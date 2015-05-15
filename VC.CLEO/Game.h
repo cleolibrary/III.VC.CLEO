@@ -10,6 +10,40 @@ enum eGameVersion
 	GAME_VSTEAM
 };
 
+struct CVector
+{
+	float	x, y, z;
+};
+
+class CRGBA
+{
+	BYTE r, g, b, a;
+};
+
+struct CTextDrawer
+{
+	DWORD LetterWidth;
+	DWORD LetterHeight;
+	CRGBA color;
+	BYTE widthAdjustment;
+	BYTE centered;
+	BYTE drawBox;
+	BYTE withBackground;
+	DWORD lineWidth;
+	DWORD lineHeight;
+	CRGBA backgroundBoxColor;
+	BYTE proportional;
+	BYTE field_1D;
+	BYTE alignment;
+	BYTE field_1F;
+	WORD fontStyle;
+	BYTE field_22;
+	BYTE field_23;
+	DWORD x;
+	DWORD y;
+	WORD text[400];
+};
+
 class GtaGame
 {
 	void InitialiseGameVersion();
@@ -54,6 +88,9 @@ public:
 	} Scripts;
 	struct _Text{
 		wchar_t *(__thiscall *pfGetText)(int, char *);
+		CTextDrawer *textDrawers;
+		unsigned short *currentTextDrawer;
+		char *cheatString;
 	} Text;
 	struct _Screen{
 		int *Width;
@@ -88,6 +125,19 @@ public:
 		void (__cdecl *pfGameSaveScripts)(int, int);
 		void (__cdecl *pfDrawInMenu)(float, float, wchar_t *);
 	} Events;
+
+	struct _Shadows{
+		float (__cdecl *StoreShadowToBeRendered)(unsigned char, uintptr_t *, CVector *, float, float, float, float, short, unsigned char, unsigned char, unsigned char, float, bool, float, uintptr_t *, bool);
+		uintptr_t **pRwTexture;
+		uintptr_t **pRwTexture_shad_car;
+		uintptr_t **pRwTexture_shad_ped;
+		uintptr_t **pRwTexture_shad_heli;
+		uintptr_t **pRwTexture_shad_bike;
+		uintptr_t **pRwTexture_shad_rcbaron;
+		uintptr_t **pRwTexture_shad_exp;
+		uintptr_t **pRwTexture_headlight;
+		uintptr_t **pRwTexture_bloodpool_64;
+	} Shadows;
 };
 
 extern GtaGame game;

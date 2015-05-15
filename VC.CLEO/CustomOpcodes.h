@@ -45,6 +45,21 @@ class CustomOpcodes
 	static eOpcodeResult WINAPI BIT_SHR(CScript *script);
 	static eOpcodeResult WINAPI BIT_SHL(CScript *script);
 	static eOpcodeResult WINAPI START_CUSTOM_THREAD_VSTRING(CScript *script);
+	static eOpcodeResult WINAPI DRAW_SHADOW(CScript *script);
+	static eOpcodeResult WINAPI SET_TEXT_DRAW_FONT(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0A8E(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0A8F(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0A90(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0A91(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0ADC(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0ADF(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0AE0(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0AF0(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0AF1(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0AF2(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0AF3(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0AF4(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0AF5(CScript *script);
 public:
 	static void Register();
 };

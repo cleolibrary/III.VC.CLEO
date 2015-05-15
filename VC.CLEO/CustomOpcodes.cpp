@@ -3,6 +3,7 @@
 #include "OpcodesSystem.h"
 #include "ScriptManager.h"
 #include "Log.h"
+#include "Fxt.h"
 
 void CustomOpcodes::Register()
 {
@@ -46,7 +47,30 @@ void CustomOpcodes::Register()
     Opcodes::RegisterOpcode(0x05FD, BIT_MOD);
     Opcodes::RegisterOpcode(0x05FE, BIT_SHR);
     Opcodes::RegisterOpcode(0x05FF, BIT_SHL);
+
+    //CLEO 2 opcodes
     Opcodes::RegisterOpcode(0x0600, START_CUSTOM_THREAD_VSTRING);
+
+    // CLEO 3-4 SA opcodes
+    Opcodes::RegisterOpcode(0x0A8E, OPCODE_0A8E);
+    Opcodes::RegisterOpcode(0x0A8F, OPCODE_0A8F);
+    Opcodes::RegisterOpcode(0x0A90, OPCODE_0A90);
+    Opcodes::RegisterOpcode(0x0A91, OPCODE_0A91);
+    Opcodes::RegisterOpcode(0x0ADC, OPCODE_0ADC);
+    Opcodes::RegisterOpcode(0x0ADF, OPCODE_0ADF);
+    Opcodes::RegisterOpcode(0x0AE0, OPCODE_0AE0);
+
+    //CLEO 4 Ini Files
+    Opcodes::RegisterOpcode(0x0AF0, OPCODE_0AF0);
+    Opcodes::RegisterOpcode(0x0AF1, OPCODE_0AF1);
+    Opcodes::RegisterOpcode(0x0AF2, OPCODE_0AF2);
+    Opcodes::RegisterOpcode(0x0AF3, OPCODE_0AF3);
+    Opcodes::RegisterOpcode(0x0AF4, OPCODE_0AF4);
+    Opcodes::RegisterOpcode(0x0AF5, OPCODE_0AF5);
+
+    //Scrapped opcodes
+    Opcodes::RegisterOpcode(0x016F, DRAW_SHADOW);
+    Opcodes::RegisterOpcode(0x0349, SET_TEXT_DRAW_FONT);
 }
 
 eOpcodeResult CustomOpcodes::GOTO(CScript *script)
@@ -752,4 +776,355 @@ eOpcodeResult CustomOpcodes::START_CUSTOM_THREAD_VSTRING(CScript *script)
     }
     script->m_dwIp++;
     return OR_CONTINUE;
+}
+
+eOpcodeResult CustomOpcodes::DRAW_SHADOW(CScript *script)
+{
+    script->Collect(10);
+    int Type = 2;	
+    CVector pos;
+    pos.x = game.Scripts.Params[1].fVar;
+    pos.y = game.Scripts.Params[2].fVar;
+    pos.z = game.Scripts.Params[3].fVar;
+    //float Angle = game.Scripts.Params[4].fVar; // to do
+    float Size = game.Scripts.Params[5].fVar;
+
+    switch (game.Scripts.Params[0].nVar)
+    {
+    case 1u:
+        game.Shadows.pRwTexture = game.Shadows.pRwTexture_shad_car;
+        Type = 1;
+        break;
+    case 2u:
+        game.Shadows.pRwTexture = game.Shadows.pRwTexture_shad_ped;
+        break;
+    case 3u:
+        game.Shadows.pRwTexture = game.Shadows.pRwTexture_shad_exp;
+        break;
+    case 4:
+        game.Shadows.pRwTexture = game.Shadows.pRwTexture_shad_heli;
+        Type = 1;
+        break;
+    case 5:
+        game.Shadows.pRwTexture = game.Shadows.pRwTexture_headlight;
+        break;
+    case 6:
+        game.Shadows.pRwTexture = game.Shadows.pRwTexture_bloodpool_64;
+        break;
+    case 7:
+        game.Shadows.pRwTexture = game.Shadows.pRwTexture_shad_bike;
+        break;
+    case 8:
+        game.Shadows.pRwTexture = game.Shadows.pRwTexture_shad_rcbaron;
+        break;
+    case 0u:
+        return OR_CONTINUE;
+    }
+
+    game.Shadows.StoreShadowToBeRendered(Type, *game.Shadows.pRwTexture, &pos, Size, 0.0, 0.0, -Size, game.Scripts.Params[6].nVar, game.Scripts.Params[7].nVar, game.Scripts.Params[8].nVar, game.Scripts.Params[9].nVar, 150.0f, true, 1.0f, false, false);
+    return OR_CONTINUE;
+}
+
+eOpcodeResult CustomOpcodes::SET_TEXT_DRAW_FONT(CScript *script)
+{
+    script->Collect(1);
+    game.Text.textDrawers[*game.Text.currentTextDrawer].fontStyle = game.Scripts.Params[0].nVar;
+    return OR_CONTINUE;
+}
+
+//0A8E=3,%3d% = %1d% + %2d% ; int
+eOpcodeResult CustomOpcodes::OPCODE_0A8E(CScript *script)
+{
+    script->Collect(2);
+    game.Scripts.Params[0].nVar = game.Scripts.Params[0].nVar + game.Scripts.Params[1].nVar;
+    script->Store(1);
+    return OR_CONTINUE;
+}
+
+//0A8F=3,%3d% = %1d% - %2d% ; int
+eOpcodeResult CustomOpcodes::OPCODE_0A8F(CScript *script)
+{
+    script->Collect(2);
+    game.Scripts.Params[0].nVar = game.Scripts.Params[0].nVar - game.Scripts.Params[1].nVar;
+    script->Store(1);
+    return OR_CONTINUE;
+}
+
+//0A90=3,%3d% = %1d% * %2d% ; int
+eOpcodeResult CustomOpcodes::OPCODE_0A90(CScript *script)
+{
+    script->Collect(2);
+    game.Scripts.Params[0].nVar = game.Scripts.Params[0].nVar * game.Scripts.Params[1].nVar;
+    script->Store(1);
+    return OR_CONTINUE;
+}
+
+//0A91=3,%3d% = %1d% / %2d% ; int
+eOpcodeResult CustomOpcodes::OPCODE_0A91(CScript *script)
+{
+    script->Collect(2);
+    game.Scripts.Params[0].nVar = game.Scripts.Params[0].nVar / game.Scripts.Params[1].nVar;
+    script->Store(1);
+    return OR_CONTINUE;
+}
+
+//0ADC=1, test_cheat %1d%
+eOpcodeResult CustomOpcodes::OPCODE_0ADC(CScript *script)
+{
+    script->Collect(1);
+
+    char *c = game.Text.cheatString;
+    char buf[30];
+    strcpy(buf, game.Scripts.Params[0].cVar);
+    char *s = _strrev(buf);
+    while (*s && toupper(*s++) == *c++);
+    if (*s)
+    {
+        script->UpdateCompareFlag(false);
+        return OR_CONTINUE;
+    }
+    game.Text.cheatString[0] = 0;
+    script->UpdateCompareFlag(true);
+
+    return OR_CONTINUE;
+}
+
+//0ADF=2,add_dynamic_GXT_entry %1d% text %2d%
+eOpcodeResult CustomOpcodes::OPCODE_0ADF(CScript *script)
+{
+    script->Collect(2);
+
+    CustomTextEntry *entry = new CustomTextEntry(game.Scripts.Params[0].cVar, game.Scripts.Params[1].cVar);
+    if (entry)
+    {
+        entry->m_pNext = CustomText::pCustomTextList;
+        CustomText::pCustomTextList = entry;
+    }
+
+    return OR_CONTINUE;
+}
+
+//0AE0 = 1, remove_dynamic_GXT_entry %1d%
+eOpcodeResult CustomOpcodes::OPCODE_0AE0(CScript *script)
+{
+    script->Collect(1);
+
+    CustomTextEntry *entry = CustomText::pCustomTextList;
+    while (entry)
+    {
+        CustomTextEntry *next = entry->m_pNext;
+        if (strcmp(game.Scripts.Params[0].cVar, entry->m_key) == 0)
+        {
+            LOGL(LOG_PRIORITY_CUSTOM_TEXT, "Unloaded custom text \"%s\"", entry->m_key);
+            delete entry;
+            entry = 0;
+            return OR_CONTINUE;
+        }
+        entry = next;
+    }
+
+    return OR_CONTINUE;
+}
+
+char* MakeFullPath(char *path, char *dst)
+{
+	if (path[1] != ':')
+	{
+		//get current working directory
+		GetCurrentDirectory(MAX_PATH, dst);
+		strcat(dst, "\\");
+		strcat(dst, path);
+	}
+	else
+	{
+		strcpy(dst, path);
+	}
+	return dst;
+}
+
+//0AF0=4,%4d% = get_int_from_ini_file %1s% section %2s% key %3s%
+eOpcodeResult CustomOpcodes::OPCODE_0AF0(CScript *script)
+{
+    script->Collect(3);
+
+	char iniPath[MAX_PATH];
+	char path[100];
+	char sectionName[100];
+	char key[100];
+	int result;
+
+	strcpy(path, game.Scripts.Params[0].cVar);
+	strcpy(sectionName, game.Scripts.Params[1].cVar);
+	strcpy(key, game.Scripts.Params[2].cVar);
+
+	//if path is short, GetPrivateProfileInt() searches for the file in the Windows directory
+	MakeFullPath(path, iniPath);
+
+	result = GetPrivateProfileInt(sectionName, key, 0x80000000, iniPath);
+	game.Scripts.Params[0].nVar = result;
+	script->Store(1);
+	script->UpdateCompareFlag(result != 0x80000000);
+
+    return OR_CONTINUE;
+}
+
+//0AF1=4,write_int %1d% to_ini_file %2s% section %3s% key %4s%
+eOpcodeResult CustomOpcodes::OPCODE_0AF1(CScript *script)
+{
+	script->Collect(4);
+
+	char iniPath[MAX_PATH];
+	char path[100];
+	char sectionName[100];
+	char key[100];
+	DWORD value;
+	char strValue[100];
+	BOOL result;
+
+	value = game.Scripts.Params[0].nVar;
+	strcpy(path, game.Scripts.Params[1].cVar);
+	strcpy(sectionName, game.Scripts.Params[2].cVar);
+	strcpy(key, game.Scripts.Params[3].cVar);
+
+	//if path is short, GetPrivateProfileInt() searches for the file in the Windows directory
+	MakeFullPath(path, iniPath);
+
+	result = WritePrivateProfileString(sectionName, key, _itoa(value, strValue, 10), iniPath);
+	script->UpdateCompareFlag(result);
+
+	return OR_CONTINUE;
+}
+
+//0AF2=4,%4d% = get_float_from_ini_file %1s% section %2s% key %3s%
+eOpcodeResult CustomOpcodes::OPCODE_0AF2(CScript *script)
+{
+	script->Collect(3);
+
+	char iniPath[MAX_PATH];
+	char path[100];
+	char sectionName[100];
+	char key[100];
+	float value = 0.0f;
+	char strValue[100];
+	BOOL result;
+
+	strcpy(path, game.Scripts.Params[0].cVar);
+	strcpy(sectionName, game.Scripts.Params[1].cVar);
+	strcpy(key, game.Scripts.Params[2].cVar);
+
+	//if path is short, GetPrivateProfileInt() searches for the file in the Windows directory
+	MakeFullPath(path, iniPath);
+
+	result = GetPrivateProfileString(sectionName, key, NULL, strValue, sizeof(strValue), iniPath);
+	if (result)
+	{
+		value = (float)atof(strValue);
+		game.Scripts.Params[0].fVar = value;
+		script->Store(1);
+	}
+	else
+	{
+		game.Scripts.Params[0].fVar = 0.0f;
+		script->Store(1);
+	}
+
+	script->UpdateCompareFlag(result);
+
+	return OR_CONTINUE;
+}
+
+//0AF3=4,write_float %1d% to_ini_file %2s% section %3s% key %4s%
+eOpcodeResult CustomOpcodes::OPCODE_0AF3(CScript *script)
+{
+	script->Collect(4);
+
+	char iniPath[MAX_PATH];
+	char path[100];
+	char sectionName[100];
+	char key[100];
+	float value;
+	char strValue[100];
+	BOOL result;
+
+	value = game.Scripts.Params[0].fVar;
+	strcpy(path, game.Scripts.Params[1].cVar);
+	strcpy(sectionName, game.Scripts.Params[2].cVar);
+	strcpy(key, game.Scripts.Params[3].cVar);
+
+	//if path is short, GetPrivateProfileInt() searches for the file in the Windows directory
+	MakeFullPath(path, iniPath);
+
+	sprintf(strValue, "%g", value);
+
+	result = WritePrivateProfileString(sectionName, key, strValue, iniPath);
+	script->UpdateCompareFlag(result);
+
+	return OR_CONTINUE;
+}
+
+//0AF4=4,%4d% = read_string_from_ini_file %1s% section %2s% key %3s%
+eOpcodeResult CustomOpcodes::OPCODE_0AF4(CScript *script)
+{
+	script->Collect(3);
+
+	char iniPath[MAX_PATH];
+	char path[100];
+	char sectionName[100];
+	char key[100];
+	char strValue[100];
+	char *strptr;
+	BOOL result;
+
+	strcpy(path, game.Scripts.Params[0].cVar);
+	strcpy(sectionName, game.Scripts.Params[1].cVar);
+	strcpy(key, game.Scripts.Params[2].cVar);
+
+	//if path is short, GetPrivateProfileInt() searches for the file in the Windows directory
+	MakeFullPath(path, iniPath);
+
+	result = GetPrivateProfileString(sectionName, key, NULL, strValue, sizeof(strValue), iniPath);
+
+	strcpy(game.Scripts.Params[0].cVar, strValue);
+	script->Store(1);
+
+	script->UpdateCompareFlag(result);
+
+	return OR_CONTINUE;
+}
+
+//0AF5=4,write_string %1s% to_ini_file %2s% section %3s% key %4s%
+eOpcodeResult CustomOpcodes::OPCODE_0AF5(CScript *script)
+{
+	script->Collect(4);
+
+	char iniPath[MAX_PATH];
+	char path[100];
+	char sectionName[100];
+	char key[100];
+	char strValue[100];
+	char *strptr;
+	BOOL result;
+
+	switch ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
+	{
+	case PARAM_TYPE_STRING:
+		strcpy(strValue, game.Scripts.Params[0].cVar);
+		break;
+	default:
+		strptr = (char *)game.Scripts.Params[0].nVar;
+		strcpy(strValue, strptr);
+	}
+	strcpy(strValue, game.Scripts.Params[0].cVar);
+	strcpy(path, game.Scripts.Params[1].cVar);
+	strcpy(sectionName, game.Scripts.Params[2].cVar);
+	strcpy(key, game.Scripts.Params[3].cVar);
+
+	//if path is short, GetPrivateProfileInt() searches for the file in the Windows directory
+	MakeFullPath(path, iniPath);
+
+	result = WritePrivateProfileString(sectionName, key, strValue, iniPath);
+
+	script->UpdateCompareFlag(result);
+
+	return OR_CONTINUE;
 }
