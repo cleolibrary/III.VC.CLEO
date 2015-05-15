@@ -88,6 +88,10 @@ public:
 	} Scripts;
 	struct _Text{
 		wchar_t *(__thiscall *pfGetText)(int, char *);
+		void(__cdecl *TextBox)(const wchar_t *text, bool flag1, bool infinite, bool flag2);
+		void(__cdecl *StyledText)(const wchar_t *text, unsigned time, unsigned style);
+		void(__cdecl *TextLowPriority) (const wchar_t *text, unsigned time, bool flag1, bool flag2);
+		void(__cdecl *TextHighPriority) (const wchar_t *text, unsigned time, bool flag1, bool flag2);
 		CTextDrawer *textDrawers;
 		unsigned short *currentTextDrawer;
 		char *cheatString;

@@ -54,6 +54,18 @@ class CustomOpcodes
 	static eOpcodeResult WINAPI OPCODE_0ADC(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0ADF(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0AE0(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0AA2(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0AA3(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0AA4(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0AAB(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0ACA(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0ACB(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0ACC(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0ACD(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0ACE(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0ACF(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0AD0(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0AD1(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0AF0(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0AF1(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0AF2(CScript *script);

@@ -87,6 +87,10 @@ void GtaGame::InitAndPatch()
 		this->Text.textDrawers = (CTextDrawer *)0x7F0EA0;
 		this->Text.currentTextDrawer = (unsigned short *)0xA10A48;
 		this->Text.cheatString = (char *)0xA10942;
+		this->Text.TextBox = (void(__cdecl *)(const wchar_t *text, bool flag1, bool infinite, bool flag2))0x55BFC0;
+		this->Text.StyledText = (void(__cdecl *)(const wchar_t *text, unsigned time, unsigned style))0x583F40;
+		this->Text.TextLowPriority = (void(__cdecl *)(const wchar_t *text, unsigned time, bool flag1, bool flag2))0x584410;
+		this->Text.TextHighPriority = (void(__cdecl *)(const wchar_t *text, unsigned time, bool flag1, bool flag2))0x584300;
 		// Screen
 		this->Screen.Width = (int *)0x9B48E4;
 		this->Screen.Height = (int *)0x9B48E8;
