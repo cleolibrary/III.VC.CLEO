@@ -84,6 +84,7 @@ void GtaGame::InitAndPatch()
 		CPatch::SetInt(0x584DA6, 0xE940EC83); //sub esp,40 
 		CPatch::SetInt(0x584DAA, 0x00000189); //jmp 584F37
 		CPatch::RedirectJump(0x584F30, CustomText::GetText);
+		this->Text.CText = 0x94B220;
 		this->Text.textDrawers = (CTextDrawer *)0x7F0EA0;
 		this->Text.currentTextDrawer = (unsigned short *)0xA10A48;
 		this->Text.cheatString = (char *)0xA10942;
@@ -126,7 +127,6 @@ void GtaGame::InitAndPatch()
 		CPatch::RedirectCall(0x61C763, GtaGame::OnGameSaveScripts);
 		this->Events.pfDrawInMenu = (void(__cdecl *)(float, float, wchar_t *))CPatch::MakeCallAddr(0x49E3D9, 0x551040);
 		CPatch::RedirectCall(0x49E3D9, GtaGame::OnMenuDrawing);
-
 		//Shadows
 		this->Shadows.StoreShadowToBeRendered = (float(__cdecl *)(unsigned char, uintptr_t *, CVector *, float, float, float, float, short, unsigned char, unsigned char, unsigned char, float, bool, float, uintptr_t *, bool)) 0x56E6C0;
 		this->Shadows.pRwTexture_shad_car     = (uintptr_t **)0x97F2EC;
@@ -137,7 +137,11 @@ void GtaGame::InitAndPatch()
 		this->Shadows.pRwTexture_shad_exp	  = (uintptr_t **)0x978DB4;
 		this->Shadows.pRwTexture_headlight	  = (uintptr_t **)0xA1073C;
 		this->Shadows.pRwTexture_bloodpool_64 = (uintptr_t **)0xA0DAC8;
-		
+		//Misc
+		this->Misc.stVehicleModelInfo = 0x752A8C;
+		this->Misc.activePadState = 0x7DBCB0;
+		this->Misc.pfModelForWeapon = (int(__cdecl *)(int eWeaponType)) 0x4418B0;
+		this->Misc.cameraWidescreen = 0x7E46F5;
 		break;
 	case GAME_V1_1:
 		break;

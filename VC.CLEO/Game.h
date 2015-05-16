@@ -92,6 +92,7 @@ public:
 		void(__cdecl *StyledText)(const wchar_t *text, unsigned time, unsigned style);
 		void(__cdecl *TextLowPriority) (const wchar_t *text, unsigned time, bool flag1, bool flag2);
 		void(__cdecl *TextHighPriority) (const wchar_t *text, unsigned time, bool flag1, bool flag2);
+		uintptr_t CText;
 		CTextDrawer *textDrawers;
 		unsigned short *currentTextDrawer;
 		char *cheatString;
@@ -142,6 +143,13 @@ public:
 		uintptr_t **pRwTexture_headlight;
 		uintptr_t **pRwTexture_bloodpool_64;
 	} Shadows;
+
+	struct _Misc{
+		uintptr_t stVehicleModelInfo;
+		uintptr_t activePadState;
+		int(__cdecl *pfModelForWeapon)(int eWeaponType);
+		uintptr_t cameraWidescreen;
+	} Misc;
 };
 
 extern GtaGame game;

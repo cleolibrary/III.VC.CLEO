@@ -45,6 +45,12 @@ class CustomOpcodes
 	static eOpcodeResult WINAPI BIT_SHR(CScript *script);
 	static eOpcodeResult WINAPI BIT_SHL(CScript *script);
 	static eOpcodeResult WINAPI START_CUSTOM_THREAD_VSTRING(CScript *script);
+	static eOpcodeResult WINAPI IS_BUTTON_PRESSED_ON_PAD(CScript *script);
+	static eOpcodeResult WINAPI EMULATE_BUTTON_PRESS_ON_PAD(CScript *script);
+	static eOpcodeResult WINAPI IS_CAMERA_IN_WIDESCREEN_MODE(CScript *script);
+	static eOpcodeResult WINAPI GET_MODEL_ID_FROM_WEAPON_ID(CScript *script);
+	static eOpcodeResult WINAPI GET_WEAPON_ID_FROM_MODEL_ID(CScript *script);
+	static eOpcodeResult WINAPI SET_MEM_OFFSET(CScript *script);
 	static eOpcodeResult WINAPI DRAW_SHADOW(CScript *script);
 	static eOpcodeResult WINAPI SET_TEXT_DRAW_FONT(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0A8E(CScript *script);
@@ -66,6 +72,7 @@ class CustomOpcodes
 	static eOpcodeResult WINAPI OPCODE_0ACF(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0AD0(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0AD1(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0ADB(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0AF0(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0AF1(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0AF2(CScript *script);
