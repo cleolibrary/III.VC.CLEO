@@ -10,6 +10,40 @@ enum eGameVersion
 	GAME_VSTEAM
 };
 
+struct CVector
+{
+	float	x, y, z;
+};
+
+class CRGBA
+{
+	BYTE r, g, b, a;
+};
+
+struct CTextDrawer
+{
+	DWORD LetterWidth;
+	DWORD LetterHeight;
+	CRGBA color;
+	BYTE widthAdjustment;
+	BYTE centered;
+	BYTE drawBox;
+	BYTE withBackground;
+	DWORD lineWidth;
+	DWORD lineHeight;
+	CRGBA backgroundBoxColor;
+	BYTE proportional;
+	BYTE field_1D;
+	BYTE alignment;
+	BYTE field_1F;
+	WORD fontStyle;
+	BYTE field_22;
+	BYTE field_23;
+	float x;
+	float y;
+	WORD text[400];
+};
+
 class GtaGame
 {
 	void InitialiseGameVersion();
@@ -54,6 +88,14 @@ public:
 	} Scripts;
 	struct _Text{
 		wchar_t *(__thiscall *pfGetText)(int, char *);
+		void(__cdecl *TextBox)(const wchar_t *text, bool flag1);
+		void(__cdecl *StyledText)(const wchar_t *text, unsigned time, unsigned style);
+		void(__cdecl *TextLowPriority) (const wchar_t *text, unsigned time, bool flag1, bool flag2);
+		void(__cdecl *TextHighPriority) (const wchar_t *text, unsigned time, bool flag1, bool flag2);
+		uintptr_t CText;
+		CTextDrawer *textDrawers;
+		unsigned short *currentTextDrawer;
+		char *cheatString;
 	} Text;
 	struct _Screen{
 		int *Width;
@@ -88,6 +130,14 @@ public:
 		void (__cdecl *pfGameSaveScripts)(int, int);
 		void (__cdecl *pfDrawInMenu)(float, float, wchar_t *);
 	} Events;
+
+	struct _Misc{
+		uintptr_t stVehicleModelInfo;
+		uintptr_t activePadState;
+		int(__cdecl *pfModelForWeapon)(int eWeaponType);
+		uintptr_t cameraWidescreen;
+		uintptr_t currentWeather;
+	} Misc;
 };
 
 extern GtaGame game;

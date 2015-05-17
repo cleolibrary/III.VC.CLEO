@@ -76,6 +76,14 @@ void GtaGame::InitAndPatch()
 		// Text
 		this->Text.pfGetText = (wchar_t *(__thiscall *)(int, char *))0x52BFB0;
 		CPatch::RedirectJump(0x52C5A0, CustomText::GetText);
+		this->Text.CText = 0x941520;
+		this->Text.textDrawers = (CTextDrawer *)0x70EA68;
+		this->Text.currentTextDrawer = (unsigned short *)0x95CC88;
+		this->Text.cheatString = (char *)0x885B90;
+		this->Text.TextBox = (void(__cdecl *)(const wchar_t *text, bool flag1))0x5051E0;
+		this->Text.StyledText = (void(__cdecl *)(const wchar_t *text, unsigned time, unsigned style))0x529F60;
+		this->Text.TextLowPriority = (void(__cdecl *)(const wchar_t *text, unsigned time, bool flag1, bool flag2))0x529900;
+		this->Text.TextHighPriority = (void(__cdecl *)(const wchar_t *text, unsigned time, bool flag1, bool flag2))0x529A10;
 		// Screen
 		this->Screen.Width = (int *)0x8F436C;
 		this->Screen.Height = (int *)0x8F4370;
@@ -111,6 +119,12 @@ void GtaGame::InitAndPatch()
 		CPatch::RedirectCall(0x58FBD9, GtaGame::OnGameSaveScripts);
 		this->Events.pfDrawInMenu = (void (__cdecl *)(float, float, wchar_t *))CPatch::MakeCallAddr(0x47AF76, 0x500F50);
 		CPatch::RedirectCall(0x47AF76, GtaGame::OnMenuDrawing);
+		//Misc
+		this->Misc.stVehicleModelInfo = 0x8E2DE4;
+		this->Misc.activePadState = 0x6F0360;
+		this->Misc.pfModelForWeapon = (int(__cdecl *)(int eWeaponType)) 0x430690;
+		this->Misc.cameraWidescreen = 0x6FAD68;
+		this->Misc.currentWeather = 0x95CCEC;
 		break;
 	case GAME_V1_1:
 		break;

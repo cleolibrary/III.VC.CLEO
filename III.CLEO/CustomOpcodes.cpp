@@ -3,6 +3,8 @@
 #include "OpcodesSystem.h"
 #include "ScriptManager.h"
 #include "Log.h"
+#include "Fxt.h"
+int format(CScript *script, char *str, size_t len, const char *format);
 
 void CustomOpcodes::Register()
 {
@@ -46,14 +48,92 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x05FD, BIT_MOD);
 	Opcodes::RegisterOpcode(0x05FE, BIT_SHR);
 	Opcodes::RegisterOpcode(0x05FF, BIT_SHL);
+	//Duplicate CLEO3/VC opcodes to match CLEO4 SA ids
+	Opcodes::RegisterOpcode(0x0A93, TERMINATE_CUSTOM_THREAD);
+	Opcodes::RegisterOpcode(0x0ABA, TERMINATE_NAMED_CUSTOM_THREAD);
+	Opcodes::RegisterOpcode(0x0A92, START_CUSTOM_THREAD);
+	Opcodes::RegisterOpcode(0x0A8C, MEMORY_WRITE);
+	Opcodes::RegisterOpcode(0x0A8D, MEMORY_READ);
+	Opcodes::RegisterOpcode(0x0AA5, CALL);
+	Opcodes::RegisterOpcode(0x0AA7, CALL_FUNCTION);
+	Opcodes::RegisterOpcode(0x0AA6, CALL_METHOD);
+	Opcodes::RegisterOpcode(0x0AA8, CALL_FUNCTION_METHOD);
+	Opcodes::RegisterOpcode(0x0A96, GET_CHAR_STRUCT);
+	Opcodes::RegisterOpcode(0x0A97, GET_CAR_STRUCT);
+	Opcodes::RegisterOpcode(0x0A98, GET_OBJECT_STRUCT);
+	Opcodes::RegisterOpcode(0x0AEA, GET_CHAR_HANDLE);
+	Opcodes::RegisterOpcode(0x0AEB, GET_CAR_HANDLE);
+	Opcodes::RegisterOpcode(0x0AEC, GET_OBJECT_HANDLE);
+	Opcodes::RegisterOpcode(0x0A9F, GET_THREAD_POINTER);
+	Opcodes::RegisterOpcode(0x0AAA, GET_NAMED_THREAD_POINTER);
+	Opcodes::RegisterOpcode(0x0AB0, IS_KEY_PRESSED);
+	Opcodes::RegisterOpcode(0x0AE1, FIND_RANDOM_CHAR);
+	Opcodes::RegisterOpcode(0x0AE2, FIND_RANDOM_CAR);
+	Opcodes::RegisterOpcode(0x0AE3, FIND_RANDOM_OBJECT);
+	Opcodes::RegisterOpcode(0x0AE9, CALL_POP_FLOAT);
+	Opcodes::RegisterOpcode(0x0AEE, MATH_EXP);
+	Opcodes::RegisterOpcode(0x0AEF, MATH_LOG);
+	Opcodes::RegisterOpcode(0x0AB1, CALL_SCM_FUNCTION);
+	Opcodes::RegisterOpcode(0x0AB2, SCM_FUNCTION_RET);
+	Opcodes::RegisterOpcode(0x0AC6, GET_LABEL_OFFSET);
+	Opcodes::RegisterOpcode(0x0AC7, GET_VAR_OFFSET);
+	Opcodes::RegisterOpcode(0x0B10, BIT_AND);
+	Opcodes::RegisterOpcode(0x0B11, BIT_OR);
+	Opcodes::RegisterOpcode(0x0B12, BIT_XOR);
+	Opcodes::RegisterOpcode(0x0B13, BIT_NOT);
+	Opcodes::RegisterOpcode(0x0B14, BIT_MOD);
+	Opcodes::RegisterOpcode(0x0B15, BIT_SHR);
+	Opcodes::RegisterOpcode(0x0B16, BIT_SHL);
+
+	//CLEO 2 opcodes
 	Opcodes::RegisterOpcode(0x0600, START_CUSTOM_THREAD_VSTRING);
+	Opcodes::RegisterOpcode(0x0601, IS_BUTTON_PRESSED_ON_PAD);
+	Opcodes::RegisterOpcode(0x0602, EMULATE_BUTTON_PRESS_ON_PAD);
+	Opcodes::RegisterOpcode(0x0603, IS_CAMERA_IN_WIDESCREEN_MODE);
+	Opcodes::RegisterOpcode(0x0604, GET_MODEL_ID_FROM_WEAPON_ID);
+	Opcodes::RegisterOpcode(0x0605, GET_WEAPON_ID_FROM_MODEL_ID);
+	Opcodes::RegisterOpcode(0x0606, SET_MEM_OFFSET);
+	Opcodes::RegisterOpcode(0x0607, GET_CURRENT_WEATHER);
+	Opcodes::RegisterOpcode(0x0608, SHOW_TEXT_POSITION);
+	Opcodes::RegisterOpcode(0x0609, SHOW_FORMATTED_TEXT_POSITION);
+
+	// CLEO 3-4 SA opcodes
+	Opcodes::RegisterOpcode(0x0A8E, OPCODE_0A8E);
+	Opcodes::RegisterOpcode(0x0A8F, OPCODE_0A8F);
+	Opcodes::RegisterOpcode(0x0A90, OPCODE_0A90);
+	Opcodes::RegisterOpcode(0x0A91, OPCODE_0A91);
+	Opcodes::RegisterOpcode(0x0ADC, OPCODE_0ADC);
+	Opcodes::RegisterOpcode(0x0ADF, OPCODE_0ADF);
+	Opcodes::RegisterOpcode(0x0AE0, OPCODE_0AE0);
+	Opcodes::RegisterOpcode(0x0AA2, OPCODE_0AA2);
+	Opcodes::RegisterOpcode(0x0AA3, OPCODE_0AA3);
+	Opcodes::RegisterOpcode(0x0AA4, OPCODE_0AA4);
+	Opcodes::RegisterOpcode(0x0AAB, OPCODE_0AAB);
+
+	Opcodes::RegisterOpcode(0x0ACA, OPCODE_0ACA);
+	Opcodes::RegisterOpcode(0x0ACB, OPCODE_0ACB);
+	Opcodes::RegisterOpcode(0x0ACC, OPCODE_0ACC);
+	Opcodes::RegisterOpcode(0x0ACD, OPCODE_0ACD);
+	Opcodes::RegisterOpcode(0x0ACE, OPCODE_0ACE);
+	Opcodes::RegisterOpcode(0x0ACF, OPCODE_0ACF);
+	Opcodes::RegisterOpcode(0x0AD0, OPCODE_0AD0);
+	Opcodes::RegisterOpcode(0x0AD1, OPCODE_0AD1);
+	Opcodes::RegisterOpcode(0x0ADB, OPCODE_0ADB);
+
+	//CLEO 4 Ini Files
+	Opcodes::RegisterOpcode(0x0AF0, OPCODE_0AF0);
+	Opcodes::RegisterOpcode(0x0AF1, OPCODE_0AF1);
+	Opcodes::RegisterOpcode(0x0AF2, OPCODE_0AF2);
+	Opcodes::RegisterOpcode(0x0AF3, OPCODE_0AF3);
+	Opcodes::RegisterOpcode(0x0AF4, OPCODE_0AF4);
+	Opcodes::RegisterOpcode(0x0AF5, OPCODE_0AF5);
 }
 
 eOpcodeResult CustomOpcodes::GOTO(CScript *script)
 {
 	script->Collect(1);
-    script->JumpTo(game.Scripts.Params[0].nVar);
-    return OR_CONTINUE;
+	script->JumpTo(game.Scripts.Params[0].nVar);
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::GOTO_IF_TRUE(CScript *script)
@@ -67,17 +147,17 @@ eOpcodeResult CustomOpcodes::GOTO_IF_TRUE(CScript *script)
 eOpcodeResult CustomOpcodes::GOTO_IF_FALSE(CScript *script)
 {
 	script->Collect(1);
-    if(!script->m_bCondResult)
-        script->JumpTo(game.Scripts.Params[0].nVar);
-    return OR_CONTINUE;
+	if(!script->m_bCondResult)
+		script->JumpTo(game.Scripts.Params[0].nVar);
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::GOSUB(CScript *script)
 {
 	script->Collect(1);
 	script->m_aGosubAddr[script->m_nCurrentGosub++] = script->m_dwIp;
-    script->JumpTo(game.Scripts.Params[0].nVar);
-    return OR_CONTINUE;
+	script->JumpTo(game.Scripts.Params[0].nVar);
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::TERMINATE_CUSTOM_THREAD(CScript *script)
@@ -300,7 +380,7 @@ eOpcodeResult CustomOpcodes::GET_GAME_VERSION(CScript *script)
 {
 	game.Scripts.Params[0].nVar = game.Version - 1;
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::GET_CHAR_STRUCT(CScript *script)
@@ -308,7 +388,7 @@ eOpcodeResult CustomOpcodes::GET_CHAR_STRUCT(CScript *script)
 	script->Collect(1);
 	game.Scripts.Params[0].pVar = game.Pools.pfPedPoolGetStruct(*game.Pools.pPedPool, game.Scripts.Params[0].nVar);
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::GET_CAR_STRUCT(CScript *script)
@@ -316,7 +396,7 @@ eOpcodeResult CustomOpcodes::GET_CAR_STRUCT(CScript *script)
 	script->Collect(1);
 	game.Scripts.Params[0].pVar = game.Pools.pfVehiclePoolGetStruct(*game.Pools.pVehiclePool, game.Scripts.Params[0].nVar);
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::GET_OBJECT_STRUCT(CScript *script)
@@ -324,7 +404,7 @@ eOpcodeResult CustomOpcodes::GET_OBJECT_STRUCT(CScript *script)
 	script->Collect(1);
 	game.Scripts.Params[0].pVar = game.Pools.pfObjectPoolGetStruct(*game.Pools.pObjectPool, game.Scripts.Params[0].nVar);
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::GET_CHAR_HANDLE(CScript *script)
@@ -332,7 +412,7 @@ eOpcodeResult CustomOpcodes::GET_CHAR_HANDLE(CScript *script)
 	script->Collect(1);
 	game.Scripts.Params[0].nVar = game.Pools.pfPedPoolGetHandle(*game.Pools.pPedPool, game.Scripts.Params[0].pVar);
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::GET_CAR_HANDLE(CScript *script)
@@ -340,7 +420,7 @@ eOpcodeResult CustomOpcodes::GET_CAR_HANDLE(CScript *script)
 	script->Collect(1);
 	game.Scripts.Params[0].nVar = game.Pools.pfVehiclePoolGetHandle(*game.Pools.pVehiclePool, game.Scripts.Params[0].pVar);
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::GET_OBJECT_HANDLE(CScript *script)
@@ -348,14 +428,14 @@ eOpcodeResult CustomOpcodes::GET_OBJECT_HANDLE(CScript *script)
 	script->Collect(1);
 	game.Scripts.Params[0].nVar = game.Pools.pfObjectPoolGetHandle(*game.Pools.pObjectPool, game.Scripts.Params[0].pVar);
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::GET_THREAD_POINTER(CScript *script)
 {
 	game.Scripts.Params[0].pVar = script;
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::GET_NAMED_THREAD_POINTER(CScript *script)
@@ -390,14 +470,14 @@ eOpcodeResult CustomOpcodes::GET_NAMED_THREAD_POINTER(CScript *script)
 	else
 		script->UpdateCompareFlag(false);
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::IS_KEY_PRESSED(CScript *script)
 {
 	script->Collect(1);
 	script->UpdateCompareFlag(GetKeyState(game.Scripts.Params[0].nVar) & 0x8000);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::FIND_RANDOM_CHAR(CScript *script)
@@ -461,7 +541,7 @@ eOpcodeResult CustomOpcodes::FIND_RANDOM_CHAR(CScript *script)
 		script->m_nLastPedSearchIndex = 0;
 	}
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::FIND_RANDOM_CAR(CScript *script)
@@ -522,7 +602,7 @@ eOpcodeResult CustomOpcodes::FIND_RANDOM_CAR(CScript *script)
 		script->m_nLastVehicleSearchIndex = 0;
 	}
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::FIND_RANDOM_OBJECT(CScript *script)
@@ -580,7 +660,7 @@ eOpcodeResult CustomOpcodes::FIND_RANDOM_OBJECT(CScript *script)
 		script->m_nLastObjectSearchIndex = 0;
 	}
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::CALL_POP_FLOAT(CScript *script)
@@ -589,7 +669,7 @@ eOpcodeResult CustomOpcodes::CALL_POP_FLOAT(CScript *script)
 	__asm mov eax, pParam
 	__asm fstp [eax]
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::MATH_EXP(CScript *script)
@@ -597,7 +677,7 @@ eOpcodeResult CustomOpcodes::MATH_EXP(CScript *script)
 	script->Collect(2);
 	game.Scripts.Params[0].fVar = powf(game.Scripts.Params[0].fVar, game.Scripts.Params[1].fVar);
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::MATH_LOG(CScript *script)
@@ -605,7 +685,7 @@ eOpcodeResult CustomOpcodes::MATH_LOG(CScript *script)
 	script->Collect(2);
 	game.Scripts.Params[0].fVar =  logf(game.Scripts.Params[0].fVar) / logf(game.Scripts.Params[1].fVar);
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::CALL_SCM_FUNCTION(CScript *script)
@@ -621,7 +701,7 @@ eOpcodeResult CustomOpcodes::CALL_SCM_FUNCTION(CScript *script)
 		memcpy(script->m_aLVars, game.Scripts.Params, paramCount * 4);
 	script->m_pScmFunction->retAddr = script->m_dwIp;
 	script->JumpTo(addr);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::SCM_FUNCTION_RET(CScript *script)
@@ -638,7 +718,7 @@ eOpcodeResult CustomOpcodes::SCM_FUNCTION_RET(CScript *script)
 	ScmFunction *prev = script->m_pScmFunction->prev;
 	delete script->m_pScmFunction;
 	script->m_pScmFunction = prev;
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::GET_LABEL_OFFSET(CScript *script)
@@ -647,21 +727,21 @@ eOpcodeResult CustomOpcodes::GET_LABEL_OFFSET(CScript *script)
 	if(game.Scripts.Params[0].nVar >= 0)
 		game.Scripts.Params[0].pVar = &game.Scripts.Space[game.Scripts.Params[0].nVar];
 	else
-    {
+	{
 		if(script->m_nScriptType == SCRIPT_TYPE_CUSTOM)
 			game.Scripts.Params[0].pVar = &script->m_pCodeData[-game.Scripts.Params[0].nVar];
 		else
 			game.Scripts.Params[0].pVar = &game.Scripts.Space[0x20000 - game.Scripts.Params[0].nVar];
 	}
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::GET_VAR_OFFSET(CScript *script)
 {
 	game.Scripts.Params[0].pVar = script->GetPointerToScriptVariable();
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::BIT_AND(CScript *script)
@@ -669,7 +749,7 @@ eOpcodeResult CustomOpcodes::BIT_AND(CScript *script)
 	script->Collect(2);
 	game.Scripts.Params[0].nVar = game.Scripts.Params[0].nVar & game.Scripts.Params[1].nVar;
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::BIT_OR(CScript *script)
@@ -677,7 +757,7 @@ eOpcodeResult CustomOpcodes::BIT_OR(CScript *script)
 	script->Collect(2);
 	game.Scripts.Params[0].nVar = game.Scripts.Params[0].nVar | game.Scripts.Params[1].nVar;
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::BIT_XOR(CScript *script)
@@ -685,7 +765,7 @@ eOpcodeResult CustomOpcodes::BIT_XOR(CScript *script)
 	script->Collect(2);
 	game.Scripts.Params[0].nVar = game.Scripts.Params[0].nVar ^ game.Scripts.Params[1].nVar;
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::BIT_NOT(CScript *script)
@@ -693,7 +773,7 @@ eOpcodeResult CustomOpcodes::BIT_NOT(CScript *script)
 	script->Collect(1);
 	game.Scripts.Params[0].nVar = ~game.Scripts.Params[0].nVar;
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::BIT_MOD(CScript *script)
@@ -701,7 +781,7 @@ eOpcodeResult CustomOpcodes::BIT_MOD(CScript *script)
 	script->Collect(2);
 	game.Scripts.Params[0].nVar = game.Scripts.Params[0].nVar % game.Scripts.Params[1].nVar;
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::BIT_SHR(CScript *script)
@@ -709,7 +789,7 @@ eOpcodeResult CustomOpcodes::BIT_SHR(CScript *script)
 	script->Collect(2);
 	game.Scripts.Params[0].nVar = game.Scripts.Params[0].nVar >> game.Scripts.Params[1].nVar;
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::BIT_SHL(CScript *script)
@@ -717,7 +797,7 @@ eOpcodeResult CustomOpcodes::BIT_SHL(CScript *script)
 	script->Collect(2);
 	game.Scripts.Params[0].nVar = game.Scripts.Params[0].nVar << game.Scripts.Params[1].nVar;
 	script->Store(1);
-    return OR_CONTINUE;
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::START_CUSTOM_THREAD_VSTRING(CScript *script)
@@ -752,4 +832,738 @@ eOpcodeResult CustomOpcodes::START_CUSTOM_THREAD_VSTRING(CScript *script)
 	}
 	script->m_dwIp++;
 	return OR_CONTINUE;
+}
+
+//0601=1,  IS_BUTTON_PRESSED_ON_PAD %1d%
+eOpcodeResult CustomOpcodes::IS_BUTTON_PRESSED_ON_PAD(CScript *script)
+{
+	script->Collect(1);
+	script->UpdateCompareFlag(*(short*)((game.Scripts.Params[0].nVar * 2) + game.Misc.activePadState) != 0);
+	return OR_CONTINUE;
+}
+
+//0602=2,  EMULATE_BUTTON_PRESS_ON_PAD %1d% sensitivity %2d%
+eOpcodeResult CustomOpcodes::EMULATE_BUTTON_PRESS_ON_PAD(CScript *script)
+{
+	script->Collect(2);
+	*(short*)((game.Scripts.Params[0].nVar * 2) + game.Misc.activePadState) = game.Scripts.Params[1].nVar;
+	return OR_CONTINUE;
+}
+
+//0603=0,  IS_CAMERA_IN_WIDESCREEN_MODE
+eOpcodeResult CustomOpcodes::IS_CAMERA_IN_WIDESCREEN_MODE(CScript *script)
+{
+	script->UpdateCompareFlag(*(char*)game.Misc.cameraWidescreen != 0);
+	return OR_CONTINUE;
+}
+
+//0604=2,%2d% = weapon %1d% model
+eOpcodeResult CustomOpcodes::GET_MODEL_ID_FROM_WEAPON_ID(CScript *script)
+{
+	script->Collect(1);
+	unsigned int wID = game.Misc.pfModelForWeapon(game.Scripts.Params[0].nVar);
+	game.Scripts.Params[0].nVar = wID ? wID : -1;
+	script->Store(1);
+	return OR_CONTINUE;
+}
+
+//0605=2,%2d% = model %1d% weapon id
+eOpcodeResult CustomOpcodes::GET_WEAPON_ID_FROM_MODEL_ID(CScript *script)
+{
+	script->Collect(1);
+	unsigned int mID = game.Scripts.Params[0].nVar;
+	for (size_t i = 0; i < 37; i++)
+	{
+		if (mID == game.Misc.pfModelForWeapon(i))
+		{
+			game.Scripts.Params[0].nVar = i;
+			script->Store(1);
+			return OR_CONTINUE;
+		}
+	}
+	game.Scripts.Params[0].nVar = -1;
+	script->Store(1);
+	return OR_CONTINUE;
+}
+
+//0606=3, SET_MEM_OFFSET memory pointer %1d% memory to point %2d% virtual protect %3d%
+eOpcodeResult CustomOpcodes::SET_MEM_OFFSET(CScript *script)
+{
+	script->Collect(3);
+	DWORD flOldProtect;
+	if (game.Scripts.Params[2].nVar)
+		VirtualProtect(game.Scripts.Params[0].pVar, game.Scripts.Params[1].nVar, PAGE_EXECUTE_READWRITE, &flOldProtect);
+
+	*(int *)game.Scripts.Params[0].pVar = game.Scripts.Params[1].nVar - (game.Scripts.Params[0].nVar + 4);
+
+	if (game.Scripts.Params[2].nVar)
+		VirtualProtect(game.Scripts.Params[0].pVar, game.Scripts.Params[1].nVar, flOldProtect, &flOldProtect);
+	return OR_CONTINUE;
+}
+
+//0607=1, %1d% = GET_CURRENT_WEATHER
+eOpcodeResult CustomOpcodes::GET_CURRENT_WEATHER(CScript *script)
+{
+	game.Scripts.Params[0].nVar = *(short*)game.Misc.currentWeather;
+	script->Store(1);
+	return OR_CONTINUE;
+}
+
+//0608=3,show_text_position %1d% %2d% text %3d%
+eOpcodeResult CustomOpcodes::SHOW_TEXT_POSITION(CScript *script)
+{
+	script->Collect(3);
+	game.Text.textDrawers[*game.Text.currentTextDrawer].x = game.Scripts.Params[0].fVar;
+	game.Text.textDrawers[*game.Text.currentTextDrawer].y = game.Scripts.Params[1].fVar;
+	const char *text = game.Scripts.Params[2].cVar;
+	swprintf((wchar_t*)&game.Text.textDrawers[*game.Text.currentTextDrawer].text, 100, L"%hs", text);
+	return OR_CONTINUE;
+};
+
+//0609=-1,show_formatted_text_position %1d% %2d% text %3d%
+eOpcodeResult CustomOpcodes::SHOW_FORMATTED_TEXT_POSITION(CScript *script)
+{
+	script->Collect(3);
+	game.Text.textDrawers[*game.Text.currentTextDrawer].x = game.Scripts.Params[0].fVar;
+	game.Text.textDrawers[*game.Text.currentTextDrawer].y = game.Scripts.Params[1].fVar;
+	char fmt[100]; char text[100]; static wchar_t message_buf[0x80];
+	strcpy(fmt, game.Scripts.Params[2].cVar);
+	format(script, text, sizeof(text), fmt);
+	swprintf((wchar_t*)&game.Text.textDrawers[*game.Text.currentTextDrawer].text, 100, L"%hs", text);
+	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
+		script->Collect(1);
+	script->m_dwIp++;
+	return OR_CONTINUE;
+};
+
+//0A8E=3,%3d% = %1d% + %2d% ; int
+eOpcodeResult CustomOpcodes::OPCODE_0A8E(CScript *script)
+{
+	script->Collect(2);
+	game.Scripts.Params[0].nVar = game.Scripts.Params[0].nVar + game.Scripts.Params[1].nVar;
+	script->Store(1);
+	return OR_CONTINUE;
+}
+
+//0A8F=3,%3d% = %1d% - %2d% ; int
+eOpcodeResult CustomOpcodes::OPCODE_0A8F(CScript *script)
+{
+	script->Collect(2);
+	game.Scripts.Params[0].nVar = game.Scripts.Params[0].nVar - game.Scripts.Params[1].nVar;
+	script->Store(1);
+	return OR_CONTINUE;
+}
+
+//0A90=3,%3d% = %1d% * %2d% ; int
+eOpcodeResult CustomOpcodes::OPCODE_0A90(CScript *script)
+{
+	script->Collect(2);
+	game.Scripts.Params[0].nVar = game.Scripts.Params[0].nVar * game.Scripts.Params[1].nVar;
+	script->Store(1);
+	return OR_CONTINUE;
+}
+
+//0A91=3,%3d% = %1d% / %2d% ; int
+eOpcodeResult CustomOpcodes::OPCODE_0A91(CScript *script)
+{
+	script->Collect(2);
+	game.Scripts.Params[0].nVar = game.Scripts.Params[0].nVar / game.Scripts.Params[1].nVar;
+	script->Store(1);
+	return OR_CONTINUE;
+}
+
+//0ADC=1, test_cheat %1d%
+eOpcodeResult CustomOpcodes::OPCODE_0ADC(CScript *script)
+{
+	script->Collect(1);
+
+	char *c = game.Text.cheatString;
+	char buf[30];
+	strcpy(buf, game.Scripts.Params[0].cVar);
+	char *s = _strrev(buf);
+	while (*s && toupper(*s++) == *c++);
+	if (*s)
+	{
+		script->UpdateCompareFlag(false);
+		return OR_CONTINUE;
+	}
+	game.Text.cheatString[0] = 0;
+	script->UpdateCompareFlag(true);
+
+	return OR_CONTINUE;
+}
+
+//0ADF=2,add_dynamic_GXT_entry %1d% text %2d%
+eOpcodeResult CustomOpcodes::OPCODE_0ADF(CScript *script)
+{
+	script->Collect(2);
+
+	CustomTextEntry *entry = new CustomTextEntry(game.Scripts.Params[0].cVar, game.Scripts.Params[1].cVar);
+	if (entry)
+	{
+		entry->m_pNext = CustomText::pCustomTextList;
+		CustomText::pCustomTextList = entry;
+	}
+
+	return OR_CONTINUE;
+}
+
+//0AE0 = 1, remove_dynamic_GXT_entry %1d%
+eOpcodeResult CustomOpcodes::OPCODE_0AE0(CScript *script)
+{
+	script->Collect(1);
+
+	CustomTextEntry *entry = CustomText::pCustomTextList;
+	while (entry)
+	{
+		CustomTextEntry *next = entry->m_pNext;
+		if (next)
+		{
+			if (strcmp(game.Scripts.Params[0].cVar, next->m_key) == 0)
+			{
+				next->m_pNext = next->m_pNext ? next->m_pNext->m_pNext : nullptr;
+				LOGL(LOG_PRIORITY_CUSTOM_TEXT, "Unloaded custom text \"%s\"", entry->m_key);
+				delete entry;
+				return OR_CONTINUE;
+			}
+			else
+			{
+				CustomText::pCustomTextList = next;
+				LOGL(LOG_PRIORITY_CUSTOM_TEXT, "Unloaded custom text \"%s\"", entry->m_key);
+				delete entry;
+				return OR_CONTINUE;
+			}
+		}
+		else
+		{
+			LOGL(LOG_PRIORITY_CUSTOM_TEXT, "Unloaded custom text \"%s\"", entry->m_key);
+			delete entry;
+			CustomText::pCustomTextList = 0;
+			return OR_CONTINUE;
+		}
+		entry = next;
+	}
+
+	return OR_CONTINUE;
+}
+
+//0AA2=2,%2h% = load_library %1d% // IF and SET
+eOpcodeResult CustomOpcodes::OPCODE_0AA2(CScript *script)
+{
+	script->Collect(1);
+	auto libHandle = LoadLibrary(game.Scripts.Params[0].cVar);
+	game.Scripts.Params[0].pVar = libHandle;
+	script->Store(1);
+	script->UpdateCompareFlag(libHandle != nullptr);
+	return OR_CONTINUE;
+}
+
+//0AA3=1,free_library %1h%
+eOpcodeResult CustomOpcodes::OPCODE_0AA3(CScript *script)
+{
+	script->Collect(1);
+	HMODULE libHandle;
+	libHandle = (HMODULE)game.Scripts.Params[0].pVar;
+	FreeLibrary(libHandle);
+	return OR_CONTINUE;
+}
+
+//0AA4=3,%3d% = get_proc_address %1d% library %2d% // IF and SET
+eOpcodeResult CustomOpcodes::OPCODE_0AA4(CScript *script)
+{
+	script->Collect(2);
+	char *funcName = game.Scripts.Params[0].cVar;
+	HMODULE libHandle;
+	libHandle = (HMODULE)game.Scripts.Params[1].pVar;
+	void *funcAddr = (void *)GetProcAddress(libHandle, funcName);
+	game.Scripts.Params[0].pVar = funcAddr;
+	script->Store(1);
+	script->UpdateCompareFlag(funcAddr != nullptr);
+	return OR_CONTINUE;
+}
+
+//0AAB=1,  file_exists %1d%
+eOpcodeResult CustomOpcodes::OPCODE_0AAB(CScript *script)
+{
+	script->Collect(1);
+	DWORD fAttr = GetFileAttributes(game.Scripts.Params[0].cVar);
+	script->UpdateCompareFlag((fAttr != INVALID_FILE_ATTRIBUTES) &&
+		!(fAttr & FILE_ATTRIBUTE_DIRECTORY));
+	return OR_CONTINUE;
+}
+
+//0ACA=1,show_text_box %1d%
+eOpcodeResult CustomOpcodes::OPCODE_0ACA(CScript *script)
+{
+	static wchar_t message_buf[0x80];
+	script->Collect(1);
+	swprintf(message_buf, 100, L"%hs", game.Scripts.Params[0].cVar);
+	game.Text.TextBox(message_buf, false);
+	return OR_CONTINUE;
+};
+
+//0ACB=3,show_styled_text %1d% time %2d% style %3d%
+eOpcodeResult CustomOpcodes::OPCODE_0ACB(CScript *script)
+{
+	static wchar_t message_buf[0x80];
+	script->Collect(3);
+	const char *text = game.Scripts.Params[0].cVar;
+	unsigned time, style;
+	swprintf(message_buf, 100, L"%hs", text);
+	game.Text.StyledText(message_buf, game.Scripts.Params[1].nVar, game.Scripts.Params[2].nVar - 1);
+	return OR_CONTINUE;
+};
+
+//0ACC=2,show_text_lowpriority %1d% time %2d%
+eOpcodeResult CustomOpcodes::OPCODE_0ACC(CScript *script)
+{
+	static wchar_t message_buf[0x80];
+	script->Collect(2);
+	const char *text = game.Scripts.Params[0].cVar;
+	swprintf(message_buf, 100, L"%hs", text);
+	game.Text.TextLowPriority(message_buf, game.Scripts.Params[1].nVar, false, false);
+	return OR_CONTINUE;
+};
+
+//0ACD=2,show_text_highpriority %1d% time %2d%
+eOpcodeResult CustomOpcodes::OPCODE_0ACD(CScript *script)
+{
+	static wchar_t message_buf[0x80];
+	script->Collect(2);
+	const char *text = game.Scripts.Params[0].cVar;
+	swprintf(message_buf, 100, L"%hs", text);
+	game.Text.TextHighPriority(message_buf, game.Scripts.Params[1].nVar, false, false);
+	return OR_CONTINUE;
+};
+
+//0ACE=-1,show_formatted_text_box %1d%
+eOpcodeResult CustomOpcodes::OPCODE_0ACE(CScript *script)
+{
+	static wchar_t message_buf[0x80];
+	script->Collect(1);
+	char fmt[100]; char text[100];
+	strcpy(fmt, game.Scripts.Params[0].cVar);
+	format(script, text, sizeof(text), fmt);
+
+	swprintf(message_buf, 100, L"%hs", text);
+	game.Text.TextBox(message_buf, false);
+
+	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
+		script->Collect(1);
+	script->m_dwIp++;
+	return OR_CONTINUE;
+};
+
+//0ACF=-1,show_formatted_styled_text %1d% time %2d% style %3d%
+eOpcodeResult CustomOpcodes::OPCODE_0ACF(CScript *script)
+{
+	script->Collect(3);
+	char fmt[100]; char text[100]; static wchar_t message_buf[100];
+	unsigned time, style;
+	strcpy(fmt, game.Scripts.Params[0].cVar);
+	time = game.Scripts.Params[1].nVar;
+	style = game.Scripts.Params[2].nVar;
+	format(script, text, sizeof(text), fmt);
+	swprintf(message_buf, 100, L"%hs", text);
+	game.Text.StyledText(message_buf, time, style - 1);
+	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
+		script->Collect(1);
+	script->m_dwIp++;
+	return OR_CONTINUE;
+};
+
+//0AD0=-1,show_formatted_text_lowpriority %1d% time %2d%
+eOpcodeResult CustomOpcodes::OPCODE_0AD0(CScript *script)
+{
+	script->Collect(2);
+	char fmt[100]; char text[100]; static wchar_t message_buf[0x80];
+	unsigned time;
+	strcpy(fmt, game.Scripts.Params[0].cVar);
+	time = game.Scripts.Params[1].nVar;
+	format(script, text, sizeof(text), fmt);
+	swprintf(message_buf, 100, L"%hs", text);
+	game.Text.TextLowPriority(message_buf, time, false, false);
+	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
+		script->Collect(1);
+	script->m_dwIp++;
+	return OR_CONTINUE;
+};
+
+//0AD1=-1,show_formatted_text_highpriority %1d% time %2d%
+eOpcodeResult CustomOpcodes::OPCODE_0AD1(CScript *script)
+{
+	script->Collect(2);
+	char fmt[100]; char text[100]; static wchar_t message_buf[0x80];
+	unsigned time;
+	strcpy(fmt, game.Scripts.Params[0].cVar);
+	time = game.Scripts.Params[1].nVar;
+	format(script, text, sizeof(text), fmt);
+	swprintf(message_buf, 100, L"%hs", text);
+	game.Text.TextHighPriority(message_buf, time, false, false);
+	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
+		script->Collect(1);
+	script->m_dwIp++;
+	return OR_CONTINUE;
+};
+
+//0ADB=2,%2d% = car_model %1o% name
+eOpcodeResult CustomOpcodes::OPCODE_0ADB(CScript *script)
+{
+	script->Collect(1);
+	unsigned mi; char *buf; static char cmessage_buf[0x80];
+	mi = game.Scripts.Params[0].nVar;
+	buf = (char*)((game.Misc.stVehicleModelInfo + 0x36) + ((mi - 90) * 0x1F8));
+	wcstombs(cmessage_buf, CustomText::GetText(game.Text.CText, 0, buf), sizeof(cmessage_buf));
+	game.Scripts.Params[0].pVar = cmessage_buf;
+	script->Store(1);
+	return OR_CONTINUE;
+}
+
+////////////////////////////////////////////INI FILES///////////////////////////
+char* MakeFullPath(char *path, char *dst)
+{
+	if (path[1] != ':')
+	{
+		//get current working directory
+		GetCurrentDirectory(MAX_PATH, dst);
+		strcat(dst, "\\");
+		strcat(dst, path);
+	}
+	else
+	{
+		strcpy(dst, path);
+	}
+	return dst;
+}
+
+//0AF0=4,%4d% = get_int_from_ini_file %1s% section %2s% key %3s%
+eOpcodeResult CustomOpcodes::OPCODE_0AF0(CScript *script)
+{
+	script->Collect(3);
+
+	char iniPath[MAX_PATH];
+	char path[100];
+	char sectionName[100];
+	char key[100];
+	int result;
+
+	strcpy(path, game.Scripts.Params[0].cVar);
+	strcpy(sectionName, game.Scripts.Params[1].cVar);
+	strcpy(key, game.Scripts.Params[2].cVar);
+
+	//if path is short, GetPrivateProfileInt() searches for the file in the Windows directory
+	MakeFullPath(path, iniPath);
+
+	result = GetPrivateProfileInt(sectionName, key, 0x80000000, iniPath);
+	game.Scripts.Params[0].nVar = result;
+	script->Store(1);
+	script->UpdateCompareFlag(result != 0x80000000);
+
+	return OR_CONTINUE;
+}
+
+//0AF1=4,write_int %1d% to_ini_file %2s% section %3s% key %4s%
+eOpcodeResult CustomOpcodes::OPCODE_0AF1(CScript *script)
+{
+	script->Collect(4);
+
+	char iniPath[MAX_PATH];
+	char path[100];
+	char sectionName[100];
+	char key[100];
+	DWORD value;
+	char strValue[100];
+	BOOL result;
+
+	value = game.Scripts.Params[0].nVar;
+	strcpy(path, game.Scripts.Params[1].cVar);
+	strcpy(sectionName, game.Scripts.Params[2].cVar);
+	strcpy(key, game.Scripts.Params[3].cVar);
+
+	//if path is short, GetPrivateProfileInt() searches for the file in the Windows directory
+	MakeFullPath(path, iniPath);
+
+	result = WritePrivateProfileString(sectionName, key, _itoa(value, strValue, 10), iniPath);
+	script->UpdateCompareFlag(result != 0);
+
+	return OR_CONTINUE;
+}
+
+//0AF2=4,%4d% = get_float_from_ini_file %1s% section %2s% key %3s%
+eOpcodeResult CustomOpcodes::OPCODE_0AF2(CScript *script)
+{
+	script->Collect(3);
+
+	char iniPath[MAX_PATH];
+	char path[100];
+	char sectionName[100];
+	char key[100];
+	float value = 0.0f;
+	char strValue[100];
+	BOOL result;
+
+	strcpy(path, game.Scripts.Params[0].cVar);
+	strcpy(sectionName, game.Scripts.Params[1].cVar);
+	strcpy(key, game.Scripts.Params[2].cVar);
+
+	//if path is short, GetPrivateProfileInt() searches for the file in the Windows directory
+	MakeFullPath(path, iniPath);
+
+	result = GetPrivateProfileString(sectionName, key, NULL, strValue, sizeof(strValue), iniPath);
+	if (result)
+	{
+		value = (float)atof(strValue);
+		game.Scripts.Params[0].fVar = value;
+		script->Store(1);
+	}
+	else
+	{
+		game.Scripts.Params[0].fVar = 0.0f;
+		script->Store(1);
+	}
+
+	script->UpdateCompareFlag(result != 0);
+
+	return OR_CONTINUE;
+}
+
+//0AF3=4,write_float %1d% to_ini_file %2s% section %3s% key %4s%
+eOpcodeResult CustomOpcodes::OPCODE_0AF3(CScript *script)
+{
+	script->Collect(4);
+
+	char iniPath[MAX_PATH];
+	char path[100];
+	char sectionName[100];
+	char key[100];
+	float value;
+	char strValue[100];
+	BOOL result;
+
+	value = game.Scripts.Params[0].fVar;
+	strcpy(path, game.Scripts.Params[1].cVar);
+	strcpy(sectionName, game.Scripts.Params[2].cVar);
+	strcpy(key, game.Scripts.Params[3].cVar);
+
+	//if path is short, GetPrivateProfileInt() searches for the file in the Windows directory
+	MakeFullPath(path, iniPath);
+
+	sprintf(strValue, "%g", value);
+
+	result = WritePrivateProfileString(sectionName, key, strValue, iniPath);
+	script->UpdateCompareFlag(result != 0);
+
+	return OR_CONTINUE;
+}
+
+//0AF4=4,%4d% = read_string_from_ini_file %1s% section %2s% key %3s%
+eOpcodeResult CustomOpcodes::OPCODE_0AF4(CScript *script)
+{
+	script->Collect(3);
+
+	char iniPath[MAX_PATH];
+	char path[100];
+	char sectionName[100];
+	char key[100];
+	char strValue[100];
+	char *strptr;
+	BOOL result;
+
+	strcpy(path, game.Scripts.Params[0].cVar);
+	strcpy(sectionName, game.Scripts.Params[1].cVar);
+	strcpy(key, game.Scripts.Params[2].cVar);
+
+	//if path is short, GetPrivateProfileInt() searches for the file in the Windows directory
+	MakeFullPath(path, iniPath);
+
+	result = GetPrivateProfileString(sectionName, key, NULL, strValue, sizeof(strValue), iniPath);
+
+	strcpy(game.Scripts.Params[0].cVar, strValue);
+	script->Store(1);
+
+	script->UpdateCompareFlag(result != 0);
+
+	return OR_CONTINUE;
+}
+
+//0AF5=4,write_string %1s% to_ini_file %2s% section %3s% key %4s%
+eOpcodeResult CustomOpcodes::OPCODE_0AF5(CScript *script)
+{
+	script->Collect(4);
+
+	char iniPath[MAX_PATH];
+	char path[100];
+	char sectionName[100];
+	char key[100];
+	char strValue[100];
+	char *strptr;
+	BOOL result;
+
+	switch ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
+	{
+	case PARAM_TYPE_STRING:
+		strcpy(strValue, game.Scripts.Params[0].cVar);
+		break;
+	default:
+		strptr = (char *)game.Scripts.Params[0].nVar;
+		strcpy(strValue, strptr);
+	}
+	strcpy(strValue, game.Scripts.Params[0].cVar);
+	strcpy(path, game.Scripts.Params[1].cVar);
+	strcpy(sectionName, game.Scripts.Params[2].cVar);
+	strcpy(key, game.Scripts.Params[3].cVar);
+
+	//if path is short, GetPrivateProfileInt() searches for the file in the Windows directory
+	MakeFullPath(path, iniPath);
+
+	result = WritePrivateProfileString(sectionName, key, strValue, iniPath);
+
+	script->UpdateCompareFlag(result != 0);
+
+	return OR_CONTINUE;
+}
+
+// perform 'sprintf'-operation for parameters, passed through SCM
+int format(CScript *script, char *str, size_t len, const char *format)
+{
+	unsigned int written = 0;
+	const char *iter = format;
+	char bufa[256], fmtbufa[64], *fmta;
+
+	while (*iter)
+	{
+		while (*iter && *iter != '%')
+		{
+			if (written++ >= len)
+				return -1;
+			*str++ = *iter++;
+		}
+		if (*iter == '%')
+		{
+			if (iter[1] == '%')
+			{
+				if (written++ >= len)
+					return -1;
+				*str++ = '%'; /* "%%"->'%' */
+				iter += 2;
+				continue;
+			}
+
+			//get flags and width specifier
+			fmta = fmtbufa;
+			*fmta++ = *iter++;
+			while (*iter == '0' ||
+				*iter == '+' ||
+				*iter == '-' ||
+				*iter == ' ' ||
+				*iter == '*' ||
+				*iter == '#')
+			{
+				if (*iter == '*')
+				{
+					char *buffiter = bufa;
+					//get width
+					script->Collect(1);
+					_itoa(game.Scripts.Params[0].nVar, buffiter, 10);
+					while (*buffiter)
+						*fmta++ = *buffiter++;
+				}
+				else
+					*fmta++ = *iter;
+				iter++;
+			}
+
+			//get immidiate width value
+			while (isdigit(*iter))
+				*fmta++ = *iter++;
+
+			//get precision
+			if (*iter == '.')
+			{
+				*fmta++ = *iter++;
+				if (*iter == '*')
+				{
+					char *buffiter = bufa;
+					script->Collect(1);
+					_itoa(game.Scripts.Params[0].nVar, buffiter, 10);
+					while (*buffiter)
+						*fmta++ = *buffiter++;
+				}
+				else
+					while (isdigit(*iter))
+						*fmta++ = *iter++;
+			}
+			//get size
+			if (*iter == 'h' || *iter == 'l')
+				*fmta++ = *iter++;
+
+			switch (*iter)
+			{
+			case 's':
+			{
+				static const char none[] = "(null)";
+				const char *astr = game.Scripts.Params[0].cVar;
+				const char *striter = astr ? astr : none;
+				while (*striter)
+				{
+					if (written++ >= len)
+						return -1;
+					*str++ = *striter++;
+				}
+				iter++;
+				break;
+			}
+
+			case 'c':
+				if (written++ >= len)
+					return -1;
+				script->Collect(1);
+				*str++ = (char)game.Scripts.Params[0].nVar;
+				iter++;
+				break;
+
+			default:
+			{
+				/* For non wc types, use system sprintf and append to wide char output */
+				/* FIXME: for unrecognised types, should ignore % when printing */
+				char *bufaiter = bufa;
+				if (*iter == 'p' || *iter == 'P')
+				{
+					script->Collect(1);
+					sprintf(bufaiter, "%08X", game.Scripts.Params[0].nVar);
+				}
+				else
+				{
+					*fmta++ = *iter;
+					*fmta = '\0';
+					if (*iter == 'a' || *iter == 'A' ||
+						*iter == 'e' || *iter == 'E' ||
+						*iter == 'f' || *iter == 'F' ||
+						*iter == 'g' || *iter == 'G')
+					{
+						script->Collect(1);
+						sprintf(bufaiter, fmtbufa, game.Scripts.Params[0].fVar);
+					}
+					else
+					{
+						script->Collect(1);
+						sprintf(bufaiter, fmtbufa, game.Scripts.Params[0].pVar);
+					}
+				}
+				while (*bufaiter)
+				{
+					if (written++ >= len)
+						return -1;
+					*str++ = *bufaiter++;
+				}
+				iter++;
+				break;
+			}
+			}
+		}
+	}
+	if (written >= len)
+		return -1;
+	*str++ = 0;
+	return (int)written;
 }
