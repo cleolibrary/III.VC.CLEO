@@ -4,6 +4,7 @@
 #include "ScriptManager.h"
 #include "Log.h"
 #include "Fxt.h"
+int format(CScript *script, char *str, size_t len, const char *format);
 
 void CustomOpcodes::Register()
 {
@@ -87,12 +88,15 @@ void CustomOpcodes::Register()
 
     //CLEO 2 opcodes
     Opcodes::RegisterOpcode(0x0600, START_CUSTOM_THREAD_VSTRING);
-	Opcodes::RegisterOpcode(0x0601, IS_BUTTON_PRESSED_ON_PAD);
-	Opcodes::RegisterOpcode(0x0602, EMULATE_BUTTON_PRESS_ON_PAD);
-	Opcodes::RegisterOpcode(0x0603, IS_CAMERA_IN_WIDESCREEN_MODE);
-	Opcodes::RegisterOpcode(0x0604, GET_MODEL_ID_FROM_WEAPON_ID);
-	Opcodes::RegisterOpcode(0x0605, GET_WEAPON_ID_FROM_MODEL_ID);
-	Opcodes::RegisterOpcode(0x0606, SET_MEM_OFFSET);
+    Opcodes::RegisterOpcode(0x0601, IS_BUTTON_PRESSED_ON_PAD);
+    Opcodes::RegisterOpcode(0x0602, EMULATE_BUTTON_PRESS_ON_PAD);
+    Opcodes::RegisterOpcode(0x0603, IS_CAMERA_IN_WIDESCREEN_MODE);
+    Opcodes::RegisterOpcode(0x0604, GET_MODEL_ID_FROM_WEAPON_ID);
+    Opcodes::RegisterOpcode(0x0605, GET_WEAPON_ID_FROM_MODEL_ID);
+    Opcodes::RegisterOpcode(0x0606, SET_MEM_OFFSET);
+    Opcodes::RegisterOpcode(0x0607, GET_CURRENT_WEATHER);
+	Opcodes::RegisterOpcode(0x0608, SHOW_TEXT_POSITION);
+	Opcodes::RegisterOpcode(0x0609, SHOW_FORMATTED_TEXT_POSITION);
 
     // CLEO 3-4 SA opcodes
     Opcodes::RegisterOpcode(0x0A8E, OPCODE_0A8E);
@@ -838,70 +842,104 @@ eOpcodeResult CustomOpcodes::START_CUSTOM_THREAD_VSTRING(CScript *script)
 //0601=1,  IS_BUTTON_PRESSED_ON_PAD %1d%
 eOpcodeResult CustomOpcodes::IS_BUTTON_PRESSED_ON_PAD(CScript *script)
 {
-	script->Collect(1);
-	script->UpdateCompareFlag(*(short*)((game.Scripts.Params[0].nVar * 2) + game.Misc.activePadState) != 0);
-	return OR_CONTINUE;
+    script->Collect(1);
+    script->UpdateCompareFlag(*(short*)((game.Scripts.Params[0].nVar * 2) + game.Misc.activePadState) != 0);
+    return OR_CONTINUE;
 }
 
 //0602=2,  EMULATE_BUTTON_PRESS_ON_PAD %1d% sensitivity %2d%
 eOpcodeResult CustomOpcodes::EMULATE_BUTTON_PRESS_ON_PAD(CScript *script)
 {
-	script->Collect(2);
-	*(short*)((game.Scripts.Params[0].nVar * 2) + game.Misc.activePadState) = game.Scripts.Params[1].nVar;
-	return OR_CONTINUE;
+    script->Collect(2);
+    *(short*)((game.Scripts.Params[0].nVar * 2) + game.Misc.activePadState) = game.Scripts.Params[1].nVar;
+    return OR_CONTINUE;
 }
 
 //0603=0,  IS_CAMERA_IN_WIDESCREEN_MODE
 eOpcodeResult CustomOpcodes::IS_CAMERA_IN_WIDESCREEN_MODE(CScript *script)
 {
-	script->UpdateCompareFlag(*(char*)game.Misc.cameraWidescreen != 0);
-	return OR_CONTINUE;
+    script->UpdateCompareFlag(*(char*)game.Misc.cameraWidescreen != 0);
+    return OR_CONTINUE;
 }
 
 //0604=2,%2d% = weapon %1d% model
 eOpcodeResult CustomOpcodes::GET_MODEL_ID_FROM_WEAPON_ID(CScript *script)
 {
-	script->Collect(1);
-	unsigned int wID = game.Misc.pfModelForWeapon(game.Scripts.Params[0].nVar);
-	game.Scripts.Params[0].nVar = wID ? wID : -1;
-	script->Store(1);
-	return OR_CONTINUE;
+    script->Collect(1);
+    unsigned int wID = game.Misc.pfModelForWeapon(game.Scripts.Params[0].nVar);
+    game.Scripts.Params[0].nVar = wID ? wID : -1;
+    script->Store(1);
+    return OR_CONTINUE;
 }
 
 //0605=2,%2d% = model %1d% weapon id
 eOpcodeResult CustomOpcodes::GET_WEAPON_ID_FROM_MODEL_ID(CScript *script)
 {
-	script->Collect(1);
-	unsigned int mID = game.Scripts.Params[0].nVar;
-	for (size_t i = 0; i < 37; i++)
-	{
-		if (mID == game.Misc.pfModelForWeapon(i))
-		{
-			game.Scripts.Params[0].nVar = i;
-			script->Store(1);
-			return OR_CONTINUE;
-		}
-	}
-	game.Scripts.Params[0].nVar = -1;
-	script->Store(1);
-	return OR_CONTINUE;
+    script->Collect(1);
+    unsigned int mID = game.Scripts.Params[0].nVar;
+    for (size_t i = 0; i < 37; i++)
+    {
+        if (mID == game.Misc.pfModelForWeapon(i))
+        {
+            game.Scripts.Params[0].nVar = i;
+            script->Store(1);
+            return OR_CONTINUE;
+        }
+    }
+    game.Scripts.Params[0].nVar = -1;
+    script->Store(1);
+    return OR_CONTINUE;
 }
 
 //0606=3, SET_MEM_OFFSET memory pointer %1d% memory to point %2d% virtual protect %3d%
 eOpcodeResult CustomOpcodes::SET_MEM_OFFSET(CScript *script)
 {
-	script->Collect(3);
-	DWORD flOldProtect;
-	if (game.Scripts.Params[2].nVar)
-		VirtualProtect(game.Scripts.Params[0].pVar, game.Scripts.Params[1].nVar, PAGE_EXECUTE_READWRITE, &flOldProtect);
+    script->Collect(3);
+    DWORD flOldProtect;
+    if (game.Scripts.Params[2].nVar)
+        VirtualProtect(game.Scripts.Params[0].pVar, game.Scripts.Params[1].nVar, PAGE_EXECUTE_READWRITE, &flOldProtect);
 
-	*(int *)game.Scripts.Params[0].pVar = game.Scripts.Params[1].nVar - (game.Scripts.Params[0].nVar + 4);
+    *(int *)game.Scripts.Params[0].pVar = game.Scripts.Params[1].nVar - (game.Scripts.Params[0].nVar + 4);
 
-	if (game.Scripts.Params[2].nVar)
-		VirtualProtect(game.Scripts.Params[0].pVar, game.Scripts.Params[1].nVar, flOldProtect, &flOldProtect);
-	return OR_CONTINUE;
+    if (game.Scripts.Params[2].nVar)
+        VirtualProtect(game.Scripts.Params[0].pVar, game.Scripts.Params[1].nVar, flOldProtect, &flOldProtect);
+    return OR_CONTINUE;
 }
 
+//0607=1, %1d% = GET_CURRENT_WEATHER
+eOpcodeResult CustomOpcodes::GET_CURRENT_WEATHER(CScript *script)
+{
+    game.Scripts.Params[0].nVar = *(short*)game.Misc.currentWeather;
+    script->Store(1);
+    return OR_CONTINUE;
+}
+
+//0608=3,show_text_position %1d% %2d% text %3d%
+eOpcodeResult CustomOpcodes::SHOW_TEXT_POSITION(CScript *script)
+{
+    script->Collect(3);
+    game.Text.textDrawers[*game.Text.currentTextDrawer].x = game.Scripts.Params[0].fVar;
+    game.Text.textDrawers[*game.Text.currentTextDrawer].y = game.Scripts.Params[1].fVar;
+	const char *text = game.Scripts.Params[2].cVar;
+	swprintf((wchar_t*)&game.Text.textDrawers[*game.Text.currentTextDrawer].text, 100, L"%hs", text);
+    return OR_CONTINUE;
+};
+
+//0609=-1,show_formatted_text_position %1d% %2d% text %3d%
+eOpcodeResult CustomOpcodes::SHOW_FORMATTED_TEXT_POSITION(CScript *script)
+{
+	script->Collect(3);
+	game.Text.textDrawers[*game.Text.currentTextDrawer].x = game.Scripts.Params[0].fVar;
+	game.Text.textDrawers[*game.Text.currentTextDrawer].y = game.Scripts.Params[1].fVar;
+	char fmt[100]; char text[100]; static wchar_t message_buf[0x80];
+	strcpy(fmt, game.Scripts.Params[2].cVar);
+	format(script, text, sizeof(text), fmt);
+	swprintf((wchar_t*)&game.Text.textDrawers[*game.Text.currentTextDrawer].text, 100, L"%hs", text);
+	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
+		script->Collect(1);
+	script->m_dwIp++;
+	return OR_CONTINUE;
+};
 
 eOpcodeResult CustomOpcodes::DRAW_SHADOW(CScript *script)
 {
@@ -1113,11 +1151,10 @@ eOpcodeResult CustomOpcodes::OPCODE_0AAB(CScript *script)
     return OR_CONTINUE;
 }
 
-wchar_t message_buf[0x80];
-char cmessage_buf[0x80];
 //0ACA=1,show_text_box %1d%
 eOpcodeResult CustomOpcodes::OPCODE_0ACA(CScript *script)
 {
+    static wchar_t message_buf[0x80];
     script->Collect(1);
     swprintf(message_buf, 100, L"%hs", game.Scripts.Params[0].cVar);
     game.Text.TextBox(message_buf, false, false, false);
@@ -1127,6 +1164,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0ACA(CScript *script)
 //0ACB=3,show_styled_text %1d% time %2d% style %3d%
 eOpcodeResult CustomOpcodes::OPCODE_0ACB(CScript *script)
 {
+    static wchar_t message_buf[0x80];
     script->Collect(3);
     const char *text = game.Scripts.Params[0].cVar;
     unsigned time, style;
@@ -1138,6 +1176,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0ACB(CScript *script)
 //0ACC=2,show_text_lowpriority %1d% time %2d%
 eOpcodeResult CustomOpcodes::OPCODE_0ACC(CScript *script)
 {
+    static wchar_t message_buf[0x80];
     script->Collect(2);
     const char *text = game.Scripts.Params[0].cVar;
     swprintf(message_buf, 100, L"%hs", text);
@@ -1148,6 +1187,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0ACC(CScript *script)
 //0ACD=2,show_text_highpriority %1d% time %2d%
 eOpcodeResult CustomOpcodes::OPCODE_0ACD(CScript *script)
 {
+    static wchar_t message_buf[0x80];
     script->Collect(2);
     const char *text = game.Scripts.Params[0].cVar;
     swprintf(message_buf, 100, L"%hs", text);
@@ -1155,73 +1195,73 @@ eOpcodeResult CustomOpcodes::OPCODE_0ACD(CScript *script)
     return OR_CONTINUE;
 };
 
-int format(CScript *script, char *str, size_t len, const char *format);
 //0ACE=-1,show_formatted_text_box %1d%
 eOpcodeResult CustomOpcodes::OPCODE_0ACE(CScript *script)
 {
-	script->Collect(1);
+    static wchar_t message_buf[0x80];
+    script->Collect(1);
     char fmt[100]; char text[100];
-	strcpy(fmt, game.Scripts.Params[0].cVar);
-	format(script, text, sizeof(text), fmt);
+    strcpy(fmt, game.Scripts.Params[0].cVar);
+    format(script, text, sizeof(text), fmt);
 
-	swprintf(message_buf, 100, L"%hs", text);
-	game.Text.TextBox(message_buf, false, false, false);
+    swprintf(message_buf, 100, L"%hs", text);
+    game.Text.TextBox(message_buf, false, false, false);
 
-	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
-		script->Collect(1);
-	script->m_dwIp++;
+    while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
+        script->Collect(1);
+    script->m_dwIp++;
     return OR_CONTINUE;
 };
 
 //0ACF=-1,show_formatted_styled_text %1d% time %2d% style %3d%
 eOpcodeResult CustomOpcodes::OPCODE_0ACF(CScript *script)
 {
-	script->Collect(3);
-    char fmt[100]; char text[100];
+    script->Collect(3);
+    char fmt[100]; char text[100]; static wchar_t message_buf[100];
     unsigned time, style;
-	strcpy(fmt, game.Scripts.Params[0].cVar);
-	time = game.Scripts.Params[1].nVar;
-	style = game.Scripts.Params[2].nVar;
-	format(script, text, sizeof(text), fmt);
-	swprintf(message_buf, 100, L"%hs", text);
-	game.Text.StyledText(message_buf, time, style - 1);
-	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
-		script->Collect(1);
-	script->m_dwIp++;
+    strcpy(fmt, game.Scripts.Params[0].cVar);
+    time = game.Scripts.Params[1].nVar;
+    style = game.Scripts.Params[2].nVar;
+    format(script, text, sizeof(text), fmt);
+    swprintf(message_buf, 100, L"%hs", text);
+    game.Text.StyledText(message_buf, time, style - 1);
+    while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
+        script->Collect(1);
+    script->m_dwIp++;
     return OR_CONTINUE;
 };
 
 //0AD0=-1,show_formatted_text_lowpriority %1d% time %2d%
 eOpcodeResult CustomOpcodes::OPCODE_0AD0(CScript *script)
 {
-	script->Collect(2);
-    char fmt[100]; char text[100];
+    script->Collect(2);
+    char fmt[100]; char text[100]; static wchar_t message_buf[0x80];
     unsigned time;
-	strcpy(fmt, game.Scripts.Params[0].cVar);
-	time = game.Scripts.Params[1].nVar;
-	format(script, text, sizeof(text), fmt);
-	swprintf(message_buf, 100, L"%hs", text);
-	game.Text.TextLowPriority(message_buf, time, false, false);
-	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
-		script->Collect(1);
-	script->m_dwIp++;
+    strcpy(fmt, game.Scripts.Params[0].cVar);
+    time = game.Scripts.Params[1].nVar;
+    format(script, text, sizeof(text), fmt);
+    swprintf(message_buf, 100, L"%hs", text);
+    game.Text.TextLowPriority(message_buf, time, false, false);
+    while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
+        script->Collect(1);
+    script->m_dwIp++;
     return OR_CONTINUE;
 };
 
 //0AD1=-1,show_formatted_text_highpriority %1d% time %2d%
 eOpcodeResult CustomOpcodes::OPCODE_0AD1(CScript *script)
 {
-	script->Collect(2);
-    char fmt[100]; char text[100];
+    script->Collect(2);
+    char fmt[100]; char text[100]; static wchar_t message_buf[0x80];
     unsigned time;
-	strcpy(fmt, game.Scripts.Params[0].cVar);
-	time = game.Scripts.Params[1].nVar;
-	format(script, text, sizeof(text), fmt);
-	swprintf(message_buf, 100, L"%hs", text);
-	game.Text.TextHighPriority(message_buf, time, false, false);
-	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
-		script->Collect(1);
-	script->m_dwIp++;
+    strcpy(fmt, game.Scripts.Params[0].cVar);
+    time = game.Scripts.Params[1].nVar;
+    format(script, text, sizeof(text), fmt);
+    swprintf(message_buf, 100, L"%hs", text);
+    game.Text.TextHighPriority(message_buf, time, false, false);
+    while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
+        script->Collect(1);
+    script->m_dwIp++;
     return OR_CONTINUE;
 };
 
@@ -1229,7 +1269,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0AD1(CScript *script)
 eOpcodeResult CustomOpcodes::OPCODE_0ADB(CScript *script)
 {
     script->Collect(1);
-    unsigned mi; char *buf;     
+    unsigned mi; char *buf; static char cmessage_buf[0x80];
     mi = game.Scripts.Params[0].nVar;
     buf = (char*)((game.Misc.stVehicleModelInfo + 0x32) + ((mi - 130) * 0x174));
     wcstombs(cmessage_buf, CustomText::GetText(game.Text.CText, 0, buf), sizeof(cmessage_buf));
@@ -1445,144 +1485,144 @@ eOpcodeResult CustomOpcodes::OPCODE_0AF5(CScript *script)
 // perform 'sprintf'-operation for parameters, passed through SCM
 int format(CScript *script, char *str, size_t len, const char *format)
 {
-	unsigned int written = 0;
-	const char *iter = format;
-	char bufa[256], fmtbufa[64], *fmta;
+    unsigned int written = 0;
+    const char *iter = format;
+    char bufa[256], fmtbufa[64], *fmta;
 
-	while (*iter)
-	{
-		while (*iter && *iter != '%')
-		{
-			if (written++ >= len)
-				return -1;
-			*str++ = *iter++;
-		}
-		if (*iter == '%')
-		{
-			if (iter[1] == '%')
-			{
-				if (written++ >= len)
-					return -1;
-				*str++ = '%'; /* "%%"->'%' */
-				iter += 2;
-				continue;
-			}
+    while (*iter)
+    {
+        while (*iter && *iter != '%')
+        {
+            if (written++ >= len)
+                return -1;
+            *str++ = *iter++;
+        }
+        if (*iter == '%')
+        {
+            if (iter[1] == '%')
+            {
+                if (written++ >= len)
+                    return -1;
+                *str++ = '%'; /* "%%"->'%' */
+                iter += 2;
+                continue;
+            }
 
-			//get flags and width specifier
-			fmta = fmtbufa;
-			*fmta++ = *iter++;
-			while (*iter == '0' ||
-				*iter == '+' ||
-				*iter == '-' ||
-				*iter == ' ' ||
-				*iter == '*' ||
-				*iter == '#')
-			{
-				if (*iter == '*')
-				{
-					char *buffiter = bufa;
-					//get width
-					script->Collect(1);
-					_itoa(game.Scripts.Params[0].nVar, buffiter, 10);
-					while (*buffiter)
-						*fmta++ = *buffiter++;
-				}
-				else
-					*fmta++ = *iter;
-				iter++;
-			}
+            //get flags and width specifier
+            fmta = fmtbufa;
+            *fmta++ = *iter++;
+            while (*iter == '0' ||
+                *iter == '+' ||
+                *iter == '-' ||
+                *iter == ' ' ||
+                *iter == '*' ||
+                *iter == '#')
+            {
+                if (*iter == '*')
+                {
+                    char *buffiter = bufa;
+                    //get width
+                    script->Collect(1);
+                    _itoa(game.Scripts.Params[0].nVar, buffiter, 10);
+                    while (*buffiter)
+                        *fmta++ = *buffiter++;
+                }
+                else
+                    *fmta++ = *iter;
+                iter++;
+            }
 
-			//get immidiate width value
-			while (isdigit(*iter))
-				*fmta++ = *iter++;
+            //get immidiate width value
+            while (isdigit(*iter))
+                *fmta++ = *iter++;
 
-			//get precision
-			if (*iter == '.')
-			{
-				*fmta++ = *iter++;
-				if (*iter == '*')
-				{
-					char *buffiter = bufa;
-					script->Collect(1);
-					_itoa(game.Scripts.Params[0].nVar, buffiter, 10);
-					while (*buffiter)
-						*fmta++ = *buffiter++;
-				}
-				else
-					while (isdigit(*iter))
-						*fmta++ = *iter++;
-			}
-			//get size
-			if (*iter == 'h' || *iter == 'l')
-				*fmta++ = *iter++;
+            //get precision
+            if (*iter == '.')
+            {
+                *fmta++ = *iter++;
+                if (*iter == '*')
+                {
+                    char *buffiter = bufa;
+                    script->Collect(1);
+                    _itoa(game.Scripts.Params[0].nVar, buffiter, 10);
+                    while (*buffiter)
+                        *fmta++ = *buffiter++;
+                }
+                else
+                    while (isdigit(*iter))
+                        *fmta++ = *iter++;
+            }
+            //get size
+            if (*iter == 'h' || *iter == 'l')
+                *fmta++ = *iter++;
 
-			switch (*iter)
-			{
-			case 's':
-			{
-				static const char none[] = "(null)";
-				const char *astr = game.Scripts.Params[0].cVar;
-				const char *striter = astr ? astr : none;
-				while (*striter)
-				{
-					if (written++ >= len)
-						return -1;
-					*str++ = *striter++;
-				}
-				iter++;
-				break;
-			}
+            switch (*iter)
+            {
+            case 's':
+            {
+                static const char none[] = "(null)";
+                const char *astr = game.Scripts.Params[0].cVar;
+                const char *striter = astr ? astr : none;
+                while (*striter)
+                {
+                    if (written++ >= len)
+                        return -1;
+                    *str++ = *striter++;
+                }
+                iter++;
+                break;
+            }
 
-			case 'c':
-				if (written++ >= len)
-					return -1;
-				script->Collect(1);
-				*str++ = (char)game.Scripts.Params[0].nVar;
-				iter++;
-				break;
+            case 'c':
+                if (written++ >= len)
+                    return -1;
+                script->Collect(1);
+                *str++ = (char)game.Scripts.Params[0].nVar;
+                iter++;
+                break;
 
-			default:
-			{
-				/* For non wc types, use system sprintf and append to wide char output */
-				/* FIXME: for unrecognised types, should ignore % when printing */
-				char *bufaiter = bufa;
-				if (*iter == 'p' || *iter == 'P')
-				{
-					script->Collect(1);
-					sprintf(bufaiter, "%08X", game.Scripts.Params[0].nVar);
-				}
-				else
-				{
-					*fmta++ = *iter;
-					*fmta = '\0';
-					if (*iter == 'a' || *iter == 'A' ||
-						*iter == 'e' || *iter == 'E' ||
-						*iter == 'f' || *iter == 'F' ||
-						*iter == 'g' || *iter == 'G')
-					{
-						script->Collect(1);
-						sprintf(bufaiter, fmtbufa, game.Scripts.Params[0].fVar);
-					}
-					else
-					{
-						script->Collect(1);
-						sprintf(bufaiter, fmtbufa, game.Scripts.Params[0].pVar);
-					}
-				}
-				while (*bufaiter)
-				{
-					if (written++ >= len)
-						return -1;
-					*str++ = *bufaiter++;
-				}
-				iter++;
-				break;
-			}
-			}
-		}
-	}
-	if (written >= len)
-		return -1;
-	*str++ = 0;
-	return (int)written;
+            default:
+            {
+                /* For non wc types, use system sprintf and append to wide char output */
+                /* FIXME: for unrecognised types, should ignore % when printing */
+                char *bufaiter = bufa;
+                if (*iter == 'p' || *iter == 'P')
+                {
+                    script->Collect(1);
+                    sprintf(bufaiter, "%08X", game.Scripts.Params[0].nVar);
+                }
+                else
+                {
+                    *fmta++ = *iter;
+                    *fmta = '\0';
+                    if (*iter == 'a' || *iter == 'A' ||
+                        *iter == 'e' || *iter == 'E' ||
+                        *iter == 'f' || *iter == 'F' ||
+                        *iter == 'g' || *iter == 'G')
+                    {
+                        script->Collect(1);
+                        sprintf(bufaiter, fmtbufa, game.Scripts.Params[0].fVar);
+                    }
+                    else
+                    {
+                        script->Collect(1);
+                        sprintf(bufaiter, fmtbufa, game.Scripts.Params[0].pVar);
+                    }
+                }
+                while (*bufaiter)
+                {
+                    if (written++ >= len)
+                        return -1;
+                    *str++ = *bufaiter++;
+                }
+                iter++;
+                break;
+            }
+            }
+        }
+    }
+    if (written >= len)
+        return -1;
+    *str++ = 0;
+    return (int)written;
 }

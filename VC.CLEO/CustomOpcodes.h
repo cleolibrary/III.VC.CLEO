@@ -51,6 +51,9 @@ class CustomOpcodes
 	static eOpcodeResult WINAPI GET_MODEL_ID_FROM_WEAPON_ID(CScript *script);
 	static eOpcodeResult WINAPI GET_WEAPON_ID_FROM_MODEL_ID(CScript *script);
 	static eOpcodeResult WINAPI SET_MEM_OFFSET(CScript *script);
+	static eOpcodeResult WINAPI GET_CURRENT_WEATHER(CScript *script);
+	static eOpcodeResult WINAPI SHOW_TEXT_POSITION(CScript *script);
+	static eOpcodeResult WINAPI SHOW_FORMATTED_TEXT_POSITION(CScript *script);
 	static eOpcodeResult WINAPI DRAW_SHADOW(CScript *script);
 	static eOpcodeResult WINAPI SET_TEXT_DRAW_FONT(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0A8E(CScript *script);

@@ -142,6 +142,7 @@ void GtaGame::InitAndPatch()
 		this->Misc.activePadState = 0x7DBCB0;
 		this->Misc.pfModelForWeapon = (int(__cdecl *)(int eWeaponType)) 0x4418B0;
 		this->Misc.cameraWidescreen = 0x7E46F5;
+		this->Misc.currentWeather = 0xA10AAA;
 		break;
 	case GAME_V1_1:
 		break;

@@ -39,8 +39,8 @@ struct CTextDrawer
 	WORD fontStyle;
 	BYTE field_22;
 	BYTE field_23;
-	DWORD x;
-	DWORD y;
+	float x;
+	float y;
 	WORD text[400];
 };
 
@@ -149,6 +149,7 @@ public:
 		uintptr_t activePadState;
 		int(__cdecl *pfModelForWeapon)(int eWeaponType);
 		uintptr_t cameraWidescreen;
+		uintptr_t currentWeather;
 	} Misc;
 };
 
