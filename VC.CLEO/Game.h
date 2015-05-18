@@ -41,7 +41,7 @@ struct CTextDrawer
 	BYTE field_23;
 	float x;
 	float y;
-	WORD text[400];
+	WORD text[100];
 };
 
 class GtaGame

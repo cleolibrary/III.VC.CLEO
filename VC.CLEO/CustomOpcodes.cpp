@@ -922,6 +922,7 @@ eOpcodeResult CustomOpcodes::SHOW_TEXT_POSITION(CScript *script)
 	game.Text.textDrawers[*game.Text.currentTextDrawer].y = game.Scripts.Params[1].fVar;
 	const char *text = game.Scripts.Params[2].cVar;
 	swprintf((wchar_t*)&game.Text.textDrawers[*game.Text.currentTextDrawer].text, 100, L"%hs", text);
+	*game.Text.currentTextDrawer = *game.Text.currentTextDrawer + 1;
 	return OR_CONTINUE;
 };
 
@@ -938,6 +939,7 @@ eOpcodeResult CustomOpcodes::SHOW_FORMATTED_TEXT_POSITION(CScript *script)
 	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
 		script->Collect(1);
 	script->m_dwIp++;
+	*game.Text.currentTextDrawer = *game.Text.currentTextDrawer + 1;
 	return OR_CONTINUE;
 };
 
@@ -1080,27 +1082,26 @@ eOpcodeResult CustomOpcodes::OPCODE_0AE0(CScript *script)
 		{
 			if (strcmp(game.Scripts.Params[0].cVar, next->m_key) == 0)
 			{
-				next->m_pNext = next->m_pNext ? next->m_pNext->m_pNext : nullptr;
+				if (entry->m_pNext != next->m_pNext)
+				entry->m_pNext = next->m_pNext;
+				else
+				entry->m_pNext = 0;
+
 				LOGL(LOG_PRIORITY_CUSTOM_TEXT, "Unloaded custom text \"%s\"", entry->m_key);
-				delete entry;
-				return OR_CONTINUE;
-			}
-			else
-			{
-				CustomText::pCustomTextList = next;
-				LOGL(LOG_PRIORITY_CUSTOM_TEXT, "Unloaded custom text \"%s\"", entry->m_key);
-				delete entry;
+				delete next;
 				return OR_CONTINUE;
 			}
 		}
 		else
 		{
-			LOGL(LOG_PRIORITY_CUSTOM_TEXT, "Unloaded custom text \"%s\"", entry->m_key);
-			delete entry;
-			CustomText::pCustomTextList = 0;
-			return OR_CONTINUE;
+			if (strcmp(game.Scripts.Params[0].cVar, entry->m_key) == 0)
+			{
+				LOGL(LOG_PRIORITY_CUSTOM_TEXT, "Unloaded custom text \"%s\"", entry->m_key);
+				delete entry;
+				CustomText::pCustomTextList = 0;
+				return OR_CONTINUE;
+			}
 		}
-		entry = next;
 	}
 
 	return OR_CONTINUE;
