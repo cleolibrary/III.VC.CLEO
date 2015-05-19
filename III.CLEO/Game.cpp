@@ -125,6 +125,7 @@ void GtaGame::InitAndPatch()
 		this->Misc.pfModelForWeapon = (int(__cdecl *)(int eWeaponType)) 0x430690;
 		this->Misc.cameraWidescreen = 0x6FAD68;
 		this->Misc.currentWeather = 0x95CCEC;
+		this->Misc.Multiply3x3 = (void (__cdecl *)(CVector *out, uintptr_t *m, CVector *in)) 0x4BA4D0;
 		break;
 	case GAME_V1_1:
 		break;

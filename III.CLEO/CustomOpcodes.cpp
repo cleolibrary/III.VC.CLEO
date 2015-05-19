@@ -86,6 +86,9 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x0B16, BIT_SHL);
 
 	//CLEO 2 opcodes
+	Opcodes::RegisterOpcode(0x0400, STORE_COORDS_FROM_OBJECT_WITH_OFFSET);
+	Opcodes::RegisterOpcode(0x0407, STORE_COORDS_FROM_CAR_WITH_OFFSET);
+	Opcodes::RegisterOpcode(0x04C4, STORE_COORDS_FROM_ACTOR_WITH_OFFSET);
 	Opcodes::RegisterOpcode(0x0600, START_CUSTOM_THREAD_VSTRING);
 	Opcodes::RegisterOpcode(0x0601, IS_BUTTON_PRESSED_ON_PAD);
 	Opcodes::RegisterOpcode(0x0602, EMULATE_BUTTON_PRESS_ON_PAD);
@@ -797,6 +800,69 @@ eOpcodeResult CustomOpcodes::BIT_SHL(CScript *script)
 	script->Collect(2);
 	game.Scripts.Params[0].nVar = game.Scripts.Params[0].nVar << game.Scripts.Params[1].nVar;
 	script->Store(1);
+	return OR_CONTINUE;
+}
+
+//0400=7,store_coords_to %5d% %6d% %7d% from_object %1d% with_offset %2d% %3d% %4d%
+eOpcodeResult CustomOpcodes::STORE_COORDS_FROM_OBJECT_WITH_OFFSET(CScript *script)
+{
+	script->Collect(4);
+	void* object = game.Pools.pfObjectPoolGetStruct(*game.Pools.pObjectPool, game.Scripts.Params[0].nVar);
+
+	CVector in;
+	in.x = game.Scripts.Params[1].fVar;
+	in.y = game.Scripts.Params[2].fVar;
+	in.z = game.Scripts.Params[3].fVar;
+	CVector out;
+	game.Misc.Multiply3x3(&out, (uintptr_t*)((uintptr_t*)object + 4), &in);
+
+	game.Scripts.Params[0].fVar = out.x + *(float*)((uintptr_t*)object + 52);
+	game.Scripts.Params[1].fVar = out.y + *(float*)((uintptr_t*)object + 52 + 4);
+	game.Scripts.Params[2].fVar = out.z + *(float*)((uintptr_t*)object + 52 + 8);
+
+	script->Store(3);
+	return OR_CONTINUE;
+}
+
+//0407=7,store_coords_to %5d% %6d% %7d% from_car %1d% with_offset %2d% %3d% %4d%
+eOpcodeResult CustomOpcodes::STORE_COORDS_FROM_CAR_WITH_OFFSET(CScript *script)
+{
+	script->Collect(4);
+	void* car = game.Pools.pfVehiclePoolGetStruct(*game.Pools.pVehiclePool, game.Scripts.Params[0].nVar);
+
+	CVector in;
+	in.x = game.Scripts.Params[1].fVar;
+	in.y = game.Scripts.Params[2].fVar;
+	in.z = game.Scripts.Params[3].fVar;
+	CVector out;
+	game.Misc.Multiply3x3(&out, (uintptr_t*)((uintptr_t*)car + 4), &in);
+
+	game.Scripts.Params[0].fVar = out.x + *(float*)((uintptr_t*)car + 52);
+	game.Scripts.Params[1].fVar = out.y + *(float*)((uintptr_t*)car + 52 + 4);
+	game.Scripts.Params[2].fVar = out.z + *(float*)((uintptr_t*)car + 52 + 8);
+
+	script->Store(3);
+	return OR_CONTINUE;
+}
+
+//04C4=7,store_coords_to %5d% %6d% %7d% from_actor %1d% with_offset %2d% %3d% %4d%
+eOpcodeResult CustomOpcodes::STORE_COORDS_FROM_ACTOR_WITH_OFFSET(CScript *script)
+{
+	script->Collect(4);
+	void* actor = game.Pools.pfPedPoolGetStruct(*game.Pools.pPedPool, game.Scripts.Params[0].nVar);
+
+	CVector in;
+	in.x = game.Scripts.Params[1].fVar;
+	in.y = game.Scripts.Params[2].fVar;
+	in.z = game.Scripts.Params[3].fVar;
+	CVector out;
+	game.Misc.Multiply3x3(&out, (uintptr_t*)((uintptr_t*)actor + 4), &in);
+
+	game.Scripts.Params[0].fVar = out.x + *(float*)((uintptr_t*)actor + 52);
+	game.Scripts.Params[1].fVar = out.y + *(float*)((uintptr_t*)actor + 52 + 4);
+	game.Scripts.Params[2].fVar = out.z + *(float*)((uintptr_t*)actor + 52 + 8);
+
+	script->Store(3);
 	return OR_CONTINUE;
 }
 

@@ -137,6 +137,7 @@ public:
 		int(__cdecl *pfModelForWeapon)(int eWeaponType);
 		uintptr_t cameraWidescreen;
 		uintptr_t currentWeather;
+		void(__cdecl *Multiply3x3)(CVector *out, uintptr_t *m, CVector *in);
 	} Misc;
 };
 
