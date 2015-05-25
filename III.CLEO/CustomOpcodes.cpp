@@ -51,7 +51,7 @@ void CustomOpcodes::Register()
 	//Duplicate CLEO3/VC opcodes to match CLEO4 SA ids
 	Opcodes::RegisterOpcode(0x0A93, TERMINATE_CUSTOM_THREAD);
 	Opcodes::RegisterOpcode(0x0ABA, TERMINATE_NAMED_CUSTOM_THREAD);
-	Opcodes::RegisterOpcode(0x0A92, START_CUSTOM_THREAD);
+	Opcodes::RegisterOpcode(0x0A92, START_CUSTOM_THREAD_VSTRING);
 	Opcodes::RegisterOpcode(0x0A8C, MEMORY_WRITE);
 	Opcodes::RegisterOpcode(0x0A8D, MEMORY_READ);
 	Opcodes::RegisterOpcode(0x0AA5, CALL);
@@ -86,9 +86,6 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x0B16, BIT_SHL);
 
 	//CLEO 2 opcodes
-	Opcodes::RegisterOpcode(0x0400, STORE_COORDS_FROM_OBJECT_WITH_OFFSET);
-	Opcodes::RegisterOpcode(0x0407, STORE_COORDS_FROM_CAR_WITH_OFFSET);
-	Opcodes::RegisterOpcode(0x04C4, STORE_COORDS_FROM_ACTOR_WITH_OFFSET);
 	Opcodes::RegisterOpcode(0x0600, START_CUSTOM_THREAD_VSTRING);
 	Opcodes::RegisterOpcode(0x0601, IS_BUTTON_PRESSED_ON_PAD);
 	Opcodes::RegisterOpcode(0x0602, EMULATE_BUTTON_PRESS_ON_PAD);
@@ -130,6 +127,11 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x0AF3, OPCODE_0AF3);
 	Opcodes::RegisterOpcode(0x0AF4, OPCODE_0AF4);
 	Opcodes::RegisterOpcode(0x0AF5, OPCODE_0AF5);
+
+	//Original opcodes added since VC
+	Opcodes::RegisterOpcode(0x04C2, STORE_COORDS_FROM_OBJECT_WITH_OFFSET); //0400
+	Opcodes::RegisterOpcode(0x04C3, STORE_COORDS_FROM_CAR_WITH_OFFSET); //0407
+	Opcodes::RegisterOpcode(0x04C4, STORE_COORDS_FROM_ACTOR_WITH_OFFSET);
 }
 
 eOpcodeResult CustomOpcodes::GOTO(CScript *script)

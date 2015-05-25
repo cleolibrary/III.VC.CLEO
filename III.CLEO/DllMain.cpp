@@ -199,8 +199,8 @@ void PatchArrays()
 	injector::WriteMemory<char>(0x50972C + 3, 16, true);
 
 
-	injector::AdjustPointer(0x43EC4A, &aScriptTextures[0], 0x72B090, 0x72B090 + 0x0); // -> push    offset unk_72B090
-	injector::AdjustPointer(0x43EC7A, &aScriptTextures[0], 0x72B090, 0x72B090 + 0x0); // -> push    offset unk_72B090
+	//injector::AdjustPointer(0x43EC4A, &aScriptTextures[0], 0x72B090, 0x72B090 + 0x0); // -> push    offset unk_72B090
+	//injector::AdjustPointer(0x43EC7A, &aScriptTextures[0], 0x72B090, 0x72B090 + 0x0); // -> push    offset unk_72B090
 	injector::AdjustPointer(0x44D65B, &aScriptTextures[0], 0x72B090, 0x72B090 + 0x0); // -> add     ecx, offset unk_72B090
 	injector::AdjustPointer(0x44D709, &aScriptTextures[0], 0x72B090, 0x72B090 + 0x0); // -> mov     esi, offset unk_72B090
 	injector::AdjustPointer(0x50874F, &aScriptTextures[0], 0x72B090, 0x72B090 + 0x0); // -> add     ecx, offset unk_72B090
@@ -219,8 +219,8 @@ void PatchArrays()
 	injector::AdjustPointer(0x439350, &aTextSprites[0], 0x72D108, 0x72D108 + 0x0); // -> mov     ds:byte_72D108[ecx], 0
 	injector::AdjustPointer(0x43936F, &aTextSprites[0], 0x72D108, 0x72D108 + 0x0); // -> mov     ss:byte_72D108[ebp], 0
 	injector::AdjustPointer(0x439394, &aTextSprites[0], 0x72D108, 0x72D108 + 0x0); // -> mov     ds:byte_72D108[ebx], 0
-	injector::AdjustPointer(0x43EC1B, &aTextSprites[0], 0x72D108, 0x72D108 + 0x0); // -> push    offset byte_72D108
-	injector::AdjustPointer(0x43EC9A, &aTextSprites[0], 0x72D108, 0x72D108 + 0x0); // -> push    offset byte_72D108
+	//injector::AdjustPointer(0x43EC1B, &aTextSprites[0], 0x72D108, 0x72D108 + 0x0); // -> push    offset byte_72D108
+	//injector::AdjustPointer(0x43EC9A, &aTextSprites[0], 0x72D108, 0x72D108 + 0x0); // -> push    offset byte_72D108
 	injector::AdjustPointer(0x44D421, &aTextSprites[0], 0x72D108, 0x72D108 + 0x0); // -> mov     ss:byte_72D108[ebp], 1
 	injector::AdjustPointer(0x44D48D, &aTextSprites[0], 0x72D108, 0x72D108 + 0x0); // -> add     edi, offset byte_72D108
 	injector::AdjustPointer(0x44D525, &aTextSprites[0], 0x72D108, 0x72D108 + 0x0); // -> mov     ds:byte_72D108[eax], 1

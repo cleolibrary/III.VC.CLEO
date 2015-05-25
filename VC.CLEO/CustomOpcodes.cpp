@@ -52,7 +52,7 @@ void CustomOpcodes::Register()
 	//Duplicate CLEO3/VC opcodes to match CLEO4 SA ids
 	Opcodes::RegisterOpcode(0x0A93, TERMINATE_CUSTOM_THREAD);
 	Opcodes::RegisterOpcode(0x0ABA, TERMINATE_NAMED_CUSTOM_THREAD);
-	Opcodes::RegisterOpcode(0x0A92, START_CUSTOM_THREAD);
+	Opcodes::RegisterOpcode(0x0A92, START_CUSTOM_THREAD_VSTRING);
 	Opcodes::RegisterOpcode(0x0A8C, MEMORY_WRITE);
 	Opcodes::RegisterOpcode(0x0A8D, MEMORY_READ);
 	Opcodes::RegisterOpcode(0x0AA5, CALL);
@@ -511,17 +511,17 @@ eOpcodeResult CustomOpcodes::FIND_RANDOM_CHAR(CScript *script)
 		}
 		objcount = (*game.Pools.pPedPool)->capacity;
 	}
-	unsigned int poolobj = (unsigned int)(*game.Pools.pPedPool)->objects + objcount * 0x5F0;
+	unsigned int poolobj = (unsigned int)(*game.Pools.pPedPool)->objects + objcount * 0x6D8;
 	bool found = 0;
 	float maxsq = game.Scripts.Params[3].fVar * game.Scripts.Params[3].fVar;
 	for(int i = objcount - 1; i >= 0; i--)
 	{
-		poolobj -= 0x5F0;
+		poolobj -= 0x6D8;
 		if(!((*game.Pools.pPedPool)->flags[i] & 0x80))
 		{
-			if(*(unsigned int *)(poolobj + 0x32C))
+			if (*(unsigned int *)(poolobj + 0x3D4))
 			{
-				if(!game.Scripts.Params[5].nVar || (*(unsigned int *)(poolobj + 0x224) != 48 && *(unsigned int *)(poolobj + 0x224) != 49))
+				if(!game.Scripts.Params[5].nVar || (*(unsigned int *)(poolobj + 0x244) != 48 && *(unsigned int *)(poolobj + 0x244) != 49))
 				{
 					float xd = *(float *)(poolobj + 0x34) - game.Scripts.Params[0].fVar;
 					float yd = *(float *)(poolobj + 0x38) - game.Scripts.Params[1].fVar;
@@ -575,15 +575,15 @@ eOpcodeResult CustomOpcodes::FIND_RANDOM_CAR(CScript *script)
 		}
 		objcount = (*game.Pools.pVehiclePool)->capacity;
 	}
-	unsigned int poolobj = (unsigned int)(*game.Pools.pVehiclePool)->objects + objcount * 0x5A8;
+	unsigned int poolobj = (unsigned int)(*game.Pools.pVehiclePool)->objects + objcount * 0x5DC;
 	bool found = 0;
 	float maxsq = game.Scripts.Params[3].fVar * game.Scripts.Params[3].fVar;
 	for(int i = objcount - 1; i >= 0; i--)
 	{
-		poolobj -= 0x5A8;
+		poolobj -= 0x5DC;
 		if(!((*game.Pools.pVehiclePool)->flags[i] & 0x80))
 		{
-			if(!game.Scripts.Params[5].nVar || ((*(unsigned char *)(poolobj + 0x50) & 0xF8) != 40 && *(unsigned int *)(poolobj + 0x284) != 1 && !(*(unsigned char *)(poolobj + 0x122) & 8)))
+			if (!game.Scripts.Params[5].nVar || ((*(unsigned char *)(poolobj + 0x50) & 0xF8) != 40 && *(unsigned int *)(poolobj + 0x29C) != 1 && !(*(unsigned char *)(poolobj + 0x11A) & 8)))
 			{
 				float xd = *(float *)(poolobj + 0x34) - game.Scripts.Params[0].fVar;
 				float yd = *(float *)(poolobj + 0x38) - game.Scripts.Params[1].fVar;
@@ -636,12 +636,12 @@ eOpcodeResult CustomOpcodes::FIND_RANDOM_OBJECT(CScript *script)
 		}
 		objcount = (*game.Pools.pObjectPool)->capacity;
 	}
-	unsigned int poolobj = (unsigned int)(*game.Pools.pObjectPool)->objects + objcount * 0x19C;
+	unsigned int poolobj = (unsigned int)(*game.Pools.pObjectPool)->objects + objcount * 0x1A0;
 	bool found = 0;
 	float maxsq = game.Scripts.Params[3].fVar * game.Scripts.Params[3].fVar;
 	for(int i = objcount - 1; i >= 0; i--)
 	{
-		poolobj -= 0x19C;
+		poolobj -= 0x1A0;
 		if(!((*game.Pools.pObjectPool)->flags[i] & 0x80))
 		{
 			float xd = *(float *)(poolobj + 0x34) - game.Scripts.Params[0].fVar;
@@ -956,14 +956,14 @@ eOpcodeResult CustomOpcodes::DRAW_SHADOW(CScript *script)
 
 	switch (game.Scripts.Params[0].nVar)
 	{
-	case 1u:
+	case 1:
 		game.Shadows.pRwTexture = game.Shadows.pRwTexture_shad_car;
 		Type = 1;
 		break;
-	case 2u:
+	case 2:
 		game.Shadows.pRwTexture = game.Shadows.pRwTexture_shad_ped;
 		break;
-	case 3u:
+	case 3:
 		game.Shadows.pRwTexture = game.Shadows.pRwTexture_shad_exp;
 		break;
 	case 4:
@@ -982,7 +982,7 @@ eOpcodeResult CustomOpcodes::DRAW_SHADOW(CScript *script)
 	case 8:
 		game.Shadows.pRwTexture = game.Shadows.pRwTexture_shad_rcbaron;
 		break;
-	case 0u:
+	default:
 		return OR_CONTINUE;
 	}
 
