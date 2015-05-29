@@ -132,6 +132,8 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x04C2, STORE_COORDS_FROM_OBJECT_WITH_OFFSET); //0400
 	Opcodes::RegisterOpcode(0x04C3, STORE_COORDS_FROM_CAR_WITH_OFFSET); //0407
 	Opcodes::RegisterOpcode(0x04C4, STORE_COORDS_FROM_ACTOR_WITH_OFFSET);
+
+	Opcodes::RegisterOpcode(0x046F, STORE_PLAYER_CURRENTLY_ARMED_WEAPON);
 }
 
 eOpcodeResult CustomOpcodes::GOTO(CScript *script)
@@ -865,6 +867,14 @@ eOpcodeResult CustomOpcodes::STORE_COORDS_FROM_ACTOR_WITH_OFFSET(CScript *script
 	game.Scripts.Params[2].fVar = out.z + *(float*)((uintptr_t*)actor + 52 + 8);
 
 	script->Store(3);
+	return OR_CONTINUE;
+}
+
+eOpcodeResult CustomOpcodes::STORE_PLAYER_CURRENTLY_ARMED_WEAPON(CScript *script)
+{
+	script->Collect(1);
+	game.Scripts.Params[0].nVar = *(DWORD *)(game.Pools.pCPlayerPedPool[79 * game.Scripts.Params[0].nVar] + 24 * *(BYTE *)(game.Pools.pCPlayerPedPool[79 * game.Scripts.Params[0].nVar] + 1176) + 860);
+	script->Store(1);
 	return OR_CONTINUE;
 }
 

@@ -47,6 +47,7 @@ class CustomOpcodes
 	static eOpcodeResult WINAPI STORE_COORDS_FROM_OBJECT_WITH_OFFSET(CScript *script);
 	static eOpcodeResult WINAPI STORE_COORDS_FROM_CAR_WITH_OFFSET(CScript *script);
 	static eOpcodeResult WINAPI STORE_COORDS_FROM_ACTOR_WITH_OFFSET(CScript *script);
+	static eOpcodeResult WINAPI STORE_PLAYER_CURRENTLY_ARMED_WEAPON(CScript *script);
 	static eOpcodeResult WINAPI START_CUSTOM_THREAD_VSTRING(CScript *script);
 	static eOpcodeResult WINAPI IS_BUTTON_PRESSED_ON_PAD(CScript *script);
 	static eOpcodeResult WINAPI EMULATE_BUTTON_PRESS_ON_PAD(CScript *script);

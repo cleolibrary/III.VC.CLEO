@@ -115,6 +115,7 @@ public:
 		GamePool **pPedPool;
 		GamePool **pVehiclePool;
 		GamePool **pObjectPool;
+		uintptr_t *pCPlayerPedPool;
 		void* (__thiscall *pfPedPoolGetStruct)(GamePool *pool, int handle);
 		void* (__thiscall *pfVehiclePoolGetStruct)(GamePool *pool, int handle);
 		void* (__thiscall *pfObjectPoolGetStruct)(GamePool *pool, int handle);

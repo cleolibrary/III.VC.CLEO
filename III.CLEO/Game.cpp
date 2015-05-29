@@ -100,6 +100,7 @@ void GtaGame::InitAndPatch()
 		this->Pools.pPedPool = (GamePool **)0x8F2C60;
 		this->Pools.pVehiclePool = (GamePool **)0x9430DC;
 		this->Pools.pObjectPool = (GamePool **)0x880E28;
+		this->Pools.pCPlayerPedPool = (uintptr_t *)0x9412F0;
 		this->Pools.pfPedPoolGetStruct = (void* (__thiscall *)(GamePool *, int))0x43EB30;
 		this->Pools.pfVehiclePoolGetStruct = (void* (__thiscall *)(GamePool *, int))0x43EAF0;
 		this->Pools.pfObjectPoolGetStruct = (void* (__thiscall *)(GamePool *, int))0x43EAB0;
