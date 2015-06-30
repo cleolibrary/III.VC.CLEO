@@ -1,10 +1,18 @@
 #pragma once
 
 #ifndef CLEOAPI
-#define CLEOAPI __declspec(dllexport)
+#define CLEOAPI __declspec(dllimport)
 #endif
 
-#include "ScmFunction.h"
+class ScmFunction
+{
+public:
+	class ScmFunction *prev;
+	unsigned int vars[16];
+	int retAddr;
+
+	ScmFunction(class CScript *script);
+};
 
 enum eScriptType
 {
@@ -80,13 +88,13 @@ public:
 	/* 0x8C */ unsigned int m_nLastVehicleSearchIndex;
 	/* 0x90 */ unsigned int m_nLastObjectSearchIndex;
 	/* 0x94 */ struct _LoadingErrors{
-	               unsigned int m_bFileNotFound : 1;
-	               unsigned int m_bFileSeekError : 1;
-				   unsigned int m_bInternalError : 1;
-				   unsigned int m_bEmptyFile : 1;
-				   unsigned int m_bAllocationFailed : 1;
-				   unsigned int m_bEofReached : 1;
-			   } m_Errors;
+		unsigned int m_bFileNotFound : 1;
+		unsigned int m_bFileSeekError : 1;
+		unsigned int m_bInternalError : 1;
+		unsigned int m_bEmptyFile : 1;
+		unsigned int m_bAllocationFailed : 1;
+		unsigned int m_bEofReached : 1;
+	} m_Errors;
 	/* 0x98 */ char *m_pCodeData;
 	/* 0x9C */ unsigned int m_dwBaseIp;
 	/* 0xA0 */ class ScmFunction *m_pScmFunction;
@@ -128,4 +136,18 @@ public:
 	eOpcodeResult ProcessOneCommand();
 };
 
-static_assert(sizeof(CScript) == 0xAC, "Error with CScript");
+#define CUSTOM_OPCODE_START_ID 0x05DC
+#define MAX_NUMBER_OF_OPCODES 0x8000
+
+typedef eOpcodeResult(__stdcall* Opcode)(CScript *);
+typedef eOpcodeResult(__thiscall* OpcodeHandler)(CScript *, int);
+
+class Opcodes
+{
+public:
+	static Opcode CLEOAPI functions[MAX_NUMBER_OF_OPCODES];
+
+	static bool CLEOAPI RegisterOpcode(unsigned short id, Opcode func);
+};
+
+CLEOAPI tScriptVar* CLEO_GetParamsAddress();

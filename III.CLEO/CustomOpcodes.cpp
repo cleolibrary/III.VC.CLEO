@@ -6,6 +6,11 @@
 #include "Fxt.h"
 int format(CScript *script, char *str, size_t len, const char *format);
 
+CLEOAPI tScriptVar* CLEO_GetParamsAddress()
+{
+	return game.Scripts.Params;
+}
+
 void CustomOpcodes::Register()
 {
 	Opcodes::RegisterOpcode(0x0002, GOTO);

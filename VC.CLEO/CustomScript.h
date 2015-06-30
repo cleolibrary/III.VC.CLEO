@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef CLEOAPI
+#define CLEOAPI __declspec(dllexport)
+#endif
+
 #include "ScmFunction.h"
 
 enum eScriptType
@@ -97,21 +101,21 @@ public:
 
 	void RemoveFromCustomList(CScript **list);
 
-	void Collect(unsigned int numParams);
+	CLEOAPI void Collect(unsigned int numParams);
 
-	void Collect(unsigned int *pIp, unsigned int numParams);
+	CLEOAPI void Collect(unsigned int *pIp, unsigned int numParams);
 
-	int CollectNextWithoutIncreasingPC(unsigned int ip);
+	CLEOAPI int CollectNextWithoutIncreasingPC(unsigned int ip);
 
-	eParamType GetNextParamType();
+	CLEOAPI eParamType GetNextParamType();
 
-	void Store(unsigned int numParams);
+	CLEOAPI void Store(unsigned int numParams);
 
-	void ReadShortString(char *out);
+	CLEOAPI void ReadShortString(char *out);
 
-	void UpdateCompareFlag(bool result);
+	CLEOAPI void UpdateCompareFlag(bool result);
 
-	void *GetPointerToScriptVariable();
+	CLEOAPI void *GetPointerToScriptVariable();
 
 	CScript();
 
@@ -119,7 +123,7 @@ public:
 
 	~CScript();
 
-	void JumpTo(int address);
+	CLEOAPI void JumpTo(int address);
 
 	eOpcodeResult ProcessOneCommand();
 };
