@@ -4,11 +4,22 @@
 #include "ScriptManager.h"
 #include "Log.h"
 #include "Fxt.h"
+#include "CleoVersion.h"
 int format(CScript *script, char *str, size_t len, const char *format);
 
 CLEOAPI tScriptVar* CLEO_GetParamsAddress()
 {
 	return game.Scripts.Params;
+}
+
+CLEOAPI char* CLEO_GetScriptSpaceAddress()
+{
+	return game.Scripts.Space;
+}
+
+CLEOAPI unsigned CLEO_GetVersion()
+{
+	return CLEO_VERSION;
 }
 
 void CustomOpcodes::Register()

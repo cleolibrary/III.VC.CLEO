@@ -151,3 +151,5 @@ public:
 };
 
 CLEOAPI tScriptVar* CLEO_GetParamsAddress();
+CLEOAPI char* CLEO_GetScriptSpaceAddress();
+CLEOAPI unsigned CLEO_GetVersion();
