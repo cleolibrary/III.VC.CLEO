@@ -257,12 +257,12 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)
 		}
 
 		Params = CLEO_GetParamsAddress();
-		Opcodes::RegisterOpcode(OPCODE_INIFILE_GET_INT, &Script_InifileGetInt);
-		Opcodes::RegisterOpcode(OPCODE_INIFILE_WRITE_INT, &Script_InifileWriteInt);
-		Opcodes::RegisterOpcode(OPCODE_INIFILE_GET_FLOAT, &Script_InifileGetFloat);
-		Opcodes::RegisterOpcode(OPCODE_INIFILE_WRITE_FLOAT, &Script_InifileWriteFloat);
-		Opcodes::RegisterOpcode(OPCODE_INIFILE_READ_STRING, &Script_InifileReadString);
-		Opcodes::RegisterOpcode(OPCODE_INIFILE_WRITE_STRING, &Script_InifileWriteString);
+		Opcodes::RegisterOpcode(OPCODE_INIFILE_GET_INT, Script_InifileGetInt);
+		Opcodes::RegisterOpcode(OPCODE_INIFILE_WRITE_INT, Script_InifileWriteInt);
+		Opcodes::RegisterOpcode(OPCODE_INIFILE_GET_FLOAT, Script_InifileGetFloat);
+		Opcodes::RegisterOpcode(OPCODE_INIFILE_WRITE_FLOAT, Script_InifileWriteFloat);
+		Opcodes::RegisterOpcode(OPCODE_INIFILE_READ_STRING, Script_InifileReadString);
+		Opcodes::RegisterOpcode(OPCODE_INIFILE_WRITE_STRING, Script_InifileWriteString);
 	}
 	return TRUE;
 }

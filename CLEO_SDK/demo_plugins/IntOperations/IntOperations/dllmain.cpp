@@ -220,20 +220,20 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)
 		}
 
 		Params = CLEO_GetParamsAddress();
-		Opcodes::RegisterOpcode(OPCODE_INTOP_AND, &Script_IntOp_AND);
-		Opcodes::RegisterOpcode(OPCODE_INTOP_OR, &Script_IntOp_OR);
-		Opcodes::RegisterOpcode(OPCODE_INTOP_XOR, &Script_IntOp_XOR);
-		Opcodes::RegisterOpcode(OPCODE_INTOP_NOT, &Script_IntOp_NOT);
-		Opcodes::RegisterOpcode(OPCODE_INTOP_MOD, &Script_IntOp_MOD);
-		Opcodes::RegisterOpcode(OPCODE_INTOP_SHR, &Script_IntOp_SHR);
-		Opcodes::RegisterOpcode(OPCODE_INTOP_SHL, &Script_IntOp_SHL);
-		Opcodes::RegisterOpcode(SCR_INTOP_AND, &Scr_IntOp_AND);
-		Opcodes::RegisterOpcode(SCR_INTOP_OR, &Scr_IntOp_OR);
-		Opcodes::RegisterOpcode(SCR_INTOP_XOR, &Scr_IntOp_XOR);
-		Opcodes::RegisterOpcode(SCR_INTOP_NOT, &Scr_IntOp_NOT);
-		Opcodes::RegisterOpcode(SCR_INTOP_MOD, &Scr_IntOp_MOD);
-		Opcodes::RegisterOpcode(SCR_INTOP_SHR, &Scr_IntOp_SHR);
-		Opcodes::RegisterOpcode(SCR_INTOP_SHL, &Scr_IntOp_SHL);
+		Opcodes::RegisterOpcode(OPCODE_INTOP_AND, Script_IntOp_AND);
+		Opcodes::RegisterOpcode(OPCODE_INTOP_OR, Script_IntOp_OR);
+		Opcodes::RegisterOpcode(OPCODE_INTOP_XOR, Script_IntOp_XOR);
+		Opcodes::RegisterOpcode(OPCODE_INTOP_NOT, Script_IntOp_NOT);
+		Opcodes::RegisterOpcode(OPCODE_INTOP_MOD, Script_IntOp_MOD);
+		Opcodes::RegisterOpcode(OPCODE_INTOP_SHR, Script_IntOp_SHR);
+		Opcodes::RegisterOpcode(OPCODE_INTOP_SHL, Script_IntOp_SHL);
+		Opcodes::RegisterOpcode(SCR_INTOP_AND, Scr_IntOp_AND);
+		Opcodes::RegisterOpcode(SCR_INTOP_OR, Scr_IntOp_OR);
+		Opcodes::RegisterOpcode(SCR_INTOP_XOR, Scr_IntOp_XOR);
+		Opcodes::RegisterOpcode(SCR_INTOP_NOT, Scr_IntOp_NOT);
+		Opcodes::RegisterOpcode(SCR_INTOP_MOD, Scr_IntOp_MOD);
+		Opcodes::RegisterOpcode(SCR_INTOP_SHR, Scr_IntOp_SHR);
+		Opcodes::RegisterOpcode(SCR_INTOP_SHL, Scr_IntOp_SHL);
 	}
 	return TRUE;
 }

@@ -256,12 +256,12 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)
 		}
 
 		Params = CLEO_GetParamsAddress();
-		Opcodes::RegisterOpcode(OPCODE_FS_DELETEFILE, &Script_FS_DeleteFile);
-		Opcodes::RegisterOpcode(OPCODE_FS_DELETEDIR, &Script_FS_DeleteDirectory);
-		Opcodes::RegisterOpcode(OPCODE_FS_MOVEFILE, &Script_FS_MoveFile);
-		Opcodes::RegisterOpcode(OPCODE_FS_MOVEDIR, &Script_FS_MoveDir);
-		Opcodes::RegisterOpcode(OPCODE_FS_COPYFILE, &Script_FS_CopyFile);
-		Opcodes::RegisterOpcode(OPCODE_FS_COPYDIR, &Script_FS_CopyDir);
+		Opcodes::RegisterOpcode(OPCODE_FS_DELETEFILE, Script_FS_DeleteFile);
+		Opcodes::RegisterOpcode(OPCODE_FS_DELETEDIR, Script_FS_DeleteDirectory);
+		Opcodes::RegisterOpcode(OPCODE_FS_MOVEFILE, Script_FS_MoveFile);
+		Opcodes::RegisterOpcode(OPCODE_FS_MOVEDIR, Script_FS_MoveDir);
+		Opcodes::RegisterOpcode(OPCODE_FS_COPYFILE, Script_FS_CopyFile);
+		Opcodes::RegisterOpcode(OPCODE_FS_COPYDIR, Script_FS_CopyDir);
 	}
 	return TRUE;
 }

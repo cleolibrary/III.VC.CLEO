@@ -65,42 +65,107 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x05FE, BIT_SHR);
 	Opcodes::RegisterOpcode(0x05FF, BIT_SHL);
 
-	//Duplicate CLEO3/VC opcodes to match CLEO4 SA ids
-	Opcodes::RegisterOpcode(0x0A93, TERMINATE_CUSTOM_THREAD);
-	Opcodes::RegisterOpcode(0x0ABA, TERMINATE_NAMED_CUSTOM_THREAD);
-	Opcodes::RegisterOpcode(0x0A92, START_CUSTOM_THREAD_VSTRING);
+	//CLEO4 SA opcodes including duplicates with new ids
 	Opcodes::RegisterOpcode(0x0A8C, MEMORY_WRITE);
 	Opcodes::RegisterOpcode(0x0A8D, MEMORY_READ);
-	Opcodes::RegisterOpcode(0x0AA5, CALL);
-	Opcodes::RegisterOpcode(0x0AA7, CALL_FUNCTION);
-	Opcodes::RegisterOpcode(0x0AA6, CALL_METHOD);
-	Opcodes::RegisterOpcode(0x0AA8, CALL_FUNCTION_METHOD);
+	Opcodes::RegisterOpcode(0x0A8E, OPCODE_0A8E);
+	Opcodes::RegisterOpcode(0x0A8F, OPCODE_0A8F);
+	Opcodes::RegisterOpcode(0x0A90, OPCODE_0A90);
+	Opcodes::RegisterOpcode(0x0A91, OPCODE_0A91);
+	Opcodes::RegisterOpcode(0x0A92, START_CUSTOM_THREAD_VSTRING);
+	Opcodes::RegisterOpcode(0x0A93, TERMINATE_CUSTOM_THREAD);
+	Opcodes::RegisterOpcode(0x0A94, DUMMY);
+	Opcodes::RegisterOpcode(0x0A95, DUMMY);
 	Opcodes::RegisterOpcode(0x0A96, GET_CHAR_STRUCT);
 	Opcodes::RegisterOpcode(0x0A97, GET_CAR_STRUCT);
 	Opcodes::RegisterOpcode(0x0A98, GET_OBJECT_STRUCT);
-	Opcodes::RegisterOpcode(0x0AEA, GET_CHAR_HANDLE);
-	Opcodes::RegisterOpcode(0x0AEB, GET_CAR_HANDLE);
-	Opcodes::RegisterOpcode(0x0AEC, GET_OBJECT_HANDLE);
+	Opcodes::RegisterOpcode(0x0A99, DUMMY);
+	Opcodes::RegisterOpcode(0x0A9A, DUMMY);
+	Opcodes::RegisterOpcode(0x0A9B, DUMMY);
+	Opcodes::RegisterOpcode(0x0A9C, DUMMY);
+	Opcodes::RegisterOpcode(0x0A9D, DUMMY);
+	Opcodes::RegisterOpcode(0x0A9E, DUMMY);
 	Opcodes::RegisterOpcode(0x0A9F, GET_THREAD_POINTER);
+	Opcodes::RegisterOpcode(0x0AA0, DUMMY);
+	Opcodes::RegisterOpcode(0x0AA1, DUMMY);
+	Opcodes::RegisterOpcode(0x0AA2, OPCODE_0AA2);
+	Opcodes::RegisterOpcode(0x0AA3, OPCODE_0AA3);
+	Opcodes::RegisterOpcode(0x0AA4, OPCODE_0AA4);
+	Opcodes::RegisterOpcode(0x0AA5, CALL);
+	Opcodes::RegisterOpcode(0x0AA6, CALL_METHOD);
+	Opcodes::RegisterOpcode(0x0AA7, CALL_FUNCTION);
+	Opcodes::RegisterOpcode(0x0AA8, CALL_FUNCTION_METHOD);
+	Opcodes::RegisterOpcode(0x0AA9, DUMMY);
 	Opcodes::RegisterOpcode(0x0AAA, GET_NAMED_THREAD_POINTER);
+	Opcodes::RegisterOpcode(0x0AAB, OPCODE_0AAB);
+	Opcodes::RegisterOpcode(0x0AAC, DUMMY);
+	Opcodes::RegisterOpcode(0x0AAD, DUMMY);
+	Opcodes::RegisterOpcode(0x0AAE, DUMMY);
+	Opcodes::RegisterOpcode(0x0AAF, DUMMY);
 	Opcodes::RegisterOpcode(0x0AB0, IS_KEY_PRESSED);
+	Opcodes::RegisterOpcode(0x0AB1, CALL_SCM_FUNCTION);
+	Opcodes::RegisterOpcode(0x0AB2, SCM_FUNCTION_RET);
+	Opcodes::RegisterOpcode(0x0AB3, DUMMY);
+	Opcodes::RegisterOpcode(0x0AB4, DUMMY);
+	Opcodes::RegisterOpcode(0x0AB5, DUMMY);
+	Opcodes::RegisterOpcode(0x0AB6, DUMMY);
+	Opcodes::RegisterOpcode(0x0AB7, DUMMY);
+	Opcodes::RegisterOpcode(0x0AB8, DUMMY);
+	Opcodes::RegisterOpcode(0x0AB9, DUMMY);
+	Opcodes::RegisterOpcode(0x0ABA, TERMINATE_NAMED_CUSTOM_THREAD);
+	Opcodes::RegisterOpcode(0x0ABB, DUMMY);
+	Opcodes::RegisterOpcode(0x0ABC, DUMMY);
+	Opcodes::RegisterOpcode(0x0ABD, DUMMY);
+	Opcodes::RegisterOpcode(0x0ABE, DUMMY);
+	Opcodes::RegisterOpcode(0x0ABF, DUMMY);
+	Opcodes::RegisterOpcode(0x0AC0, DUMMY);
+	Opcodes::RegisterOpcode(0x0AC1, DUMMY);
+	Opcodes::RegisterOpcode(0x0AC2, DUMMY);
+	Opcodes::RegisterOpcode(0x0AC3, DUMMY);
+	Opcodes::RegisterOpcode(0x0AC4, DUMMY);
+	Opcodes::RegisterOpcode(0x0AC5, DUMMY);
+	Opcodes::RegisterOpcode(0x0AC6, GET_LABEL_OFFSET);
+	Opcodes::RegisterOpcode(0x0AC7, GET_VAR_OFFSET);
+	Opcodes::RegisterOpcode(0x0AC8, DUMMY);
+	Opcodes::RegisterOpcode(0x0AC9, DUMMY);
+	Opcodes::RegisterOpcode(0x0ACA, OPCODE_0ACA);
+	Opcodes::RegisterOpcode(0x0ACB, OPCODE_0ACB);
+	Opcodes::RegisterOpcode(0x0ACC, OPCODE_0ACC);
+	Opcodes::RegisterOpcode(0x0ACD, OPCODE_0ACD);
+	Opcodes::RegisterOpcode(0x0ACE, OPCODE_0ACE);
+	Opcodes::RegisterOpcode(0x0ACF, OPCODE_0ACF);
+	Opcodes::RegisterOpcode(0x0AD0, OPCODE_0AD0);
+	Opcodes::RegisterOpcode(0x0AD1, OPCODE_0AD1);
+	Opcodes::RegisterOpcode(0x0AD2, DUMMY);
+	Opcodes::RegisterOpcode(0x0AD3, DUMMY);
+	Opcodes::RegisterOpcode(0x0AD4, DUMMY);
+	Opcodes::RegisterOpcode(0x0AD5, DUMMY);
+	Opcodes::RegisterOpcode(0x0AD6, DUMMY);
+	Opcodes::RegisterOpcode(0x0AD7, DUMMY);
+	Opcodes::RegisterOpcode(0x0AD8, DUMMY);
+	Opcodes::RegisterOpcode(0x0AD9, DUMMY);
+	Opcodes::RegisterOpcode(0x0ADA, DUMMY);
+	Opcodes::RegisterOpcode(0x0ADB, OPCODE_0ADB);
+	Opcodes::RegisterOpcode(0x0ADC, OPCODE_0ADC);
+	Opcodes::RegisterOpcode(0x0ADD, DUMMY);
+	Opcodes::RegisterOpcode(0x0ADE, DUMMY);
+	Opcodes::RegisterOpcode(0x0ADF, OPCODE_0ADF);
+	Opcodes::RegisterOpcode(0x0AE0, OPCODE_0AE0);
 	Opcodes::RegisterOpcode(0x0AE1, FIND_RANDOM_CHAR);
 	Opcodes::RegisterOpcode(0x0AE2, FIND_RANDOM_CAR);
 	Opcodes::RegisterOpcode(0x0AE3, FIND_RANDOM_OBJECT);
+	Opcodes::RegisterOpcode(0x0AE4, DUMMY);
+	Opcodes::RegisterOpcode(0x0AE5, DUMMY);
+	Opcodes::RegisterOpcode(0x0AE6, DUMMY);
+	Opcodes::RegisterOpcode(0x0AE7, DUMMY);
+	Opcodes::RegisterOpcode(0x0AE8, DUMMY);
 	Opcodes::RegisterOpcode(0x0AE9, CALL_POP_FLOAT);
+	Opcodes::RegisterOpcode(0x0AEA, GET_CHAR_HANDLE);
+	Opcodes::RegisterOpcode(0x0AEB, GET_CAR_HANDLE);
+	Opcodes::RegisterOpcode(0x0AEC, GET_OBJECT_HANDLE);
+	Opcodes::RegisterOpcode(0x0AED, DUMMY);
 	Opcodes::RegisterOpcode(0x0AEE, MATH_EXP);
 	Opcodes::RegisterOpcode(0x0AEF, MATH_LOG);
-	Opcodes::RegisterOpcode(0x0AB1, CALL_SCM_FUNCTION);
-	Opcodes::RegisterOpcode(0x0AB2, SCM_FUNCTION_RET);
-	Opcodes::RegisterOpcode(0x0AC6, GET_LABEL_OFFSET);
-	Opcodes::RegisterOpcode(0x0AC7, GET_VAR_OFFSET);
-	Opcodes::RegisterOpcode(0x0B10, BIT_AND);
-	Opcodes::RegisterOpcode(0x0B11, BIT_OR);
-	Opcodes::RegisterOpcode(0x0B12, BIT_XOR);
-	Opcodes::RegisterOpcode(0x0B13, BIT_NOT);
-	Opcodes::RegisterOpcode(0x0B14, BIT_MOD);
-	Opcodes::RegisterOpcode(0x0B15, BIT_SHR);
-	Opcodes::RegisterOpcode(0x0B16, BIT_SHL);
 
 	//CLEO 2 opcodes
 	Opcodes::RegisterOpcode(0x0600, START_CUSTOM_THREAD_VSTRING);
@@ -114,40 +179,14 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x0608, SHOW_TEXT_POSITION);
 	Opcodes::RegisterOpcode(0x0609, SHOW_FORMATTED_TEXT_POSITION);
 
-	// CLEO 3-4 SA opcodes
-	Opcodes::RegisterOpcode(0x0A8E, OPCODE_0A8E);
-	Opcodes::RegisterOpcode(0x0A8F, OPCODE_0A8F);
-	Opcodes::RegisterOpcode(0x0A90, OPCODE_0A90);
-	Opcodes::RegisterOpcode(0x0A91, OPCODE_0A91);
-	Opcodes::RegisterOpcode(0x0ADC, OPCODE_0ADC);
-	Opcodes::RegisterOpcode(0x0ADF, OPCODE_0ADF);
-	Opcodes::RegisterOpcode(0x0AE0, OPCODE_0AE0);
-	Opcodes::RegisterOpcode(0x0AA2, OPCODE_0AA2);
-	Opcodes::RegisterOpcode(0x0AA3, OPCODE_0AA3);
-	Opcodes::RegisterOpcode(0x0AA4, OPCODE_0AA4);
-	Opcodes::RegisterOpcode(0x0AAB, OPCODE_0AAB);
-
-	Opcodes::RegisterOpcode(0x0ACA, OPCODE_0ACA);
-	Opcodes::RegisterOpcode(0x0ACB, OPCODE_0ACB);
-	Opcodes::RegisterOpcode(0x0ACC, OPCODE_0ACC);
-	Opcodes::RegisterOpcode(0x0ACD, OPCODE_0ACD);
-	Opcodes::RegisterOpcode(0x0ACE, OPCODE_0ACE);
-	Opcodes::RegisterOpcode(0x0ACF, OPCODE_0ACF);
-	Opcodes::RegisterOpcode(0x0AD0, OPCODE_0AD0);
-	Opcodes::RegisterOpcode(0x0AD1, OPCODE_0AD1);
-	Opcodes::RegisterOpcode(0x0ADB, OPCODE_0ADB);
-
-	//CLEO 4 Ini Files
-	Opcodes::RegisterOpcode(0x0AF0, OPCODE_0AF0);
-	Opcodes::RegisterOpcode(0x0AF1, OPCODE_0AF1);
-	Opcodes::RegisterOpcode(0x0AF2, OPCODE_0AF2);
-	Opcodes::RegisterOpcode(0x0AF3, OPCODE_0AF3);
-	Opcodes::RegisterOpcode(0x0AF4, OPCODE_0AF4);
-	Opcodes::RegisterOpcode(0x0AF5, OPCODE_0AF5);
-
 	//Scrapped opcodes (VC)
 	Opcodes::RegisterOpcode(0x016F, DRAW_SHADOW);
 	Opcodes::RegisterOpcode(0x0349, SET_TEXT_DRAW_FONT);
+}
+
+eOpcodeResult CustomOpcodes::DUMMY(CScript *script)
+{
+	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::GOTO(CScript *script)
@@ -855,15 +894,15 @@ eOpcodeResult CustomOpcodes::START_CUSTOM_THREAD_VSTRING(CScript *script)
 	return OR_CONTINUE;
 }
 
-//0601=1,  IS_BUTTON_PRESSED_ON_PAD %1d%
+//0601=2, is_button_pressed_on_pad %1d% with_sensitivity %2d%
 eOpcodeResult CustomOpcodes::IS_BUTTON_PRESSED_ON_PAD(CScript *script)
 {
-	script->Collect(1);
-	script->UpdateCompareFlag(*(short*)((game.Scripts.Params[0].nVar * 2) + game.Misc.activePadState) != 0);
+	script->Collect(2);
+	script->UpdateCompareFlag(*(short*)((game.Scripts.Params[0].nVar * 2) + game.Misc.activePadState) == game.Scripts.Params[1].nVar);
 	return OR_CONTINUE;
 }
 
-//0602=2,  EMULATE_BUTTON_PRESS_ON_PAD %1d% sensitivity %2d%
+//0602=2, emulate_button_press_on_pad %1d% with_sensitivity %2d%
 eOpcodeResult CustomOpcodes::EMULATE_BUTTON_PRESS_ON_PAD(CScript *script)
 {
 	script->Collect(2);
@@ -871,14 +910,14 @@ eOpcodeResult CustomOpcodes::EMULATE_BUTTON_PRESS_ON_PAD(CScript *script)
 	return OR_CONTINUE;
 }
 
-//0603=0,  IS_CAMERA_IN_WIDESCREEN_MODE
+//0603=0, is_camera_in_widescreen_mode
 eOpcodeResult CustomOpcodes::IS_CAMERA_IN_WIDESCREEN_MODE(CScript *script)
 {
 	script->UpdateCompareFlag(*(char*)game.Misc.cameraWidescreen != 0);
 	return OR_CONTINUE;
 }
 
-//0604=2,%2d% = weapon %1d% model
+//0604=2, %2d% = weapon %1d% model
 eOpcodeResult CustomOpcodes::GET_MODEL_ID_FROM_WEAPON_ID(CScript *script)
 {
 	script->Collect(1);
@@ -888,7 +927,7 @@ eOpcodeResult CustomOpcodes::GET_MODEL_ID_FROM_WEAPON_ID(CScript *script)
 	return OR_CONTINUE;
 }
 
-//0605=2,%2d% = model %1d% weapon id
+//0605=2, %2d% = model %1d% weapon id
 eOpcodeResult CustomOpcodes::GET_WEAPON_ID_FROM_MODEL_ID(CScript *script)
 {
 	script->Collect(1);
@@ -907,7 +946,7 @@ eOpcodeResult CustomOpcodes::GET_WEAPON_ID_FROM_MODEL_ID(CScript *script)
 	return OR_CONTINUE;
 }
 
-//0606=3, SET_MEM_OFFSET memory pointer %1d% memory to point %2d% virtual protect %3d%
+//0606=3, set_memory_offset memory_pointer %1d% memory_to_point %2d% virtual_protect %3d%
 eOpcodeResult CustomOpcodes::SET_MEM_OFFSET(CScript *script)
 {
 	script->Collect(3);
@@ -922,7 +961,7 @@ eOpcodeResult CustomOpcodes::SET_MEM_OFFSET(CScript *script)
 	return OR_CONTINUE;
 }
 
-//0607=1, %1d% = GET_CURRENT_WEATHER
+//0607=1, %1d% = get_current_weather
 eOpcodeResult CustomOpcodes::GET_CURRENT_WEATHER(CScript *script)
 {
 	game.Scripts.Params[0].nVar = *(short*)game.Misc.currentWeather;
@@ -930,7 +969,7 @@ eOpcodeResult CustomOpcodes::GET_CURRENT_WEATHER(CScript *script)
 	return OR_CONTINUE;
 }
 
-//0608=3,show_text_position %1d% %2d% text %3d%
+//0608=3, show_text_position %1d% %2d% text %3d%
 eOpcodeResult CustomOpcodes::SHOW_TEXT_POSITION(CScript *script)
 {
 	script->Collect(3);
@@ -942,7 +981,7 @@ eOpcodeResult CustomOpcodes::SHOW_TEXT_POSITION(CScript *script)
 	return OR_CONTINUE;
 };
 
-//0609=-1,show_formatted_text_position %1d% %2d% text %3d%
+//0609=-1, show_formatted_text_position %1d% %2d% text %3d%
 eOpcodeResult CustomOpcodes::SHOW_FORMATTED_TEXT_POSITION(CScript *script)
 {
 	script->Collect(3);
@@ -1013,6 +1052,12 @@ eOpcodeResult CustomOpcodes::SET_TEXT_DRAW_FONT(CScript *script)
 	return OR_CONTINUE;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+/*****************************************************************************************************/
+////////////////////////////////CLEO4 SA opcodes///////////////////////////////////////////////////////
+//0A8C=4,write_memory %1d% size %2d% value %3d% virtual_protect %4d% //dup
+//0A8D=4,%4d% = read_memory %1d% size %2d% virtual_protect %3d% //dup
+
 //0A8E=3,%3d% = %1d% + %2d% ; int
 eOpcodeResult CustomOpcodes::OPCODE_0A8E(CScript *script)
 {
@@ -1049,7 +1094,319 @@ eOpcodeResult CustomOpcodes::OPCODE_0A91(CScript *script)
 	return OR_CONTINUE;
 }
 
-//0ADC=1, test_cheat %1d%
+//0A92=-1,create_custom_thread %1s% //dup
+//0A93=0,end_custom_thread //dup
+//0A94=-1,start_custom_mission %1s% //not supported
+//0A95=0,enable_thread_saving ////not supported
+//0A96=2,%2d% = actor %1d% struct //dup
+//0A97=2,%2d% = car %1d% struct //dup
+//0A98=2,%2d% = object %1d% struct //dup
+
+//0A99=1,chdir %1buserdir/rootdir%
+//0A9A=3,%3d% = openfile %1s% mode %2d% ; IF and SET
+//0A9B=1,closefile %1d%
+//0A9C=2,%2d% = file %1d% size
+//0A9D=3,readfile %1d% size %2d% to %3d%
+//0A9E=3,writefile %1d% size %2d% from %3d%
+//0A9F=1,%1d% = current_thread_pointer //dup
+
+
+//0AA0=1,gosub_if_false %1p%
+
+
+//0AA1=0,return_if_false
+
+
+//0AA2=2,%2h% = load_library %1s% ; IF and SET
+eOpcodeResult CustomOpcodes::OPCODE_0AA2(CScript *script)
+{
+	script->Collect(1);
+	auto libHandle = LoadLibrary(game.Scripts.Params[0].cVar);
+	game.Scripts.Params[0].pVar = libHandle;
+	script->Store(1);
+	script->UpdateCompareFlag(libHandle != nullptr);
+	return OR_CONTINUE;
+}
+
+//0AA3=1,free_library %1h%
+eOpcodeResult CustomOpcodes::OPCODE_0AA3(CScript *script)
+{
+	script->Collect(1);
+	HMODULE libHandle;
+	libHandle = (HMODULE)game.Scripts.Params[0].pVar;
+	FreeLibrary(libHandle);
+	return OR_CONTINUE;
+}
+
+//0AA4=3,%3d% = get_proc_address %1s% library %2d% ; IF and SET
+eOpcodeResult CustomOpcodes::OPCODE_0AA4(CScript *script)
+{
+	script->Collect(2);
+	char *funcName = game.Scripts.Params[0].cVar;
+	HMODULE libHandle;
+	libHandle = (HMODULE)game.Scripts.Params[1].pVar;
+	void *funcAddr = (void *)GetProcAddress(libHandle, funcName);
+	game.Scripts.Params[0].pVar = funcAddr;
+	script->Store(1);
+	script->UpdateCompareFlag(funcAddr != nullptr);
+	return OR_CONTINUE;
+}
+
+//0AA5=-1,call %1d% num_params %2h% pop %3h% //dup
+//0AA6=-1,call_method %1d% struct %2d% num_params %3h% pop %4h% //dup
+//0AA7=-1,call_function %1d% num_params %2h% pop %3h% //dup
+//0AA8=-1,call_function_method %1d% struct %2d% num_params %3h% pop %4h% //dup
+
+
+//0AA9=0,  is_game_version_original //replaced with 05E5
+//0AAA=2,%2d% = thread %1s% pointer //dup
+
+
+//0AAB=1,   file_exists %1s%
+eOpcodeResult CustomOpcodes::OPCODE_0AAB(CScript *script)
+{
+	script->Collect(1);
+	DWORD fAttr = GetFileAttributes(game.Scripts.Params[0].cVar);
+	script->UpdateCompareFlag((fAttr != INVALID_FILE_ATTRIBUTES) &&
+		!(fAttr & FILE_ATTRIBUTE_DIRECTORY));
+	return OR_CONTINUE;
+}
+
+//0AAC=2,%2d% = load_audiostream %1d%
+
+
+//0AAD=2,set_mp3 %1d% perform_action %2d%
+
+
+//0AAE=1,release_mp3 %1d%
+
+
+//0AAF=2,%2d% = get_mp3_length %1d%
+
+
+//0AB0=1,  key_pressed %1d% //dup
+//0AB1=-1,call_scm_func %1p% //dup
+//0AB2=-1,ret  //dup
+//0AB3=2,var %1d% = %2d% //not supported
+//0AB4=2,%2d% = var %1d% //not supported
+
+
+//0AB5=3,store_actor %1d% closest_vehicle_to %2d% closest_ped_to %3d%
+
+
+//0AB6=3,store_target_marker_coords_to %1d% %2d% %3d% // IF and SET //not supported
+
+
+//0AB7=2,get_vehicle %1d% number_of_gears_to %2d%
+
+
+//0AB8=2,get_vehicle %1d% current_gear_to %2d%
+
+
+//0AB9=2,get_mp3 %1d% state_to %2d%
+
+
+//0ABA=1,end_custom_thread_named %1s% //dup
+
+
+//0ABB=2,%2d% = audiostream %1d% volume
+
+
+//0ABC=2,set_audiostream %1d% volume %2d%
+
+
+//0ABD=1,  vehicle %1d% siren_on
+
+
+//0ABE=1,  vehicle %1d% engine_on
+
+
+//0ABF=2,set_vehicle %1d% engine_state_to %2d%
+
+
+//0AC0=2,audiostream %1d% loop %2d%
+
+
+//0AC1=2,%2d% = load_audiostream_with_3d_support %1d% ; IF and SET
+
+
+//0AC2=4,set_audiostream %1d% 3d_position %2d% %3d% %4d%
+
+
+//0AC3=2,link_3d_audiostream %1d% to_object %2d%
+
+
+//0AC4=2,link_3d_audiostream %1d% to_actor %2d%
+
+
+//0AC5=2,link_3d_audiostream %1d% to_vehicle %2d%
+
+
+//0AC6=2,%2d% = label %1p% offset //dup
+//0AC7=2,%2d% = var %1d% offset //dup
+
+
+//0AC8=2,%2d% = allocate_memory_size %1d%
+
+
+//0AC9=1,free_allocated_memory %1d%
+
+
+//0ACA=1,show_text_box %1s%
+eOpcodeResult CustomOpcodes::OPCODE_0ACA(CScript *script)
+{
+	static wchar_t message_buf[0x80];
+	script->Collect(1);
+	swprintf(message_buf, 100, L"%hs", game.Scripts.Params[0].cVar);
+	game.Text.TextBox(message_buf, false, false, false);
+	return OR_CONTINUE;
+};
+
+//0ACB=3,show_styled_text %1s% time %2d% style %3d%
+eOpcodeResult CustomOpcodes::OPCODE_0ACB(CScript *script)
+{
+	static wchar_t message_buf[0x80];
+	script->Collect(3);
+	const char *text = game.Scripts.Params[0].cVar;
+	unsigned time, style;
+	swprintf(message_buf, 100, L"%hs", text);
+	game.Text.StyledText(message_buf, game.Scripts.Params[1].nVar, game.Scripts.Params[2].nVar - 1);
+	return OR_CONTINUE;
+};
+
+//0ACC=2,show_text_lowpriority %1s% time %2d%
+eOpcodeResult CustomOpcodes::OPCODE_0ACC(CScript *script)
+{
+	static wchar_t message_buf[0x80];
+	script->Collect(2);
+	const char *text = game.Scripts.Params[0].cVar;
+	swprintf(message_buf, 100, L"%hs", text);
+	game.Text.TextLowPriority(message_buf, game.Scripts.Params[1].nVar, false, false);
+	return OR_CONTINUE;
+};
+
+//0ACD=2,show_text_highpriority %1s% time %2d%
+eOpcodeResult CustomOpcodes::OPCODE_0ACD(CScript *script)
+{
+	static wchar_t message_buf[0x80];
+	script->Collect(2);
+	const char *text = game.Scripts.Params[0].cVar;
+	swprintf(message_buf, 100, L"%hs", text);
+	game.Text.TextHighPriority(message_buf, game.Scripts.Params[1].nVar, false, false);
+	return OR_CONTINUE;
+};
+
+//0ACE=-1,show_formatted_text_box %1s%
+eOpcodeResult CustomOpcodes::OPCODE_0ACE(CScript *script)
+{
+	static wchar_t message_buf[0x80];
+	script->Collect(1);
+	char fmt[100]; char text[100];
+	strcpy(fmt, game.Scripts.Params[0].cVar);
+	format(script, text, sizeof(text), fmt);
+
+	swprintf(message_buf, 100, L"%hs", text);
+	game.Text.TextBox(message_buf, false, false, false);
+
+	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
+		script->Collect(1);
+	script->m_dwIp++;
+	return OR_CONTINUE;
+};
+
+//0ACF=-1,show_formatted_styled_text %1s% time %2d% style %3d%
+eOpcodeResult CustomOpcodes::OPCODE_0ACF(CScript *script)
+{
+	script->Collect(3);
+	char fmt[100]; char text[100]; static wchar_t message_buf[100];
+	unsigned time, style;
+	strcpy(fmt, game.Scripts.Params[0].cVar);
+	time = game.Scripts.Params[1].nVar;
+	style = game.Scripts.Params[2].nVar;
+	format(script, text, sizeof(text), fmt);
+	swprintf(message_buf, 100, L"%hs", text);
+	game.Text.StyledText(message_buf, time, style - 1);
+	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
+		script->Collect(1);
+	script->m_dwIp++;
+	return OR_CONTINUE;
+};
+
+//0AD0=-1,show_formatted_text_lowpriority %1s% time %2s%
+eOpcodeResult CustomOpcodes::OPCODE_0AD0(CScript *script)
+{
+	script->Collect(2);
+	char fmt[100]; char text[100]; static wchar_t message_buf[0x80];
+	unsigned time;
+	strcpy(fmt, game.Scripts.Params[0].cVar);
+	time = game.Scripts.Params[1].nVar;
+	format(script, text, sizeof(text), fmt);
+	swprintf(message_buf, 100, L"%hs", text);
+	game.Text.TextLowPriority(message_buf, time, false, false);
+	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
+		script->Collect(1);
+	script->m_dwIp++;
+	return OR_CONTINUE;
+};
+
+//0AD1=-1,show_formatted_text_highpriority %1s% time %2s%
+eOpcodeResult CustomOpcodes::OPCODE_0AD1(CScript *script)
+{
+	script->Collect(2);
+	char fmt[100]; char text[100]; static wchar_t message_buf[0x80];
+	unsigned time;
+	strcpy(fmt, game.Scripts.Params[0].cVar);
+	time = game.Scripts.Params[1].nVar;
+	format(script, text, sizeof(text), fmt);
+	swprintf(message_buf, 100, L"%hs", text);
+	game.Text.TextHighPriority(message_buf, time, false, false);
+	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
+		script->Collect(1);
+	script->m_dwIp++;
+	return OR_CONTINUE;
+};
+
+//0AD2=2,%2d% = player %1d% targeted_actor //IF and SET
+
+
+//0AD3=-1,%1d% = format %2s%
+
+
+//0AD4=-1,%3d% = scan_string %1d% format %2s%
+
+
+//0AD5=3,file %1d% seek %2d% from_origin %3d% //IF and SET
+
+
+//0AD6=1,  end_of_file %1d% reached
+
+
+//0AD7=3,read_string_from_file %1d% to %2d% size %3d% // IF and SET
+
+
+//0AD8=2,write_string_to_file %1d% from %2d% //IF and SET
+
+
+//0AD9=-1,write_formatted_text %2d% in_file %1d%
+
+
+//0ADA=-1,%3d% = scan_file %1d% format %2d% //IF and SET
+
+
+//0ADB=2,%2d% = car_model %1o% name
+eOpcodeResult CustomOpcodes::OPCODE_0ADB(CScript *script)
+{
+	script->Collect(1);
+	unsigned mi; char *buf; static char cmessage_buf[0x80];
+	mi = game.Scripts.Params[0].nVar;
+	buf = (char*)((game.Misc.stVehicleModelInfo + 0x32) + ((mi - 130) * 0x174));
+	wcstombs(cmessage_buf, CustomText::GetText(game.Text.CText, 0, buf), sizeof(cmessage_buf));
+	game.Scripts.Params[0].pVar = cmessage_buf;
+	script->Store(1);
+	return OR_CONTINUE;
+}
+
+//0ADC=1,   test_cheat %1d%
 eOpcodeResult CustomOpcodes::OPCODE_0ADC(CScript *script)
 {
 	script->Collect(1);
@@ -1070,6 +1427,12 @@ eOpcodeResult CustomOpcodes::OPCODE_0ADC(CScript *script)
 	return OR_CONTINUE;
 }
 
+//0ADD=1,spawn_car_with_model %1o% like_a_cheat
+
+
+//0ADE=2,%2d% = text_by_GXT_entry %1d%
+
+
 //0ADF=2,add_dynamic_GXT_entry %1d% text %2d%
 eOpcodeResult CustomOpcodes::OPCODE_0ADF(CScript *script)
 {
@@ -1085,7 +1448,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0ADF(CScript *script)
 	return OR_CONTINUE;
 }
 
-//0AE0 = 1, remove_dynamic_GXT_entry %1d%
+//0AE0=1,remove_dynamic_GXT_entry %1d%
 eOpcodeResult CustomOpcodes::OPCODE_0AE0(CScript *script)
 {
 	script->Collect(1);
@@ -1099,9 +1462,9 @@ eOpcodeResult CustomOpcodes::OPCODE_0AE0(CScript *script)
 			if (strcmp(game.Scripts.Params[0].cVar, next->m_key) == 0)
 			{
 				if (entry->m_pNext != next->m_pNext)
-				entry->m_pNext = next->m_pNext;
+					entry->m_pNext = next->m_pNext;
 				else
-				entry->m_pNext = 0;
+					entry->m_pNext = 0;
 
 				LOGL(LOG_PRIORITY_CUSTOM_TEXT, "Unloaded custom text \"%s\"", entry->m_key);
 				delete next;
@@ -1123,381 +1486,36 @@ eOpcodeResult CustomOpcodes::OPCODE_0AE0(CScript *script)
 	return OR_CONTINUE;
 }
 
-//0AA2=2,%2h% = load_library %1d% // IF and SET
-eOpcodeResult CustomOpcodes::OPCODE_0AA2(CScript *script)
-{
-	script->Collect(1);
-	auto libHandle = LoadLibrary(game.Scripts.Params[0].cVar);
-	game.Scripts.Params[0].pVar = libHandle;
-	script->Store(1);
-	script->UpdateCompareFlag(libHandle != nullptr);
-	return OR_CONTINUE;
-}
+//0AE1=7,%7d% = random_actor_near_point %1d% %2d% %3d% in_radius %4d% find_next %5h% pass_deads %6h% //IF and SET //dup
+//0AE2=7,%7d% = random_vehicle_near_point %1d% %2d% %3d% in_radius %4d% find_next %5h% pass_wrecked %6h% //IF and SET //dup
+//0AE3=6,%6d% = random_object_near_point %1d% %2d% %3d% in_radius %4d% find_next %5h% //IF and SET //dup
 
-//0AA3=1,free_library %1h%
-eOpcodeResult CustomOpcodes::OPCODE_0AA3(CScript *script)
-{
-	script->Collect(1);
-	HMODULE libHandle;
-	libHandle = (HMODULE)game.Scripts.Params[0].pVar;
-	FreeLibrary(libHandle);
-	return OR_CONTINUE;
-}
 
-//0AA4=3,%3d% = get_proc_address %1d% library %2d% // IF and SET
-eOpcodeResult CustomOpcodes::OPCODE_0AA4(CScript *script)
-{
-	script->Collect(2);
-	char *funcName = game.Scripts.Params[0].cVar;
-	HMODULE libHandle;
-	libHandle = (HMODULE)game.Scripts.Params[1].pVar;
-	void *funcAddr = (void *)GetProcAddress(libHandle, funcName);
-	game.Scripts.Params[0].pVar = funcAddr;
-	script->Store(1);
-	script->UpdateCompareFlag(funcAddr != nullptr);
-	return OR_CONTINUE;
-}
+//0AE4=1,  directory_exists %1d%
 
-//0AAB=1,  file_exists %1d%
-eOpcodeResult CustomOpcodes::OPCODE_0AAB(CScript *script)
-{
-	script->Collect(1);
-	DWORD fAttr = GetFileAttributes(game.Scripts.Params[0].cVar);
-	script->UpdateCompareFlag((fAttr != INVALID_FILE_ATTRIBUTES) &&
-		!(fAttr & FILE_ATTRIBUTE_DIRECTORY));
-	return OR_CONTINUE;
-}
 
-//0ACA=1,show_text_box %1d%
-eOpcodeResult CustomOpcodes::OPCODE_0ACA(CScript *script)
-{
-	static wchar_t message_buf[0x80];
-	script->Collect(1);
-	swprintf(message_buf, 100, L"%hs", game.Scripts.Params[0].cVar);
-	game.Text.TextBox(message_buf, false, false, false);
-	return OR_CONTINUE;
-};
+//0AE5=1,create_directory %1d% ; IF and SET
 
-//0ACB=3,show_styled_text %1d% time %2d% style %3d%
-eOpcodeResult CustomOpcodes::OPCODE_0ACB(CScript *script)
-{
-	static wchar_t message_buf[0x80];
-	script->Collect(3);
-	const char *text = game.Scripts.Params[0].cVar;
-	unsigned time, style;
-	swprintf(message_buf, 100, L"%hs", text);
-	game.Text.StyledText(message_buf, game.Scripts.Params[1].nVar, game.Scripts.Params[2].nVar - 1);
-	return OR_CONTINUE;
-};
 
-//0ACC=2,show_text_lowpriority %1d% time %2d%
-eOpcodeResult CustomOpcodes::OPCODE_0ACC(CScript *script)
-{
-	static wchar_t message_buf[0x80];
-	script->Collect(2);
-	const char *text = game.Scripts.Params[0].cVar;
-	swprintf(message_buf, 100, L"%hs", text);
-	game.Text.TextLowPriority(message_buf, game.Scripts.Params[1].nVar, false, false);
-	return OR_CONTINUE;
-};
+//0AE6=3,%2d% = find_first_file %1d% get_filename_to %3d% ; IF and SET
 
-//0ACD=2,show_text_highpriority %1d% time %2d%
-eOpcodeResult CustomOpcodes::OPCODE_0ACD(CScript *script)
-{
-	static wchar_t message_buf[0x80];
-	script->Collect(2);
-	const char *text = game.Scripts.Params[0].cVar;
-	swprintf(message_buf, 100, L"%hs", text);
-	game.Text.TextHighPriority(message_buf, game.Scripts.Params[1].nVar, false, false);
-	return OR_CONTINUE;
-};
 
-//0ACE=-1,show_formatted_text_box %1d%
-eOpcodeResult CustomOpcodes::OPCODE_0ACE(CScript *script)
-{
-	static wchar_t message_buf[0x80];
-	script->Collect(1);
-	char fmt[100]; char text[100];
-	strcpy(fmt, game.Scripts.Params[0].cVar);
-	format(script, text, sizeof(text), fmt);
+//0AE7=2,%2d% = find_next_file %1d% ; IF and SET
 
-	swprintf(message_buf, 100, L"%hs", text);
-	game.Text.TextBox(message_buf, false, false, false);
 
-	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
-		script->Collect(1);
-	script->m_dwIp++;
-	return OR_CONTINUE;
-};
+//0AE8=1,find_close %1d%
 
-//0ACF=-1,show_formatted_styled_text %1d% time %2d% style %3d%
-eOpcodeResult CustomOpcodes::OPCODE_0ACF(CScript *script)
-{
-	script->Collect(3);
-	char fmt[100]; char text[100]; static wchar_t message_buf[100];
-	unsigned time, style;
-	strcpy(fmt, game.Scripts.Params[0].cVar);
-	time = game.Scripts.Params[1].nVar;
-	style = game.Scripts.Params[2].nVar;
-	format(script, text, sizeof(text), fmt);
-	swprintf(message_buf, 100, L"%hs", text);
-	game.Text.StyledText(message_buf, time, style - 1);
-	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
-		script->Collect(1);
-	script->m_dwIp++;
-	return OR_CONTINUE;
-};
 
-//0AD0=-1,show_formatted_text_lowpriority %1d% time %2d%
-eOpcodeResult CustomOpcodes::OPCODE_0AD0(CScript *script)
-{
-	script->Collect(2);
-	char fmt[100]; char text[100]; static wchar_t message_buf[0x80];
-	unsigned time;
-	strcpy(fmt, game.Scripts.Params[0].cVar);
-	time = game.Scripts.Params[1].nVar;
-	format(script, text, sizeof(text), fmt);
-	swprintf(message_buf, 100, L"%hs", text);
-	game.Text.TextLowPriority(message_buf, time, false, false);
-	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
-		script->Collect(1);
-	script->m_dwIp++;
-	return OR_CONTINUE;
-};
+//0AE9=1,pop_float %1d% //dup
+//0AEA=2,%2d% = actor_struct %1d% handle //dup
+//0AEB=2,%2d% = car_struct %1d% handle //dup
+//0AEC=2,%2d% = object_struct %1d% handle //dup
 
-//0AD1=-1,show_formatted_text_highpriority %1d% time %2d%
-eOpcodeResult CustomOpcodes::OPCODE_0AD1(CScript *script)
-{
-	script->Collect(2);
-	char fmt[100]; char text[100]; static wchar_t message_buf[0x80];
-	unsigned time;
-	strcpy(fmt, game.Scripts.Params[0].cVar);
-	time = game.Scripts.Params[1].nVar;
-	format(script, text, sizeof(text), fmt);
-	swprintf(message_buf, 100, L"%hs", text);
-	game.Text.TextHighPriority(message_buf, time, false, false);
-	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
-		script->Collect(1);
-	script->m_dwIp++;
-	return OR_CONTINUE;
-};
+//0AED=3,%3d% = float %1d% to_string_format %2d%
 
-//0ADB=2,%2d% = car_model %1o% name
-eOpcodeResult CustomOpcodes::OPCODE_0ADB(CScript *script)
-{
-	script->Collect(1);
-	unsigned mi; char *buf; static char cmessage_buf[0x80];
-	mi = game.Scripts.Params[0].nVar;
-	buf = (char*)((game.Misc.stVehicleModelInfo + 0x32) + ((mi - 130) * 0x174));
-	wcstombs(cmessage_buf, CustomText::GetText(game.Text.CText, 0, buf), sizeof(cmessage_buf));
-	game.Scripts.Params[0].pVar = cmessage_buf;
-	script->Store(1);
-	return OR_CONTINUE;
-}
 
-////////////////////////////////////////////INI FILES///////////////////////////
-char* MakeFullPath(char *path, char *dst)
-{
-	if (path[1] != ':')
-	{
-		//get current working directory
-		GetCurrentDirectory(MAX_PATH, dst);
-		strcat(dst, "\\");
-		strcat(dst, path);
-	}
-	else
-	{
-		strcpy(dst, path);
-	}
-	return dst;
-}
-
-//0AF0=4,%4d% = get_int_from_ini_file %1s% section %2s% key %3s%
-eOpcodeResult CustomOpcodes::OPCODE_0AF0(CScript *script)
-{
-	script->Collect(3);
-
-	char iniPath[MAX_PATH];
-	char path[100];
-	char sectionName[100];
-	char key[100];
-	int result;
-
-	strcpy(path, game.Scripts.Params[0].cVar);
-	strcpy(sectionName, game.Scripts.Params[1].cVar);
-	strcpy(key, game.Scripts.Params[2].cVar);
-
-	//if path is short, GetPrivateProfileInt() searches for the file in the Windows directory
-	MakeFullPath(path, iniPath);
-
-	result = GetPrivateProfileInt(sectionName, key, 0x80000000, iniPath);
-	game.Scripts.Params[0].nVar = result;
-	script->Store(1);
-	script->UpdateCompareFlag(result != 0x80000000);
-
-	return OR_CONTINUE;
-}
-
-//0AF1=4,write_int %1d% to_ini_file %2s% section %3s% key %4s%
-eOpcodeResult CustomOpcodes::OPCODE_0AF1(CScript *script)
-{
-	script->Collect(4);
-
-	char iniPath[MAX_PATH];
-	char path[100];
-	char sectionName[100];
-	char key[100];
-	DWORD value;
-	char strValue[100];
-	BOOL result;
-
-	value = game.Scripts.Params[0].nVar;
-	strcpy(path, game.Scripts.Params[1].cVar);
-	strcpy(sectionName, game.Scripts.Params[2].cVar);
-	strcpy(key, game.Scripts.Params[3].cVar);
-
-	//if path is short, GetPrivateProfileInt() searches for the file in the Windows directory
-	MakeFullPath(path, iniPath);
-
-	result = WritePrivateProfileString(sectionName, key, _itoa(value, strValue, 10), iniPath);
-	script->UpdateCompareFlag(result != 0);
-
-	return OR_CONTINUE;
-}
-
-//0AF2=4,%4d% = get_float_from_ini_file %1s% section %2s% key %3s%
-eOpcodeResult CustomOpcodes::OPCODE_0AF2(CScript *script)
-{
-	script->Collect(3);
-
-	char iniPath[MAX_PATH];
-	char path[100];
-	char sectionName[100];
-	char key[100];
-	float value = 0.0f;
-	char strValue[100];
-	BOOL result;
-
-	strcpy(path, game.Scripts.Params[0].cVar);
-	strcpy(sectionName, game.Scripts.Params[1].cVar);
-	strcpy(key, game.Scripts.Params[2].cVar);
-
-	//if path is short, GetPrivateProfileInt() searches for the file in the Windows directory
-	MakeFullPath(path, iniPath);
-
-	result = GetPrivateProfileString(sectionName, key, NULL, strValue, sizeof(strValue), iniPath);
-	if (result)
-	{
-		value = (float)atof(strValue);
-		game.Scripts.Params[0].fVar = value;
-		script->Store(1);
-	}
-	else
-	{
-		game.Scripts.Params[0].fVar = 0.0f;
-		script->Store(1);
-	}
-
-	script->UpdateCompareFlag(result != 0);
-
-	return OR_CONTINUE;
-}
-
-//0AF3=4,write_float %1d% to_ini_file %2s% section %3s% key %4s%
-eOpcodeResult CustomOpcodes::OPCODE_0AF3(CScript *script)
-{
-	script->Collect(4);
-
-	char iniPath[MAX_PATH];
-	char path[100];
-	char sectionName[100];
-	char key[100];
-	float value;
-	char strValue[100];
-	BOOL result;
-
-	value = game.Scripts.Params[0].fVar;
-	strcpy(path, game.Scripts.Params[1].cVar);
-	strcpy(sectionName, game.Scripts.Params[2].cVar);
-	strcpy(key, game.Scripts.Params[3].cVar);
-
-	//if path is short, GetPrivateProfileInt() searches for the file in the Windows directory
-	MakeFullPath(path, iniPath);
-
-	sprintf(strValue, "%g", value);
-
-	result = WritePrivateProfileString(sectionName, key, strValue, iniPath);
-	script->UpdateCompareFlag(result != 0);
-
-	return OR_CONTINUE;
-}
-
-//0AF4=4,%4d% = read_string_from_ini_file %1s% section %2s% key %3s%
-eOpcodeResult CustomOpcodes::OPCODE_0AF4(CScript *script)
-{
-	script->Collect(3);
-
-	char iniPath[MAX_PATH];
-	char path[100];
-	char sectionName[100];
-	char key[100];
-	char strValue[100];
-	char *strptr;
-	BOOL result;
-
-	strcpy(path, game.Scripts.Params[0].cVar);
-	strcpy(sectionName, game.Scripts.Params[1].cVar);
-	strcpy(key, game.Scripts.Params[2].cVar);
-
-	//if path is short, GetPrivateProfileInt() searches for the file in the Windows directory
-	MakeFullPath(path, iniPath);
-
-	result = GetPrivateProfileString(sectionName, key, NULL, strValue, sizeof(strValue), iniPath);
-
-	strcpy(game.Scripts.Params[0].cVar, strValue);
-	script->Store(1);
-
-	script->UpdateCompareFlag(result != 0);
-
-	return OR_CONTINUE;
-}
-
-//0AF5=4,write_string %1s% to_ini_file %2s% section %3s% key %4s%
-eOpcodeResult CustomOpcodes::OPCODE_0AF5(CScript *script)
-{
-	script->Collect(4);
-
-	char iniPath[MAX_PATH];
-	char path[100];
-	char sectionName[100];
-	char key[100];
-	char strValue[100];
-	char *strptr;
-	BOOL result;
-
-	switch ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
-	{
-	case PARAM_TYPE_STRING:
-		strcpy(strValue, game.Scripts.Params[0].cVar);
-		break;
-	default:
-		strptr = (char *)game.Scripts.Params[0].nVar;
-		strcpy(strValue, strptr);
-	}
-	strcpy(strValue, game.Scripts.Params[0].cVar);
-	strcpy(path, game.Scripts.Params[1].cVar);
-	strcpy(sectionName, game.Scripts.Params[2].cVar);
-	strcpy(key, game.Scripts.Params[3].cVar);
-
-	//if path is short, GetPrivateProfileInt() searches for the file in the Windows directory
-	MakeFullPath(path, iniPath);
-
-	result = WritePrivateProfileString(sectionName, key, strValue, iniPath);
-
-	script->UpdateCompareFlag(result != 0);
-
-	return OR_CONTINUE;
-}
+//0AEE=3,%3d% = exp %1d% base %2d% //all floats //dup
+//0AEF=3,%3d% = log %1d% base %2d% //all floats //dup
 
 // perform 'sprintf'-operation for parameters, passed through SCM
 int format(CScript *script, char *str, size_t len, const char *format)

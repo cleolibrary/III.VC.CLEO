@@ -1,0 +1,143 @@
+016F: draw_shadow 2 at 13@ 14@ 15@ angle 0.0 size 1.0 intensity 150 colour 0 0 0
+0349: text_draw_style = 3
+{ GTA3 only
+04C2: create_coordinate 0@ 1@ 2@ from_object 11@ offset -0.277 -16.662 3.152 ;0400 in VC
+04C3: create_coordinate 0@ 1@ 2@ from_car 10@ offset 0.0 -20.0 0.0 ;0407 in VC
+04C4: create_coordinate 0@ 1@ 2@ from_actor $PLAYER_ACTOR offset 0.0 1.2 0.0
+046F: store_player $player_char currently_armed_weapon_to 13@
+}
+0601: is_button_pressed_on_pad 3 with_sensitivity 0xFF
+0602: emulate_button_press_on_pad 2 with_sensitivity 0xFF
+0603: is_camera_in_widescreen_mode
+0604: 0@ = weapon 13 model
+0605: 0@ = model #TEC9 weapon_id
+0606: set_memory_offset memory_pointer 0x400040 memory_to_point 0x500040 virtual_protect 1
+0607: 0@ = get_current_weather
+0608: show_text_position 50.0 50.0 text "Test string"
+0609: show_formatted_text_position 50.0 50.0 text "model id = %d; weapon id = %d; weather = %d" 6@ 7@ 8@
+0A8C: write_memory 0xC0BC15 size 1 value 1 virtual_protect 0
+0A8D: $result = read_memory 1@ size 4 virtual_protect 0
+0A8E: 4@ = 5@ + 6@ // int
+0A8F: $var = 0@ - 1 // int
+0A90: $var = 100 * 1@ // int
+0A91: $div = 1 / 5 // int
+0A92: create_custom_thread "ShowTextBox.s"
+0A93: end_custom_thread
+0A94: start_custom_mission "missions\CustomMission1"
+0A95: enable_thread_saving
+0A96: $ActorStruct = actor $PLAYER_ACTOR struct
+0A97: $CarStruct = car $MyCar struct
+0A98: $ObjectStruct = object 0@ struct
+0A99: chdir 0
+0A9A: $hFILE = openfile "settings.ini" mode 0x72  // IF and SET
+0A9B: closefile $hFILE
+0A9C: 0@ = file $hFILE size
+0A9D: readfile $hFILE size 2 to $150
+0A9E: writefile $hFILE size 128 from 0@
+0A9F: 0@ = current_thread_pointer
+0AA0: gosub_if_false @CREATE_NEW_ACTOR
+0AA1: return_if_false
+0AA2: $hLIB = load_library "CLEO\version.dll" // IF and SET
+0AA3: free_library $hLIB
+0AA4: $hPROC = get_proc_address "GetVersion" library $hLIB // IF and SET
+0AA5: call $hPROC num_params 1 pop 1 $param
+0AA6: call_method $Destroy struct $CarStruct num_params 0 pop 0
+0AA7: call_function 0x569660 num_params 2 pop 2 $COORD_Y $COORD_X $GROUND
+0AA8: call_function_method 0x4048E0 struct 0xB74494 num_params 1 pop 0 $MyCar 0@
+0AA9: is_game_version_original
+0AAA: 0@ = thread 'OTB' pointer
+0AAB: file_exists "CLEO\version.dll"
+0AAC: $hMP3 = load_audiostream "CLEO\playlist\1.mp3"
+0AAD: set_mp3 $hMP3 perform_action 1
+0AAE: release_mp3 $hMP3
+0AAF: 0@ = get_mp3_length $hMP3
+0AB0: key_pressed 0x73
+0AB1: call_scm_func @GetSQR 1 10 $result
+0AB2: ret 1 0@
+0AB3: var 0 = 10
+0AB4: 0@ = var 0
+0AB5: store_actor $PLAYER_ACTOR closest_vehicle_to 0@ closest_ped_to 1@
+0AB6: store_target_marker_coords_to 0@ 1@ 2@ // IF and SET
+0AB7: get_vehicle $CAR number_of_gears_to 10@
+0AB8: get_vehicle $CAR current_gear_to 11@
+0AB9: get_mp3 $hMP3 state_to 7@
+0ABA: end_custom_thread_named 'BENZIN'
+0ABB: 0@ = audiostream $hMP3 volume
+0ABC: set_audiostream $hMP3 volume 0@
+0ABD: vehicle 0@ siren_on
+0ABE: vehicle 0@ engine_on
+0ABF: set_vehicle 0@ engine_state_to 0
+0AC0: audiostream $hMP3 loop 1
+0AC1: $hMP3 = load_audiostream_with_3d_support "sample.mp3" //IF and SET
+0AC2: set_3d_audiostream $hMP3 position 0@ 1@ 2@
+0AC3: link_3d_audiostream $hMP3 to_object $object
+0AC4: link_3d_audiostream $hMP3 to_actor $actor
+0AC5: link_3d_audiostream $hMP3 to_vehicle $car
+0AC6: 0@ = label @label offset
+0AC7: 0@ = var 0@ offset
+0AC8: 0@ = allocate_memory_size 260
+0AC9: free_allocated_memory 0@
+0ACA: show_text_box 0@v
+0ACB: show_styled_text 0@v time 1000 style 1
+0ACC: show_text_lowpriority 0x969110 time 100
+0ACD: show_text_highpriority 0x969110 time 100
+0ACE: show_formatted_text_box "This is %.4X opcode" 0x0ACE
+0ACF: show_formatted_styled_text "This is %.4X opcode" time 2000 style 1 0x0ACF
+0AD0: show_formatted_text_lowpriority "This is %.4X opcode" time 2000 0x0AD0
+0AD1: show_formatted_text_highpriority "This is %.4X opcode" time 2000 0x0AD1
+0AD2: $actor = player $PLAYER_CHAR targeted_actor //IF and SET
+0AD3: 0@v = format "%d + %d = %d" 2 2 4
+0AD4: 4@ = scan_string 0@v format "%d + %d = %d" 5@ 6@ 7@ //IF and SET
+0AD5: file $hFile seek 0x10 from_origin 1 //IF and SET
+0AD6: end_of_file $hFile reached
+0AD7: read_string_from_file $hFile to 0@v size 15 // IF and SET
+0AD8: write_string_to_file $hFile from 0@v //IF and SET
+0AD9: write_formatted_text "CLEO version: %d.%d.%d.%d" in_file $hFile 4 0 0 1
+0ADA: 0@ = scan_file $hFile format "CLEO version: %d.%d.%d.%d" 0@ 1@ 2@ 3@ //IF and SET
+0ADB: 0@v = car_model #LANDSTAL name
+0ADC: test_cheat "BLOWUP"
+0ADD: spawn_car_with_model #RHINO like_a_cheat
+0ADE: 0@ = text_by_GXT_entry 0@v
+0ADF: add_dynamic_GXT_entry "_TEST" text "Test string"
+0AE0: remove_dynamic_GXT_entry "_TEST"
+0AE1: $actor = random_actor_near_point 0@ 1@ 2@ in_radius 10.0 find_next 1 pass_deads 1
+0AE2: $car = random_vehicle_near_point 0@ 1@ 2@ in_radius 10.0 find_next 1 pass_wrecked 1
+0AE3: $object = random_object_near_point 0@ 1@ 2@ in_radius 10.0 find_next 1 //IF and SET
+0AE4: directory_exists "CLEO\CLEO_INI"
+0AE5: create_directory "CLEO\CLEO_INI" //IF and SET
+0AE6: 0@ = find_first_file "CLEO\*.cs" get_filename_to 1@v // IF and SET
+0AE7: 1@v = find_next_file 0@ // IF and SET
+0AE8: find_close 0@
+0AE9: pop_float 0@
+0AEA: $actor = actor_struct $ped_struct handle
+0AEB: $car = car_struct $vehicle_struct handle
+0AEC: $object = object_struct $object_struct handle
+0AED: 0@v = float 0@ to_string_format "%.15g"
+0AEE: 0@ = 2.0 exp 0.5 //all floats
+0AEF: 0@ = log 10.0 base 2.718281828459045 //all floats
+0AF0: 0@ = get_int_from_ini_file "cleo\config.ini" section "SectionName" key "intKey"
+0AF1: write_int 16 to_ini_file "cleo\config.ini" section "SectionName" key "intKey"
+0AF2: 0@ = get_float_from_ini_file "cleo\config.ini" section "SectionName" key "floatKey"
+0AF3: write_float 0.0 to_ini_file "cleo\config.ini" section "SectionName" key "floatKey"
+0AF4: 0@v = read_string_from_ini_file "cleo\config.ini" section "SectionName" key "stringKey"
+0AF5: write_string "new string value" to_ini_file "cleo\config.ini" section "SectionName" key "stringKey"
+0B00: delete_file "CLEO\log.txt"  // IF and SET
+0B01: delete_directory "CLEO\CLEO_SAVES" include_subdirs 0
+0B02: move_file "CLEO\1.txt" to "CLEO\2.txt" //IF and SET
+0B03: move_directory "CLEO\dir1" to "CLEO\dir2" //IF and SET
+0B04: copy_file "CLEO\1.txt" to "CLEO\2.txt" //IF and SET
+0B05: copy_directory "CLEO\dir1" to "CLEO\dir2" //IF and SET
+0B10: 0@ = 0@ AND 0xFF
+0B11: 0@ = 0@ OR 0x80
+0B12: 0@ = 1@ XOR 1
+0B13: 0@ = NOT 0@
+0B14: 0@ = 0@ MOD 5
+0B15: 0@ = 0@ SHR 8
+0B16: 0@ = 0@ SHL 8
+0B17: 0@ &= 1@
+0B18: 0@ |= 1@
+0B19: 0@ ^= 1@
+0B1A: ~0@
+0B1B: 0@ %= 1@
+0B1C: 0@ >>= 1@
+0B1D: 0@ <<= 1@

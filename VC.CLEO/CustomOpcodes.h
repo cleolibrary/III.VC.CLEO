@@ -4,6 +4,7 @@
 
 class CustomOpcodes
 {
+	static eOpcodeResult WINAPI DUMMY(CScript *script);
 	static eOpcodeResult WINAPI GOTO(CScript *script);
 	static eOpcodeResult WINAPI GOTO_IF_TRUE(CScript *script);
 	static eOpcodeResult WINAPI GOTO_IF_FALSE(CScript *script);
@@ -76,12 +77,6 @@ class CustomOpcodes
 	static eOpcodeResult WINAPI OPCODE_0AD0(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0AD1(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0ADB(CScript *script);
-	static eOpcodeResult WINAPI OPCODE_0AF0(CScript *script);
-	static eOpcodeResult WINAPI OPCODE_0AF1(CScript *script);
-	static eOpcodeResult WINAPI OPCODE_0AF2(CScript *script);
-	static eOpcodeResult WINAPI OPCODE_0AF3(CScript *script);
-	static eOpcodeResult WINAPI OPCODE_0AF4(CScript *script);
-	static eOpcodeResult WINAPI OPCODE_0AF5(CScript *script);
 public:
 	static void Register();
 };
