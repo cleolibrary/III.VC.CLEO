@@ -1,6 +1,8 @@
 #pragma once
 #include "CustomScript.h"
 #include "OpcodesSystem.h"
+#include <set>
+#include <algorithm>
 
 enum eGameVersion
 {
@@ -145,11 +147,15 @@ public:
 	} Shadows;
 
 	struct _Misc{
+		std::set<FILE *> *openedFiles;
+		std::set<void *> *allocatedMemory;
 		uintptr_t stVehicleModelInfo;
 		uintptr_t activePadState;
 		int(__cdecl *pfModelForWeapon)(int eWeaponType);
 		uintptr_t cameraWidescreen;
 		uintptr_t currentWeather;
+		char*(__cdecl *pfGetUserDirectory)();
+		void(__cdecl *pfSpawnCar)(unsigned int);
 	} Misc;
 };
 

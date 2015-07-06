@@ -42,6 +42,8 @@ eGameVersion GtaGame::GetGameVersion()
 
 void GtaGame::InitAndPatch()
 {
+	this->Misc.openedFiles = new std::set<FILE *>;
+	this->Misc.allocatedMemory = new std::set<void *>;
 	switch(this->Version)
 	{
 	case GAME_V1_0:
@@ -143,6 +145,8 @@ void GtaGame::InitAndPatch()
 		this->Misc.pfModelForWeapon = (int(__cdecl *)(int eWeaponType)) 0x4418B0;
 		this->Misc.cameraWidescreen = 0x7E46F5;
 		this->Misc.currentWeather = 0xA10AAA;
+		this->Misc.pfGetUserDirectory = (char*(__cdecl *)()) 0x602240;
+		this->Misc.pfSpawnCar = (void(__cdecl *)(unsigned int modelID)) 0x4AE8F0;
 		break;
 	case GAME_V1_1:
 		break;
@@ -169,6 +173,10 @@ void GtaGame::InitScripts_OnGameReinit()
 	game.Events.pfInitScripts_OnGameReinit();
 	scriptMgr.LoadScripts();
 	CustomText::Load();
+	std::for_each(game.Misc.openedFiles->begin(), game.Misc.openedFiles->end(), fclose);
+	game.Misc.openedFiles->clear();
+	std::for_each(game.Misc.allocatedMemory->begin(), game.Misc.allocatedMemory->end(), free);
+	game.Misc.allocatedMemory->clear();
 }
 
 void GtaGame::InitScripts_OnGameSaveLoad()
@@ -179,6 +187,10 @@ void GtaGame::InitScripts_OnGameSaveLoad()
 	game.Events.pfInitScripts_OnGameSaveLoad();
 	scriptMgr.LoadScripts();
 	CustomText::Load();
+	std::for_each(game.Misc.openedFiles->begin(), game.Misc.openedFiles->end(), fclose);
+	game.Misc.openedFiles->clear();
+	std::for_each(game.Misc.allocatedMemory->begin(), game.Misc.allocatedMemory->end(), free);
+	game.Misc.allocatedMemory->clear();
 }
 
 void GtaGame::OnShutdownGame()
@@ -187,6 +199,10 @@ void GtaGame::OnShutdownGame()
 	game.Events.pfShutdownGame();
 	scriptMgr.UnloadScripts();
 	CustomText::Unload();
+	std::for_each(game.Misc.openedFiles->begin(), game.Misc.openedFiles->end(), fclose);
+	game.Misc.openedFiles->clear();
+	std::for_each(game.Misc.allocatedMemory->begin(), game.Misc.allocatedMemory->end(), free);
+	game.Misc.allocatedMemory->clear();
 }
 
 void GtaGame::OnGameSaveScripts(int a, int b)

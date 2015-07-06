@@ -5,6 +5,7 @@
 #include "Log.h"
 #include "Fxt.h"
 #include "CleoVersion.h"
+#include <direct.h>
 int format(CScript *script, char *str, size_t len, const char *format);
 
 CLEOAPI tScriptVar* CLEO_GetParamsAddress()
@@ -79,15 +80,15 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x0A96, GET_CHAR_STRUCT);
 	Opcodes::RegisterOpcode(0x0A97, GET_CAR_STRUCT);
 	Opcodes::RegisterOpcode(0x0A98, GET_OBJECT_STRUCT);
-	Opcodes::RegisterOpcode(0x0A99, DUMMY);
-	Opcodes::RegisterOpcode(0x0A9A, DUMMY);
-	Opcodes::RegisterOpcode(0x0A9B, DUMMY);
-	Opcodes::RegisterOpcode(0x0A9C, DUMMY);
-	Opcodes::RegisterOpcode(0x0A9D, DUMMY);
-	Opcodes::RegisterOpcode(0x0A9E, DUMMY);
+	Opcodes::RegisterOpcode(0x0A99, OPCODE_0A99);
+	Opcodes::RegisterOpcode(0x0A9A, OPCODE_0A9A);
+	Opcodes::RegisterOpcode(0x0A9B, OPCODE_0A9B);
+	Opcodes::RegisterOpcode(0x0A9C, OPCODE_0A9C);
+	Opcodes::RegisterOpcode(0x0A9D, OPCODE_0A9D);
+	Opcodes::RegisterOpcode(0x0A9E, OPCODE_0A9E);
 	Opcodes::RegisterOpcode(0x0A9F, GET_THREAD_POINTER);
-	Opcodes::RegisterOpcode(0x0AA0, DUMMY);
-	Opcodes::RegisterOpcode(0x0AA1, DUMMY);
+	Opcodes::RegisterOpcode(0x0AA0, OPCODE_0AA0);
+	Opcodes::RegisterOpcode(0x0AA1, OPCODE_0AA1);
 	Opcodes::RegisterOpcode(0x0AA2, OPCODE_0AA2);
 	Opcodes::RegisterOpcode(0x0AA3, OPCODE_0AA3);
 	Opcodes::RegisterOpcode(0x0AA4, OPCODE_0AA4);
@@ -95,7 +96,7 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x0AA6, CALL_METHOD);
 	Opcodes::RegisterOpcode(0x0AA7, CALL_FUNCTION);
 	Opcodes::RegisterOpcode(0x0AA8, CALL_FUNCTION_METHOD);
-	Opcodes::RegisterOpcode(0x0AA9, DUMMY);
+	Opcodes::RegisterOpcode(0x0AA9, OPCODE_0AA9);
 	Opcodes::RegisterOpcode(0x0AAA, GET_NAMED_THREAD_POINTER);
 	Opcodes::RegisterOpcode(0x0AAB, OPCODE_0AAB);
 	Opcodes::RegisterOpcode(0x0AAC, DUMMY);
@@ -137,14 +138,14 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x0AD0, OPCODE_0AD0);
 	Opcodes::RegisterOpcode(0x0AD1, OPCODE_0AD1);
 	Opcodes::RegisterOpcode(0x0AD2, DUMMY);
-	Opcodes::RegisterOpcode(0x0AD3, DUMMY);
-	Opcodes::RegisterOpcode(0x0AD4, DUMMY);
-	Opcodes::RegisterOpcode(0x0AD5, DUMMY);
-	Opcodes::RegisterOpcode(0x0AD6, DUMMY);
-	Opcodes::RegisterOpcode(0x0AD7, DUMMY);
-	Opcodes::RegisterOpcode(0x0AD8, DUMMY);
-	Opcodes::RegisterOpcode(0x0AD9, DUMMY);
-	Opcodes::RegisterOpcode(0x0ADA, DUMMY);
+	Opcodes::RegisterOpcode(0x0AD3, OPCODE_0AD3);
+	Opcodes::RegisterOpcode(0x0AD4, OPCODE_0AD4);
+	Opcodes::RegisterOpcode(0x0AD5, OPCODE_0AD5);
+	Opcodes::RegisterOpcode(0x0AD6, OPCODE_0AD6);
+	Opcodes::RegisterOpcode(0x0AD7, OPCODE_0AD7);
+	Opcodes::RegisterOpcode(0x0AD8, OPCODE_0AD8);
+	Opcodes::RegisterOpcode(0x0AD9, OPCODE_0AD9);
+	Opcodes::RegisterOpcode(0x0ADA, OPCODE_0ADA);
 	Opcodes::RegisterOpcode(0x0ADB, OPCODE_0ADB);
 	Opcodes::RegisterOpcode(0x0ADC, OPCODE_0ADC);
 	Opcodes::RegisterOpcode(0x0ADD, DUMMY);
@@ -1124,19 +1125,122 @@ eOpcodeResult CustomOpcodes::OPCODE_0A91(CScript *script)
 //0A98=2,%2d% = object %1d% struct //dup
 
 //0A99=1,chdir %1buserdir/rootdir%
+eOpcodeResult CustomOpcodes::OPCODE_0A99(CScript *script)
+{
+	script->Collect(1);
+	auto paramType = script->GetNextParamType();
+	if (paramType != PARAM_TYPE_STRING)
+	{
+		_chdir(game.Scripts.Params[0].nVar ? game.Misc.pfGetUserDirectory() : "");
+	}
+	else
+	{
+		_chdir(game.Scripts.Params[0].cVar);
+	}
+	return OR_CONTINUE;
+}
+
+
 //0A9A=3,%3d% = openfile %1s% mode %2d% ; IF and SET
+eOpcodeResult CustomOpcodes::OPCODE_0A9A(CScript *script)
+{
+	script->Collect(1);
+	const char *fname = game.Scripts.Params[0].cVar;
+	auto paramType = script->GetNextParamType();
+	script->Collect(1);
+	char mode[0x10];
+
+	if (paramType != PARAM_TYPE_STRING)
+	{
+		union
+		{
+			unsigned uParam;
+			char strParam[4];
+		}param;
+		param.uParam = game.Scripts.Params[0].nVar;
+		strcpy(mode, param.strParam);
+	}
+	else
+		strcpy(mode, game.Scripts.Params[0].cVar);
+
+	auto file = fopen(fname, mode);
+	game.Scripts.Params[0].pVar = file;
+	script->UpdateCompareFlag(file != nullptr);
+	if (file) game.Misc.openedFiles->insert(file);
+	script->Store(1);
+	return OR_CONTINUE;
+}
+
 //0A9B=1,closefile %1d%
+eOpcodeResult CustomOpcodes::OPCODE_0A9B(CScript *script)
+{
+	script->Collect(1);
+	fclose((FILE *)game.Scripts.Params[0].pVar);
+	game.Misc.openedFiles->erase((FILE *)game.Scripts.Params[0].pVar);
+	return OR_CONTINUE;
+}
+
 //0A9C=2,%2d% = file %1d% size
+eOpcodeResult CustomOpcodes::OPCODE_0A9C(CScript *script)
+{
+	script->Collect(1);
+	FILE *file;
+	file = (FILE *)game.Scripts.Params[0].pVar;
+	auto savedPos = ftell(file);
+	fseek(file, 0, SEEK_END);
+	game.Scripts.Params[0].nVar = static_cast<unsigned>(ftell(file));
+	fseek(file, savedPos, SEEK_SET);
+	script->Store(1);
+	return OR_CONTINUE;
+}
+
 //0A9D=3,readfile %1d% size %2d% to %3d%
+eOpcodeResult CustomOpcodes::OPCODE_0A9D(CScript *script)
+{
+	script->Collect(3);
+	FILE *file;
+	file = (FILE *)game.Scripts.Params[0].pVar;
+	unsigned size = game.Scripts.Params[1].nVar;
+	void *buf;
+	buf = game.Scripts.Params[2].cVar;
+	fread(buf, size, 1, file);
+	return OR_CONTINUE;
+}
+
 //0A9E=3,writefile %1d% size %2d% from %3d%
+eOpcodeResult CustomOpcodes::OPCODE_0A9E(CScript *script)
+{
+	script->Collect(3);
+	FILE *file;
+	file = (FILE *)game.Scripts.Params[0].pVar;
+	unsigned size = game.Scripts.Params[1].nVar;
+	const void *buf;
+	buf = game.Scripts.Params[2].cVar;
+	fwrite(buf, size, 1, file);
+	fflush(file);
+	return OR_CONTINUE;
+}
+
 //0A9F=1,%1d% = current_thread_pointer //dup
 
 
 //0AA0=1,gosub_if_false %1p%
-
+eOpcodeResult CustomOpcodes::OPCODE_0AA0(CScript *script)
+{
+	script->Collect(1);
+	script->m_aGosubAddr[script->m_nCurrentGosub++] = script->m_dwIp;
+	if (!script->m_bCondResult)
+		script->JumpTo(game.Scripts.Params[0].nVar);
+	return OR_CONTINUE;
+}
 
 //0AA1=0,return_if_false
-
+eOpcodeResult CustomOpcodes::OPCODE_0AA1(CScript *script)
+{
+	if (script->m_bCondResult) return OR_CONTINUE;
+	script->m_dwIp = script->m_aGosubAddr[--script->m_nCurrentGosub];
+	return OR_CONTINUE;
+}
 
 //0AA2=2,%2h% = load_library %1s% ; IF and SET
 eOpcodeResult CustomOpcodes::OPCODE_0AA2(CScript *script)
@@ -1179,7 +1283,12 @@ eOpcodeResult CustomOpcodes::OPCODE_0AA4(CScript *script)
 //0AA8=-1,call_function_method %1d% struct %2d% num_params %3h% pop %4h% //dup
 
 
-//0AA9=0,  is_game_version_original //replaced with 05E5
+//0AA9=0,  is_game_version_original
+eOpcodeResult CustomOpcodes::OPCODE_0AA9(CScript *script)
+{
+	script->UpdateCompareFlag(game.GetGameVersion() == GAME_V1_0);
+	return OR_CONTINUE;
+}
 //0AAA=2,%2d% = thread %1s% pointer //dup
 
 
@@ -1194,72 +1303,31 @@ eOpcodeResult CustomOpcodes::OPCODE_0AAB(CScript *script)
 }
 
 //0AAC=2,%2d% = load_audiostream %1d%
-
-
 //0AAD=2,set_mp3 %1d% perform_action %2d%
-
-
 //0AAE=1,release_mp3 %1d%
-
-
 //0AAF=2,%2d% = get_mp3_length %1d%
-
 
 //0AB0=1,  key_pressed %1d% //dup
 //0AB1=-1,call_scm_func %1p% //dup
 //0AB2=-1,ret  //dup
 //0AB3=2,var %1d% = %2d% //not supported
 //0AB4=2,%2d% = var %1d% //not supported
-
-
 //0AB5=3,store_actor %1d% closest_vehicle_to %2d% closest_ped_to %3d%
-
-
 //0AB6=3,store_target_marker_coords_to %1d% %2d% %3d% // IF and SET //not supported
-
-
 //0AB7=2,get_vehicle %1d% number_of_gears_to %2d%
-
-
 //0AB8=2,get_vehicle %1d% current_gear_to %2d%
-
-
 //0AB9=2,get_mp3 %1d% state_to %2d%
-
-
 //0ABA=1,end_custom_thread_named %1s% //dup
-
-
 //0ABB=2,%2d% = audiostream %1d% volume
-
-
 //0ABC=2,set_audiostream %1d% volume %2d%
-
-
 //0ABD=1,  vehicle %1d% siren_on
-
-
 //0ABE=1,  vehicle %1d% engine_on
-
-
 //0ABF=2,set_vehicle %1d% engine_state_to %2d%
-
-
 //0AC0=2,audiostream %1d% loop %2d%
-
-
 //0AC1=2,%2d% = load_audiostream_with_3d_support %1d% ; IF and SET
-
-
 //0AC2=4,set_audiostream %1d% 3d_position %2d% %3d% %4d%
-
-
 //0AC3=2,link_3d_audiostream %1d% to_object %2d%
-
-
 //0AC4=2,link_3d_audiostream %1d% to_actor %2d%
-
-
 //0AC5=2,link_3d_audiostream %1d% to_vehicle %2d%
 
 
@@ -1268,10 +1336,29 @@ eOpcodeResult CustomOpcodes::OPCODE_0AAB(CScript *script)
 
 
 //0AC8=2,%2d% = allocate_memory_size %1d%
-
+eOpcodeResult opcode_0AC8(CScript *script)
+{
+	script->Collect(1);
+	unsigned size = game.Scripts.Params[0].nVar;
+	void *mem = malloc(size);
+	if (mem)
+	{
+		game.Misc.allocatedMemory->insert(mem);
+		mem = game.Scripts.Params[0].pVar;
+		script->UpdateCompareFlag(true);
+	}
+	else script->UpdateCompareFlag(false);
+	return OR_CONTINUE;
+};
 
 //0AC9=1,free_allocated_memory %1d%
-
+eOpcodeResult opcode_0AC9(CScript *script)
+{
+	void *mem = game.Scripts.Params[0].pVar;
+	free(mem);
+	game.Misc.allocatedMemory->erase(mem);
+	return OR_CONTINUE;
+};
 
 //0ACA=1,show_text_box %1s%
 eOpcodeResult CustomOpcodes::OPCODE_0ACA(CScript *script)
@@ -1389,30 +1476,131 @@ eOpcodeResult CustomOpcodes::OPCODE_0AD1(CScript *script)
 
 //0AD2=2,%2d% = player %1d% targeted_actor //IF and SET
 
+//0AD3=-1,string %1d% format %2d%
+eOpcodeResult CustomOpcodes::OPCODE_0AD3(CScript *script)
+{
+	script->Collect(2);
+	char fmt[100], *dst;
+	dst = (char*)game.Scripts.Params[0].pVar;
+	strcpy(fmt, game.Scripts.Params[1].cVar);
+	format(script, dst, -1ul, fmt);
+	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
+		script->Collect(1);
+	script->m_dwIp++;
+	return OR_CONTINUE;
+};
 
-//0AD3=-1,%1d% = format %2s%
+//0AD4=-1,  scan_string %1d% format %2s% store_num_results_to %3d%
+eOpcodeResult CustomOpcodes::OPCODE_0AD4(CScript *script)
+{
+	script->Collect(2);
+	char fmt[100], *src;
+	src = game.Scripts.Params[0].cVar;
+	strcpy(fmt, game.Scripts.Params[1].cVar);
+	size_t cExParams = 0;
+	int *result = (int *)script->GetPointerToScriptVariable();
+	tScriptVar *ExParams[35];
+	// read extra params
+	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
+	{
+		ExParams[cExParams++] = (tScriptVar *)script->GetPointerToScriptVariable();
+	}
+	script->m_dwIp++;
 
-
-//0AD4=-1,%3d% = scan_string %1d% format %2s%
-
+	*result = sscanf(src, fmt,
+		ExParams[0], ExParams[1], ExParams[2], ExParams[3], ExParams[4], ExParams[5],
+		ExParams[6], ExParams[7], ExParams[8], ExParams[9], ExParams[10], ExParams[11],
+		ExParams[12], ExParams[13], ExParams[14], ExParams[15], ExParams[16], ExParams[17],
+		ExParams[18], ExParams[19], ExParams[20], ExParams[21], ExParams[22], ExParams[23],
+		ExParams[24], ExParams[25], ExParams[26], ExParams[27], ExParams[28], ExParams[29],
+		ExParams[30], ExParams[31], ExParams[32], ExParams[33], ExParams[34]);
+	return OR_CONTINUE;
+};
 
 //0AD5=3,file %1d% seek %2d% from_origin %3d% //IF and SET
+eOpcodeResult CustomOpcodes::OPCODE_0AD5(CScript *script)
+{
+	script->Collect(3);
+	FILE* file = (FILE*)game.Scripts.Params[0].pVar;
+	int seek = game.Scripts.Params[1].nVar;
+	int origin = game.Scripts.Params[2].nVar;
+	script->UpdateCompareFlag(fseek(file, seek, origin) == 0);
+	return OR_CONTINUE;
+};
 
-
-//0AD6=1,  end_of_file %1d% reached
-
+//0AD6=1, end_of_file %1d% reached
+eOpcodeResult CustomOpcodes::OPCODE_0AD6(CScript *script)
+{
+	script->Collect(1);
+	FILE* file = (FILE*)game.Scripts.Params[0].pVar;
+	script->UpdateCompareFlag(feof(file) != 0);
+	return OR_CONTINUE;
+};
 
 //0AD7=3,read_string_from_file %1d% to %2d% size %3d% // IF and SET
-
+eOpcodeResult CustomOpcodes::OPCODE_0AD7(CScript *script)
+{
+	script->Collect(3);
+	FILE* file = (FILE*)game.Scripts.Params[0].pVar;
+	char* buf = (char*)game.Scripts.Params[1].pVar;
+	unsigned size = game.Scripts.Params[2].nVar;
+	script->UpdateCompareFlag(fgets(buf, size, file) == buf);
+	return OR_CONTINUE;
+};
 
 //0AD8=2,write_string_to_file %1d% from %2d% //IF and SET
-
+eOpcodeResult CustomOpcodes::OPCODE_0AD8(CScript *script)
+{
+	script->Collect(2);
+	FILE* file = (FILE*)game.Scripts.Params[0].pVar;
+	char* buf = (char*)game.Scripts.Params[1].pVar;
+	script->UpdateCompareFlag(fputs(buf, file) > 0);
+	fflush(file);
+	return OR_CONTINUE;
+};
 
 //0AD9=-1,write_formatted_text %2d% in_file %1d%
-
+eOpcodeResult CustomOpcodes::OPCODE_0AD9(CScript *script)
+{
+	script->Collect(2);
+	char fmt[100]; char text[100];
+	FILE* file = (FILE*)game.Scripts.Params[1].pVar;
+	strcpy(fmt, game.Scripts.Params[1].cVar);
+	format(script, text, sizeof(text), fmt);
+	fputs(text, file);
+	fflush(file);
+	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
+		script->Collect(1);
+	script->m_dwIp++;
+	return OR_CONTINUE;
+};
 
 //0ADA=-1,%3d% = scan_file %1d% format %2d% //IF and SET
+eOpcodeResult CustomOpcodes::OPCODE_0ADA(CScript *script)
+{
+	script->Collect(2);
+	char fmt[100];
+	FILE* file = (FILE*)game.Scripts.Params[0].pVar;
+	strcpy(fmt, game.Scripts.Params[1].cVar);
+	size_t cExParams = 0;
+	int *result = (int *)script->GetPointerToScriptVariable();
+	tScriptVar *ExParams[35];
+	// read extra params
+	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
+	{
+		ExParams[cExParams++] = (tScriptVar *)script->GetPointerToScriptVariable();
+	}
+	script->m_dwIp++;
 
+	*result = fscanf(file, fmt,
+		ExParams[0], ExParams[1], ExParams[2], ExParams[3], ExParams[4], ExParams[5],
+		ExParams[6], ExParams[7], ExParams[8], ExParams[9], ExParams[10], ExParams[11],
+		ExParams[12], ExParams[13], ExParams[14], ExParams[15], ExParams[16], ExParams[17],
+		ExParams[18], ExParams[19], ExParams[20], ExParams[21], ExParams[22], ExParams[23],
+		ExParams[24], ExParams[25], ExParams[26], ExParams[27], ExParams[28], ExParams[29],
+		ExParams[30], ExParams[31], ExParams[32], ExParams[33], ExParams[34]);
+	return OR_CONTINUE;
+};
 
 //0ADB=2,%2d% = car_model %1o% name
 eOpcodeResult CustomOpcodes::OPCODE_0ADB(CScript *script)
@@ -1449,10 +1637,21 @@ eOpcodeResult CustomOpcodes::OPCODE_0ADC(CScript *script)
 }
 
 //0ADD=1,spawn_car_with_model %1o% like_a_cheat
-
+eOpcodeResult opcode_0ADD(CScript *script)
+{
+	script->Collect(1);
+	game.Misc.pfSpawnCar(game.Scripts.Params[0].nVar);
+	return OR_CONTINUE;
+}
 
 //0ADE=2,%2d% = text_by_GXT_entry %1d%
-
+eOpcodeResult opcode_0ADE(CScript *script)
+{
+	script->Collect(2);
+	char *gxt = game.Scripts.Params[0].cVar;
+	swprintf(game.Text.pfGetText(game.Text.CText, gxt), 100, L"%hs", (char*)game.Scripts.Params[1].pVar);
+	return OR_CONTINUE;
+}
 
 //0ADF=2,add_dynamic_GXT_entry %1d% text %2d%
 eOpcodeResult CustomOpcodes::OPCODE_0ADF(CScript *script)
@@ -1510,11 +1709,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0AE0(CScript *script)
 //0AE1=7,%7d% = random_actor_near_point %1d% %2d% %3d% in_radius %4d% find_next %5h% pass_deads %6h% //IF and SET //dup
 //0AE2=7,%7d% = random_vehicle_near_point %1d% %2d% %3d% in_radius %4d% find_next %5h% pass_wrecked %6h% //IF and SET //dup
 //0AE3=6,%6d% = random_object_near_point %1d% %2d% %3d% in_radius %4d% find_next %5h% //IF and SET //dup
-
-
-//0AE4=1,  directory_exists %1d%
-
-
+//0AE4=1,directory_exists %1d%
 //0AE5=1,create_directory %1d% ; IF and SET
 
 
@@ -1531,13 +1726,9 @@ eOpcodeResult CustomOpcodes::OPCODE_0AE0(CScript *script)
 //0AEA=2,%2d% = actor_struct %1d% handle //dup
 //0AEB=2,%2d% = car_struct %1d% handle //dup
 //0AEC=2,%2d% = object_struct %1d% handle //dup
-
 //0AED=3,%3d% = float %1d% to_string_format %2d%
-
-
 //0AEE=3,%3d% = exp %1d% base %2d% //all floats //dup
 //0AEF=3,%3d% = log %1d% base %2d% //all floats //dup
-
 
 // perform 'sprintf'-operation for parameters, passed through SCM
 int format(CScript *script, char *str, size_t len, const char *format)
