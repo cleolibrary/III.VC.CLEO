@@ -127,8 +127,8 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x0AC5, DUMMY);
 	Opcodes::RegisterOpcode(0x0AC6, GET_LABEL_OFFSET);
 	Opcodes::RegisterOpcode(0x0AC7, GET_VAR_OFFSET);
-	Opcodes::RegisterOpcode(0x0AC8, DUMMY);
-	Opcodes::RegisterOpcode(0x0AC9, DUMMY);
+	Opcodes::RegisterOpcode(0x0AC8, OPCODE_0AC8);
+	Opcodes::RegisterOpcode(0x0AC9, OPCODE_0AC9);
 	Opcodes::RegisterOpcode(0x0ACA, OPCODE_0ACA);
 	Opcodes::RegisterOpcode(0x0ACB, OPCODE_0ACB);
 	Opcodes::RegisterOpcode(0x0ACC, OPCODE_0ACC);
@@ -148,8 +148,8 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x0ADA, OPCODE_0ADA);
 	Opcodes::RegisterOpcode(0x0ADB, OPCODE_0ADB);
 	Opcodes::RegisterOpcode(0x0ADC, OPCODE_0ADC);
-	Opcodes::RegisterOpcode(0x0ADD, DUMMY);
-	Opcodes::RegisterOpcode(0x0ADE, DUMMY);
+	Opcodes::RegisterOpcode(0x0ADD, OPCODE_0ADD);
+	Opcodes::RegisterOpcode(0x0ADE, OPCODE_0ADE);
 	Opcodes::RegisterOpcode(0x0ADF, OPCODE_0ADF);
 	Opcodes::RegisterOpcode(0x0AE0, OPCODE_0AE0);
 	Opcodes::RegisterOpcode(0x0AE1, FIND_RANDOM_CHAR);
@@ -973,7 +973,7 @@ eOpcodeResult CustomOpcodes::START_CUSTOM_THREAD_VSTRING(CScript *script)
 eOpcodeResult CustomOpcodes::IS_BUTTON_PRESSED_ON_PAD(CScript *script)
 {
 	script->Collect(2);
-	script->UpdateCompareFlag(*(short*)((game.Scripts.Params[0].nVar * 2) + game.Misc.activePadState) == game.Scripts.Params[1].nVar);
+	script->UpdateCompareFlag(*(short*)((game.Scripts.Params[0].nVar * 2) + game.Misc.activePadState) >= (short)game.Scripts.Params[1].nVar);
 	return OR_CONTINUE;
 }
 
@@ -1336,24 +1336,26 @@ eOpcodeResult CustomOpcodes::OPCODE_0AAB(CScript *script)
 
 
 //0AC8=2,%2d% = allocate_memory_size %1d%
-eOpcodeResult opcode_0AC8(CScript *script)
+eOpcodeResult CustomOpcodes::OPCODE_0AC8(CScript *script)
 {
 	script->Collect(1);
 	unsigned size = game.Scripts.Params[0].nVar;
-	void *mem = malloc(size);
+	void *mem = calloc(size, sizeof(char));
 	if (mem)
 	{
 		game.Misc.allocatedMemory->insert(mem);
-		mem = game.Scripts.Params[0].pVar;
+		game.Scripts.Params[0].pVar = mem;
 		script->UpdateCompareFlag(true);
 	}
 	else script->UpdateCompareFlag(false);
+	script->Store(1);
 	return OR_CONTINUE;
 };
 
 //0AC9=1,free_allocated_memory %1d%
-eOpcodeResult opcode_0AC9(CScript *script)
+eOpcodeResult CustomOpcodes::OPCODE_0AC9(CScript *script)
 {
+	script->Collect(1);
 	void *mem = game.Scripts.Params[0].pVar;
 	free(mem);
 	game.Misc.allocatedMemory->erase(mem);
@@ -1605,13 +1607,12 @@ eOpcodeResult CustomOpcodes::OPCODE_0ADA(CScript *script)
 //0ADB=2,%2d% = car_model %1o% name
 eOpcodeResult CustomOpcodes::OPCODE_0ADB(CScript *script)
 {
-	script->Collect(1);
-	unsigned mi; char *buf; static char cmessage_buf[0x80];
-	mi = game.Scripts.Params[0].nVar;
-	buf = (char*)((game.Misc.stVehicleModelInfo + 0x36) + ((mi - 90) * 0x1F8));
-	wcstombs(cmessage_buf, CustomText::GetText(game.Text.CText, 0, buf), sizeof(cmessage_buf));
-	game.Scripts.Params[0].pVar = cmessage_buf;
-	script->Store(1);
+	script->Collect(2);
+	unsigned mi = game.Scripts.Params[0].nVar;
+	char *result = game.Scripts.Params[1].cVar;
+	char *gxt = (char*)((game.Misc.stVehicleModelInfo + 0x36) + ((mi - 90) * 0x1F8));
+	wchar_t *text = CustomText::GetText(game.Text.CText, 0, gxt);
+	wcstombs(result, text, wcslen(text));
 	return OR_CONTINUE;
 }
 
@@ -1637,7 +1638,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0ADC(CScript *script)
 }
 
 //0ADD=1,spawn_car_with_model %1o% like_a_cheat
-eOpcodeResult opcode_0ADD(CScript *script)
+eOpcodeResult CustomOpcodes::OPCODE_0ADD(CScript *script)
 {
 	script->Collect(1);
 	game.Misc.pfSpawnCar(game.Scripts.Params[0].nVar);
@@ -1645,11 +1646,13 @@ eOpcodeResult opcode_0ADD(CScript *script)
 }
 
 //0ADE=2,%2d% = text_by_GXT_entry %1d%
-eOpcodeResult opcode_0ADE(CScript *script)
+eOpcodeResult CustomOpcodes::OPCODE_0ADE(CScript *script)
 {
 	script->Collect(2);
 	char *gxt = game.Scripts.Params[0].cVar;
-	swprintf(game.Text.pfGetText(game.Text.CText, gxt), 100, L"%hs", (char*)game.Scripts.Params[1].pVar);
+	char *result = game.Scripts.Params[1].cVar;
+	wchar_t *text = CustomText::GetText(game.Text.CText, 0, gxt);
+	wcstombs(result, text, wcslen(text));
 	return OR_CONTINUE;
 }
 
@@ -1686,9 +1689,19 @@ eOpcodeResult CustomOpcodes::OPCODE_0AE0(CScript *script)
 				else
 					entry->m_pNext = 0;
 
-				LOGL(LOG_PRIORITY_CUSTOM_TEXT, "Unloaded custom text \"%s\"", entry->m_key);
+				LOGL(LOG_PRIORITY_CUSTOM_TEXT, "Unloaded custom text \"%s\"", next->m_key);
 				delete next;
 				return OR_CONTINUE;
+			}
+			else
+			{
+				if (strcmp(game.Scripts.Params[0].cVar, entry->m_key) == 0)
+				{
+					CustomText::pCustomTextList = next;
+					LOGL(LOG_PRIORITY_CUSTOM_TEXT, "Unloaded custom text \"%s\"", entry->m_key);
+					delete entry;
+					return OR_CONTINUE;
+				}
 			}
 		}
 		else
@@ -1702,7 +1715,6 @@ eOpcodeResult CustomOpcodes::OPCODE_0AE0(CScript *script)
 			}
 		}
 	}
-
 	return OR_CONTINUE;
 }
 
