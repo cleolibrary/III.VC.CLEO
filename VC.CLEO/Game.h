@@ -9,7 +9,8 @@ enum eGameVersion
 	GAME_UNKNOWN,
 	GAME_V1_0,
 	GAME_V1_1,
-	GAME_VSTEAM
+	GAME_VSTEAM,
+	GAME_VSTEAMENC
 };
 
 struct CVector
@@ -49,7 +50,7 @@ struct CTextDrawer
 class GtaGame
 {
 	void InitialiseGameVersion();
-	void InitAndPatch();
+	public: void InitAndPatch();
 
 public:
 

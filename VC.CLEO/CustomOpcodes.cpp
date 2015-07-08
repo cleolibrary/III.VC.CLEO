@@ -899,7 +899,7 @@ eOpcodeResult CustomOpcodes::START_CUSTOM_THREAD_VSTRING(CScript *script)
 eOpcodeResult CustomOpcodes::IS_BUTTON_PRESSED_ON_PAD(CScript *script)
 {
 	script->Collect(2);
-	script->UpdateCompareFlag(*(short*)((game.Scripts.Params[0].nVar * 2) + game.Misc.activePadState) >= (short)game.Scripts.Params[1].nVar);
+	script->UpdateCompareFlag(*(short*)((game.Scripts.Params[0].nVar * 2) + game.Misc.activePadState) == (short)game.Scripts.Params[1].nVar);
 	return OR_CONTINUE;
 }
 

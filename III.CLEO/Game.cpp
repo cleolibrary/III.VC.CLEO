@@ -12,22 +12,50 @@ GtaGame game;
 
 #define GAME_ID_GTA3_1_0 0x598B80
 #define GAME_ID_GTA3_1_1 0x598E40
+#define GAME_ID_GTA3_STEAM 0x00000
+#define GAME_ID_GTA3_STEAMENC 0x01
+
+DWORD WINAPI SteamHandler(LPVOID)
+{
+	while (true)
+	{
+		Sleep(0);
+		if (GAME_VERSION_ID == GAME_ID_GTA3_STEAM) break;
+	}
+	game.Version = GAME_VSTEAM;
+	game.InitAndPatch();
+	return 0;
+}
 
 GtaGame::GtaGame()
 {
 	this->InitialiseGameVersion();
-	this->InitAndPatch();
+
+	if (game.GetGameVersion() == GAME_VSTEAMENC)
+	{
+		CreateThread(0, 0, (LPTHREAD_START_ROUTINE)&SteamHandler, NULL, 0, NULL);
+	}
+	else
+	{
+		this->InitAndPatch();
+	}
 }
 
 void GtaGame::InitialiseGameVersion()
 {
-	switch(GAME_VERSION_ID)
+	switch (GAME_VERSION_ID)
 	{
 	case GAME_ID_GTA3_1_0:
 		this->Version = GAME_V1_0;
 		break;
 	case GAME_ID_GTA3_1_1:
 		this->Version = GAME_V1_1;
+		break;
+	case GAME_ID_GTA3_STEAM:
+		this->Version = GAME_VSTEAM;
+		break;
+	case GAME_ID_GTA3_STEAMENC:
+		this->Version = GAME_VSTEAMENC;
 		break;
 	default:
 		this->Version = GAME_UNKNOWN;
@@ -133,6 +161,8 @@ void GtaGame::InitAndPatch()
 		this->Misc.pfSpawnCar = (void(__cdecl *)(unsigned int modelID)) 0x490EE0;
 		break;
 	case GAME_V1_1:
+		break;
+	case GAME_VSTEAM:
 		break;
 	default:
 		break;
