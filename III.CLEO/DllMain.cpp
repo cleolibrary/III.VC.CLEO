@@ -20,19 +20,6 @@ void RwRenderStateSetHook()
 	});
 }
 
-DWORD WINAPI SteamHandlerDllMain(LPVOID)
-{
-	while (true)
-	{
-		Sleep(0);
-		if (game.GetGameVersion() == GAME_VSTEAM) break;
-	}
-	RwRenderStateSetHook<0x51FB25>();
-	CustomOpcodes::Register();
-	CleoPlugins::LoadPlugins();
-	return 0;
-}
-
 std::vector<char>	aScriptTextures;
 std::vector<char>	aTextSprites;
 std::vector<char>	aTextDrawers;
@@ -311,16 +298,6 @@ BOOL __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 		LOGL(LOG_PRIORITY_ALWAYS, "GTA 3 CLEO v%d.%d.%d.%d Log File", CLEO_VERSION_MAIN, CLEO_VERSION_MAJOR, 
 			CLEO_VERSION_MINOR, CLEO_VERSION_BINARY);
 
-		if (game.Version == GAME_VSTEAMENC)
-		{
-			CreateThread(0, 0, (LPTHREAD_START_ROUTINE)&SteamHandlerDllMain, NULL, 0, NULL);
-		}
-		else
-		{
-			CustomOpcodes::Register();
-			CleoPlugins::LoadPlugins();
-		}
-
 		switch (game.Version)
 		{
 		case GAME_V1_0:
@@ -340,6 +317,9 @@ BOOL __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 			LOGL(LOG_PRIORITY_GAME_EVENT, "GTA III unknown version");
 			break;
 		}
+
+		CustomOpcodes::Register();
+		CleoPlugins::LoadPlugins();
 
 		DWORD attr = GetFileAttributes("audio\\HEAD.wav");
 		if(attr != -1 && !(attr & FILE_ATTRIBUTE_DIRECTORY))

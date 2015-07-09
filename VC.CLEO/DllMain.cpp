@@ -140,16 +140,6 @@ BOOL __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 		LOGL(LOG_PRIORITY_ALWAYS, "GTA VC CLEO v%d.%d.%d.%d Log File", CLEO_VERSION_MAIN, CLEO_VERSION_MAJOR, 
 			CLEO_VERSION_MINOR, CLEO_VERSION_BINARY);
 
-		if (game.GetGameVersion() == GAME_VSTEAMENC)
-		{
-			CreateThread(0, 0, (LPTHREAD_START_ROUTINE)&SteamHandlerDllMain, NULL, 0, NULL);
-		}
-		else
-		{
-			CustomOpcodes::Register();
-			CleoPlugins::LoadPlugins();
-		}
-
 		switch (game.Version)
 		{
 		case GAME_V1_0:
@@ -171,6 +161,16 @@ BOOL __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 		default:
 			LOGL(LOG_PRIORITY_GAME_EVENT, "GTA VC unknown version");
 			break;
+		}
+
+		if (game.GetGameVersion() == GAME_VSTEAMENC)
+		{
+			CreateThread(0, 0, (LPTHREAD_START_ROUTINE)&SteamHandlerDllMain, NULL, 0, NULL);
+		}
+		else
+		{
+			CustomOpcodes::Register();
+			CleoPlugins::LoadPlugins();
 		}
 	}
 	else if(fdwReason == DLL_PROCESS_DETACH)

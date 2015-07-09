@@ -77,13 +77,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='III|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.cleo</TargetExt>
-    <OutDir>$(SolutionDir)..\..\..\Release\CLEO</OutDir>
+    <OutDir>$(SolutionDir)..\..\..\Release\CLEO\CLEO_PLUGINS\</OutDir>
     <TargetName>III.$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='VC|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.cleo</TargetExt>
-    <OutDir>$(SolutionDir)..\..\..\Release\CLEO</OutDir>
+    <OutDir>$(SolutionDir)..\..\..\Release\CLEO\CLEO_PLUGINS\</OutDir>
     <TargetName>VC.$(ProjectName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

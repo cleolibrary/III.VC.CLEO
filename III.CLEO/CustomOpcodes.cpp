@@ -1127,8 +1127,8 @@ eOpcodeResult CustomOpcodes::OPCODE_0A91(CScript *script)
 //0A99=1,chdir %1buserdir/rootdir%
 eOpcodeResult CustomOpcodes::OPCODE_0A99(CScript *script)
 {
-	script->Collect(1);
 	auto paramType = script->GetNextParamType();
+	script->Collect(1);
 	if (paramType != PARAM_TYPE_STRING)
 	{
 		_chdir(game.Scripts.Params[0].nVar ? game.Misc.pfGetUserDirectory() : "");
