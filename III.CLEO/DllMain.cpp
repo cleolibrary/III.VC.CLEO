@@ -8,18 +8,6 @@
 #include <vector>
 #include "..\injector\hooking.hpp"
 
-DWORD WINAPI SteamHandlerDllMain(LPVOID)
-{
-	while (true)
-	{
-		Sleep(0);
-		if ((*(unsigned int *)0x61C11C) == steam) break;
-	}
-	CustomOpcodes::Register();
-	CleoPlugins::LoadPlugins();
-	return 0;
-}
-
 template<uintptr_t addr>
 void RwRenderStateSetHook()
 {
@@ -30,6 +18,19 @@ void RwRenderStateSetHook()
 		RwRenderStateSet(0xC, a2);
 		return;
 	});
+}
+
+DWORD WINAPI SteamHandlerDllMain(LPVOID)
+{
+	while (true)
+	{
+		Sleep(0);
+		if (game.GetGameVersion() == GAME_VSTEAM) break;
+	}
+	RwRenderStateSetHook<0x51FB25>();
+	CustomOpcodes::Register();
+	CleoPlugins::LoadPlugins();
+	return 0;
 }
 
 std::vector<char>	aScriptTextures;
@@ -309,22 +310,8 @@ BOOL __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 		Log::Initialise("cleo.log");
 		LOGL(LOG_PRIORITY_ALWAYS, "GTA 3 CLEO v%d.%d.%d.%d Log File", CLEO_VERSION_MAIN, CLEO_VERSION_MAJOR, 
 			CLEO_VERSION_MINOR, CLEO_VERSION_BINARY);
-		switch (game.GetGameVersion())
-		{
-		case GAME_V1_0:
-			LOGL(LOG_PRIORITY_GAME_EVENT, "GTA III v%d.%d", 1, 0);
-			break;
-		case GAME_V1_1:
-			LOGL(LOG_PRIORITY_GAME_EVENT, "GTA III v%d.%d", 1, 1);
-			break;
-		case GAME_VSTEAM:
-			LOGL(LOG_PRIORITY_GAME_EVENT, "GTA III steam version");
-			break;
-		default:
-			LOGL(LOG_PRIORITY_GAME_EVENT, "GTA III unknown version");
-			break;
-		}
-		if (game.GetGameVersion() == GAME_VSTEAMENC)
+
+		if (game.Version == GAME_VSTEAMENC)
 		{
 			CreateThread(0, 0, (LPTHREAD_START_ROUTINE)&SteamHandlerDllMain, NULL, 0, NULL);
 		}
@@ -333,11 +320,39 @@ BOOL __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 			CustomOpcodes::Register();
 			CleoPlugins::LoadPlugins();
 		}
+
+		switch (game.Version)
+		{
+		case GAME_V1_0:
+			LOGL(LOG_PRIORITY_GAME_EVENT, "GTA III v%d.%d", 1, 0);
+			RwRenderStateSetHook<0x51F965>();
+			PatchArrays();
+			break;
+		case GAME_V1_1:
+			LOGL(LOG_PRIORITY_GAME_EVENT, "GTA III v%d.%d", 1, 1);
+			RwRenderStateSetHook<0x51FB95>();
+			break;
+		case GAME_VSTEAM:
+			LOGL(LOG_PRIORITY_GAME_EVENT, "GTA III steam version");
+			RwRenderStateSetHook<0x51FB25>();
+			break;
+		default:
+			LOGL(LOG_PRIORITY_GAME_EVENT, "GTA III unknown version");
+			break;
+		}
+
 		DWORD attr = GetFileAttributes("audio\\HEAD.wav");
 		if(attr != -1 && !(attr & FILE_ATTRIBUTE_DIRECTORY))
 		{
 			switch(game.Version)
 			{
+			case GAME_V1_0:
+				CPatch::SetChar(0x566A15, 0);
+				CPatch::Nop(0x566A56, 6);
+				CPatch::Nop(0x581C44, 2);
+				CPatch::Nop(0x581C52, 6);
+				*(unsigned char *)0x604B24 = 0;
+				break;
 			case GAME_V1_1:
 				CPatch::SetChar(0x566B55, 0);
 				CPatch::Nop(0x566B96, 6);
@@ -345,15 +360,9 @@ BOOL __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 				CPatch::Nop(0x581F92, 6);
 				*(unsigned char *)0x6043EC = 0;
 				break;
+			case GAME_VSTEAM:
 			default:
-				CPatch::SetChar(0x566A15, 0);
-				CPatch::Nop(0x566A56, 6);
-				CPatch::Nop(0x581C44, 2);
-				CPatch::Nop(0x581C52, 6);
-				*(unsigned char *)0x604B24 = 0;
-
-				RwRenderStateSetHook<0x51F965>();
-				PatchArrays();
+				break;
 			}
 		}
 	}

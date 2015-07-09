@@ -12,15 +12,15 @@ GtaGame game;
 
 #define GAME_ID_GTA3_1_0 0x598B80
 #define GAME_ID_GTA3_1_1 0x598E40
-#define GAME_ID_GTA3_STEAM 0x00000
-#define GAME_ID_GTA3_STEAMENC 0x01
+#define GAME_ID_GTA3_STEAM 0x646E6957
+#define GAME_ID_GTA3_STEAMENC 0x0FFFFFF
 
 DWORD WINAPI SteamHandler(LPVOID)
 {
 	while (true)
 	{
 		Sleep(0);
-		if (GAME_VERSION_ID == GAME_ID_GTA3_STEAM) break;
+		if (game.GetGameVersion() == GAME_VSTEAM) break;
 	}
 	game.Version = GAME_VSTEAM;
 	game.InitAndPatch();
@@ -161,8 +161,176 @@ void GtaGame::InitAndPatch()
 		this->Misc.pfSpawnCar = (void(__cdecl *)(unsigned int modelID)) 0x490EE0;
 		break;
 	case GAME_V1_1:
+		// Scripts
+		CPatch::SetPointer(0x438809, scriptMgr.gameScripts);
+		CPatch::SetInt(0x43882A, sizeof(CScript));
+		CPatch::RedirectJump(0x4386C0, ScriptManager::InitialiseScript);
+		CPatch::RedirectJump(0x439500, ScriptManager::ProcessScriptCommand);
+		CPatch::RedirectJump(0x4382E0, ScriptManager::CollectScriptParameters);
+		CPatch::RedirectJump(0x438460, ScriptManager::CollectScriptNextParameterWithoutIncreasingPC);
+		this->Scripts.AddScriptToList = (void(__thiscall *)(CScript *, CScript **))0x438FE0;
+		this->Scripts.RemoveScriptFromList = (void(__thiscall *)(CScript *, CScript **))0x438FB0;
+		this->Scripts.StoreParameters = (void(__thiscall *)(CScript *, unsigned int *, unsigned int))0x4385A0;
+		this->Scripts.UpdateCompareFlag = (void(__thiscall *)(CScript *, bool))0x44FD90;
+		this->Scripts.GepPointerToScriptVariable = (void *(__thiscall *)(CScript *, unsigned int *, unsigned char))0x438640;
+		this->Scripts.OpcodeHandlers[0] = (OpcodeHandler)0x439650;
+		this->Scripts.OpcodeHandlers[1] = (OpcodeHandler)0x43AEA0;
+		this->Scripts.OpcodeHandlers[2] = (OpcodeHandler)0x43D530;
+		this->Scripts.OpcodeHandlers[3] = (OpcodeHandler)0x43ED30;
+		this->Scripts.OpcodeHandlers[4] = (OpcodeHandler)0x440CB0;
+		this->Scripts.OpcodeHandlers[5] = (OpcodeHandler)0x4429C0;
+		this->Scripts.OpcodeHandlers[6] = (OpcodeHandler)0x444B20;
+		this->Scripts.OpcodeHandlers[7] = (OpcodeHandler)0x4458A0;
+		this->Scripts.OpcodeHandlers[8] = (OpcodeHandler)0x448240;
+		this->Scripts.OpcodeHandlers[9] = (OpcodeHandler)0x44CB80;
+		this->Scripts.OpcodeHandlers[10] = (OpcodeHandler)0x5887D0;
+		this->Scripts.OpcodeHandlers[11] = (OpcodeHandler)0x58A040;
+		this->Scripts.pActiveScriptsList = (CScript **)0x8E2CA8;
+		this->Scripts.Params = (tScriptVar *)0x6ED460;
+		this->Scripts.Space = (char *)0x74B248;
+		this->Scripts.pNumOpcodesExecuted = (unsigned short *)0x95CE5E;
+		// Text
+		this->Text.pfGetText = (wchar_t *(__thiscall *)(int, char *))0x52C1F0;
+		CPatch::RedirectJump(0x52C7E0, CustomText::GetText);
+		this->Text.CText = 0x9416D8;
+		this->Text.textDrawers = (CTextDrawer *)0x70EA68;
+		this->Text.currentTextDrawer = (unsigned short *)0x95CE40;
+		this->Text.cheatString = (char *)0x885B40;
+		this->Text.TextBox = (void(__cdecl *)(const wchar_t *text, bool flag1))0x5052C0;
+		this->Text.StyledText = (void(__cdecl *)(const wchar_t *text, unsigned time, unsigned style))0x529D30;
+		this->Text.TextLowPriority = (void(__cdecl *)(const wchar_t *text, unsigned time, bool flag1, bool flag2))0x529B40;
+		this->Text.TextHighPriority = (void(__cdecl *)(const wchar_t *text, unsigned time, bool flag1, bool flag2))0x529C50;
+		// Screen
+		this->Screen.Width = (int *)0x8F4420;
+		this->Screen.Height = (int *)0x8F4424;
+		// Font
+		this->Font.AsciiToUnicode = (void(__cdecl *)(const char *, short *)) (0x5009C0 + 0xE0);
+		this->Font.PrintString = (void(__cdecl *)(float, float, wchar_t *)) (0x500F50 + 0xE0);
+		this->Font.SetFontStyle = (void(__cdecl *)(int)) (0x501DB0 + 0xE0);
+		this->Font.SetScale = (void(__cdecl *)(float, float)) (0x501B80 + 0xE0);
+		this->Font.SetColor = (void(__cdecl *)(unsigned int *)) (0x501BD0 + 0xE0);
+		this->Font.SetLeftJustifyOn = (void(__cdecl *)()) (0x501C60 + 0xE0);
+		this->Font.SetDropShadowPosition = (void(__cdecl *)(int)) (0x501E70 + 0xE0);
+		this->Font.SetPropOn = (void(__cdecl *)()) (0x501DA0 + 0xE0);
+		// Pools
+		this->Pools.pPedPool = (GamePool **)0x8F2D14;
+		this->Pools.pVehiclePool = (GamePool **)0x943294;
+		this->Pools.pObjectPool = (GamePool **)0x880DD8;
+		this->Pools.pCPlayerPedPool = (uintptr_t *)0x9414A8;
+		this->Pools.pfPedPoolGetStruct = (void* (__thiscall *)(GamePool *, int))0x43EB30;
+		this->Pools.pfVehiclePoolGetStruct = (void* (__thiscall *)(GamePool *, int))0x43EAF0;
+		this->Pools.pfObjectPoolGetStruct = (void* (__thiscall *)(GamePool *, int))0x43EAB0;
+		this->Pools.pfPedPoolGetHandle = (int(__thiscall *)(GamePool *, void *))0x43EB70;
+		this->Pools.pfVehiclePoolGetHandle = (int(__thiscall *)(GamePool *, void *))0x429050;
+		this->Pools.pfObjectPoolGetHandle = (int(__thiscall *)(GamePool *, void *))0x429000;
+		// Events
+		this->Events.pfInitScripts_OnGameSaveLoad = (void(__cdecl *)())CPatch::MakeCallAddr(0x453B43, 0x438790);
+		CPatch::RedirectCall(0x453B43, GtaGame::InitScripts_OnGameSaveLoad);
+		this->Events.pfInitScripts_OnGameInit = (void(__cdecl *)())CPatch::MakeCallAddr(0x48C35B, 0x438790);
+		CPatch::RedirectCall(0x48C35B, GtaGame::InitScripts_OnGameInit);
+		this->Events.pfInitScripts_OnGameReinit = (void(__cdecl *)())CPatch::MakeCallAddr(0x48C675, 0x438790);
+		CPatch::RedirectCall(0x48C675, GtaGame::InitScripts_OnGameReinit);
+		this->Events.pfShutdownGame = (void(__cdecl *)())CPatch::MakeCallAddr(0x48C592, 0x406300);
+		CPatch::RedirectCall(0x48C592, GtaGame::OnShutdownGame);
+		this->Events.pfGameSaveScripts = (void(__cdecl *)(int, int))CPatch::MakeCallAddr(0x58FEC9, 0x4535E0);
+		CPatch::RedirectCall(0x58FEC9, GtaGame::OnGameSaveScripts);
+		this->Events.pfDrawInMenu = (void(__cdecl *)(float, float, wchar_t *))CPatch::MakeCallAddr(0x47B049, 0x500F50);
+		CPatch::RedirectCall(0x47B049, GtaGame::OnMenuDrawing);
+		//Misc
+		this->Misc.stVehicleModelInfo = 0x8E2E98;
+		this->Misc.activePadState = 0x6F0360;
+		this->Misc.pfModelForWeapon = (int(__cdecl *)(int eWeaponType)) 0x430690;
+		this->Misc.cameraWidescreen = 0x6FAD68;
+		this->Misc.currentWeather = 0x95CEA4;
+		this->Misc.Multiply3x3 = (void(__cdecl *)(CVector *out, uintptr_t *m, CVector *in)) 0x4BA540;
+		this->Misc.pfGetUserDirectory = (char*(__cdecl *)()) 0x580F00;
+		this->Misc.pfSpawnCar = (void(__cdecl *)(unsigned int modelID)) 0x490FA0;
 		break;
 	case GAME_VSTEAM:
+		// Scripts
+		CPatch::SetPointer(0x438809, scriptMgr.gameScripts);
+		CPatch::SetInt(0x43882A, sizeof(CScript));
+		CPatch::RedirectJump(0x4386C0, ScriptManager::InitialiseScript);
+		CPatch::RedirectJump(0x439500, ScriptManager::ProcessScriptCommand);
+		CPatch::RedirectJump(0x4382E0, ScriptManager::CollectScriptParameters);
+		CPatch::RedirectJump(0x438460, ScriptManager::CollectScriptNextParameterWithoutIncreasingPC);
+		this->Scripts.AddScriptToList = (void(__thiscall *)(CScript *, CScript **))0x438FE0;
+		this->Scripts.RemoveScriptFromList = (void(__thiscall *)(CScript *, CScript **))0x438FB0;
+		this->Scripts.StoreParameters = (void(__thiscall *)(CScript *, unsigned int *, unsigned int))0x4385A0;
+		this->Scripts.UpdateCompareFlag = (void(__thiscall *)(CScript *, bool))0x44FD90;
+		this->Scripts.GepPointerToScriptVariable = (void *(__thiscall *)(CScript *, unsigned int *, unsigned char))0x438640;
+		this->Scripts.OpcodeHandlers[0] = (OpcodeHandler)0x439650;
+		this->Scripts.OpcodeHandlers[1] = (OpcodeHandler)0x43AEA0;
+		this->Scripts.OpcodeHandlers[2] = (OpcodeHandler)0x43D530;
+		this->Scripts.OpcodeHandlers[3] = (OpcodeHandler)0x43ED30;
+		this->Scripts.OpcodeHandlers[4] = (OpcodeHandler)0x440CB0;
+		this->Scripts.OpcodeHandlers[5] = (OpcodeHandler)0x4429C0;
+		this->Scripts.OpcodeHandlers[6] = (OpcodeHandler)0x444B20;
+		this->Scripts.OpcodeHandlers[7] = (OpcodeHandler)0x4458A0;
+		this->Scripts.OpcodeHandlers[8] = (OpcodeHandler)0x448240;
+		this->Scripts.OpcodeHandlers[9] = (OpcodeHandler)0x44CB80;
+		this->Scripts.OpcodeHandlers[10] = (OpcodeHandler)(0x588490 + 0x230);
+		this->Scripts.OpcodeHandlers[11] = (OpcodeHandler)(0x589D00 + 0x230);
+		this->Scripts.pActiveScriptsList = (CScript **)0x8F2DE8;
+		this->Scripts.Params = (tScriptVar *)0x6FD5A0;
+		this->Scripts.Space = (char *)0x75B388;
+		this->Scripts.pNumOpcodesExecuted = (unsigned short *)0x96CF9E;
+		// Text
+		this->Text.pfGetText = (wchar_t *(__thiscall *)(int, char *))0x52C180;
+		CPatch::RedirectJump(0x52C770, CustomText::GetText);
+		this->Text.CText = 0x951818;
+		this->Text.textDrawers = (CTextDrawer *)0x71EBA8;
+		this->Text.currentTextDrawer = (unsigned short *)0x96CF80;
+		this->Text.cheatString = (char *)0x895C80;
+		this->Text.TextBox = (void(__cdecl *)(const wchar_t *text, bool flag1))0x505250;
+		this->Text.StyledText = (void(__cdecl *)(const wchar_t *text, unsigned time, unsigned style))0x52A130;
+		this->Text.TextLowPriority = (void(__cdecl *)(const wchar_t *text, unsigned time, bool flag1, bool flag2))0x529AD0;
+		this->Text.TextHighPriority = (void(__cdecl *)(const wchar_t *text, unsigned time, bool flag1, bool flag2))0x529BE0;
+		// Screen
+		this->Screen.Width = (int *)0x904560;
+		this->Screen.Height = (int *)0x904564;
+		// Font
+		this->Font.AsciiToUnicode = (void(__cdecl *)(const char *, short *)) 0x500A30;
+		this->Font.PrintString = (void(__cdecl *)(float, float, wchar_t *)) 0x500FC0;
+		this->Font.SetFontStyle = (void(__cdecl *)(int)) 0x501E20;
+		this->Font.SetScale = (void(__cdecl *)(float, float)) 0x501BF0;
+		this->Font.SetColor = (void(__cdecl *)(unsigned int *)) 0x501C40;
+		this->Font.SetLeftJustifyOn = (void(__cdecl *)()) 0x501CD0;
+		this->Font.SetDropShadowPosition = (void(__cdecl *)(int)) 0x501EE0;
+		this->Font.SetPropOn = (void(__cdecl *)()) 0x501E10;
+		// Pools
+		this->Pools.pPedPool = (GamePool **)0x902E54;
+		this->Pools.pVehiclePool = (GamePool **)0x9533D4;
+		this->Pools.pObjectPool = (GamePool **)0x890F18;
+		this->Pools.pCPlayerPedPool = (uintptr_t *)0x9515E8;
+		this->Pools.pfPedPoolGetStruct = (void* (__thiscall *)(GamePool *, int))0x43EB30;
+		this->Pools.pfVehiclePoolGetStruct = (void* (__thiscall *)(GamePool *, int))0x43EAF0;
+		this->Pools.pfObjectPoolGetStruct = (void* (__thiscall *)(GamePool *, int))0x43EAB0;
+		this->Pools.pfPedPoolGetHandle = (int(__thiscall *)(GamePool *, void *))0x43EB70;
+		this->Pools.pfVehiclePoolGetHandle = (int(__thiscall *)(GamePool *, void *))0x429050;
+		this->Pools.pfObjectPoolGetHandle = (int(__thiscall *)(GamePool *, void *))0x429000;
+		// Events
+		this->Events.pfInitScripts_OnGameSaveLoad = (void(__cdecl *)())CPatch::MakeCallAddr(0x453B43, 0x438790);
+		CPatch::RedirectCall(0x453B43, GtaGame::InitScripts_OnGameSaveLoad);
+		this->Events.pfInitScripts_OnGameInit = (void(__cdecl *)())CPatch::MakeCallAddr(0x48C2EB, 0x438790);
+		CPatch::RedirectCall(0x48C2EB, GtaGame::InitScripts_OnGameInit);
+		this->Events.pfInitScripts_OnGameReinit = (void(__cdecl *)())CPatch::MakeCallAddr(0x48C605, 0x438790);
+		CPatch::RedirectCall(0x48C605, GtaGame::InitScripts_OnGameReinit);
+		this->Events.pfShutdownGame = (void(__cdecl *)())CPatch::MakeCallAddr(0x48C522, 0x406300);
+		CPatch::RedirectCall(0x48C522, GtaGame::OnShutdownGame);
+		this->Events.pfGameSaveScripts = (void(__cdecl *)(int, int))CPatch::MakeCallAddr(0x58FDB9, 0x4535E0);
+		CPatch::RedirectCall(0x58FDB9, GtaGame::OnGameSaveScripts);
+		this->Events.pfDrawInMenu = (void(__cdecl *)(float, float, wchar_t *))CPatch::MakeCallAddr(0x47B049, 0x500F50);
+		CPatch::RedirectCall(0x47B049, GtaGame::OnMenuDrawing);
+		//Misc
+		this->Misc.stVehicleModelInfo = 0x8F2FD8;
+		this->Misc.activePadState = 0x7004A0;
+		this->Misc.pfModelForWeapon = (int(__cdecl *)(int eWeaponType)) 0x430690;
+		this->Misc.cameraWidescreen = 0x70AEA8;
+		this->Misc.currentWeather = 0x96CFE4;
+		this->Misc.Multiply3x3 = (void(__cdecl *)(CVector *out, uintptr_t *m, CVector *in)) 0x4BA4D0;
+		this->Misc.pfGetUserDirectory = (char*(__cdecl *)()) 0x580E00;
+		this->Misc.pfSpawnCar = (void(__cdecl *)(unsigned int modelID)) 0x490F30;
 		break;
 	default:
 		break;
