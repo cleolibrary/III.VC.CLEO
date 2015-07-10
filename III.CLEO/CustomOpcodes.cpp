@@ -186,6 +186,8 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x04C4, STORE_COORDS_FROM_ACTOR_WITH_OFFSET);
 
 	Opcodes::RegisterOpcode(0x046F, STORE_PLAYER_CURRENTLY_ARMED_WEAPON);
+	Opcodes::RegisterOpcode(0x04DD, GET_CHAR_ARMOUR);
+	
 }
 
 eOpcodeResult CustomOpcodes::DUMMY(CScript *script)
@@ -931,6 +933,15 @@ eOpcodeResult CustomOpcodes::STORE_PLAYER_CURRENTLY_ARMED_WEAPON(CScript *script
 {
 	script->Collect(1);
 	game.Scripts.Params[0].nVar = *(DWORD *)(game.Pools.pCPlayerPedPool[79 * game.Scripts.Params[0].nVar] + 24 * *(BYTE *)(game.Pools.pCPlayerPedPool[79 * game.Scripts.Params[0].nVar] + 1176) + 860);
+	script->Store(1);
+	return OR_CONTINUE;
+}
+
+eOpcodeResult CustomOpcodes::GET_CHAR_ARMOUR(CScript *script)
+{
+	script->Collect(1);
+	void* actor = game.Pools.pfPedPoolGetStruct(*game.Pools.pPedPool, game.Scripts.Params[0].nVar);
+	game.Scripts.Params[0].nVar = static_cast<int>(*(float*)((uintptr_t)actor + 0x2C4));
 	script->Store(1);
 	return OR_CONTINUE;
 }

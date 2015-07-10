@@ -5,6 +5,7 @@
 04C3: create_coordinate 0@ 1@ 2@ from_car 10@ offset 0.0 -20.0 0.0 ;0407 in VC
 04C4: create_coordinate 0@ 1@ 2@ from_actor $PLAYER_ACTOR offset 0.0 1.2 0.0
 046F: store_player $player_char currently_armed_weapon_to 13@
+04DD: $873 = actor $player_actor armour
 }
 0601: is_button_pressed_on_pad 3 with_sensitivity 0xFF
 0602: emulate_button_press_on_pad 2 with_sensitivity 0xFF

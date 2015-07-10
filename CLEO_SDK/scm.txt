@@ -5,6 +5,7 @@
 04C3=7,create_coordinate %5d% %6d% %7d% from_car %1d% offset %2d% %3d% %4d% ;0407 in VC
 04C4=7,create_coordinate %5d% %6d% %7d% from_actor %1d% offset %2d% %3d% %4d%
 046F=2,store_player %1d% currently_armed_weapon_to %2d%
+04DD=2,%2d% = actor %1d% armour
 }
 0601=2, is_button_pressed_on_pad %1d% with_sensitivity %2d%
 0602=2, emulate_button_press_on_pad %1d% with_sensitivity %2d%
