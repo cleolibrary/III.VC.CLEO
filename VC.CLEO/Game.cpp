@@ -216,7 +216,7 @@ void GtaGame::InitAndPatch()
 		CPatch::SetInt(0x584DC2, 0xD98B5553); //push ebx push ebp mov ebx,ecx
 		CPatch::SetInt(0x584DC6, 0xE940EC83); //sub esp,40 
 		CPatch::SetInt(0x584DCA, 0x00000189); //jmp 584F37
-		CPatch::RedirectJump(0x584F30, CustomText::GetText);
+		CPatch::RedirectJump(0x584F50, CustomText::GetText);
 		this->Text.CText = 0x94B228;
 		this->Text.textDrawers = (CTextDrawer *)0x7F0EA8;
 		this->Text.currentTextDrawer = (unsigned short *)0xA10A50;
