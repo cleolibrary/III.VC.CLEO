@@ -87,7 +87,7 @@ public:
 		void (__thiscall *RemoveScriptFromList)(CScript *, CScript **);
 		void (__thiscall *StoreParameters)(CScript *, unsigned int *, unsigned int);
 		void (__thiscall *UpdateCompareFlag)(CScript *, bool);
-		void *(__thiscall *GepPointerToScriptVariable)(CScript *, unsigned int *, unsigned char);
+		void *(__thiscall *GetPointerToScriptVariable)(CScript *, unsigned int *, unsigned char);
 	} Scripts;
 	struct _Text{
 		wchar_t *(__thiscall *pfGetText)(int, char *);
@@ -146,6 +146,7 @@ public:
 		char*(__cdecl *pfGetUserDirectory)();
 		void(__cdecl *pfSpawnCar)(unsigned int);
 		void(__cdecl *Multiply3x3)(CVector *out, uintptr_t *m, CVector *in);
+		int(__cdecl *pfCAnimManagerBlendAnimation)(int pRpClump, int dwAnimGroupId, int dwAnimId, float fSpeed);
 	} Misc;
 };
 

@@ -86,7 +86,7 @@ void GtaGame::InitAndPatch()
 		this->Scripts.RemoveScriptFromList = (void (__thiscall *)(CScript *, CScript **))0x438FB0;
 		this->Scripts.StoreParameters = (void (__thiscall *)(CScript *, unsigned int *, unsigned int))0x4385A0;
 		this->Scripts.UpdateCompareFlag = (void (__thiscall *)(CScript *, bool))0x44FD90;
-		this->Scripts.GepPointerToScriptVariable = (void *(__thiscall *)(CScript *, unsigned int *, unsigned char))0x438640;
+		this->Scripts.GetPointerToScriptVariable = (void *(__thiscall *)(CScript *, unsigned int *, unsigned char))0x438640;
 		this->Scripts.OpcodeHandlers[0] = (OpcodeHandler)0x439650;
 		this->Scripts.OpcodeHandlers[1] = (OpcodeHandler)0x43AEA0;
 		this->Scripts.OpcodeHandlers[2] = (OpcodeHandler)0x43D530;
@@ -159,6 +159,7 @@ void GtaGame::InitAndPatch()
 		this->Misc.Multiply3x3 = (void (__cdecl *)(CVector *out, uintptr_t *m, CVector *in)) 0x4BA4D0;
 		this->Misc.pfGetUserDirectory = (char*(__cdecl *)()) 0x580BB0;
 		this->Misc.pfSpawnCar = (void(__cdecl *)(unsigned int modelID)) 0x490EE0;
+		this->Misc.pfCAnimManagerBlendAnimation = (int(__cdecl *)(int pRpClump, int dwAnimGroupId, int dwAnimId, float fSpeed)) 0x403710;
 		break;
 	case GAME_V1_1:
 		// Scripts
@@ -172,7 +173,7 @@ void GtaGame::InitAndPatch()
 		this->Scripts.RemoveScriptFromList = (void(__thiscall *)(CScript *, CScript **))0x438FB0;
 		this->Scripts.StoreParameters = (void(__thiscall *)(CScript *, unsigned int *, unsigned int))0x4385A0;
 		this->Scripts.UpdateCompareFlag = (void(__thiscall *)(CScript *, bool))0x44FD90;
-		this->Scripts.GepPointerToScriptVariable = (void *(__thiscall *)(CScript *, unsigned int *, unsigned char))0x438640;
+		this->Scripts.GetPointerToScriptVariable = (void *(__thiscall *)(CScript *, unsigned int *, unsigned char))0x438640;
 		this->Scripts.OpcodeHandlers[0] = (OpcodeHandler)0x439650;
 		this->Scripts.OpcodeHandlers[1] = (OpcodeHandler)0x43AEA0;
 		this->Scripts.OpcodeHandlers[2] = (OpcodeHandler)0x43D530;
@@ -245,6 +246,7 @@ void GtaGame::InitAndPatch()
 		this->Misc.Multiply3x3 = (void(__cdecl *)(CVector *out, uintptr_t *m, CVector *in)) 0x4BA540;
 		this->Misc.pfGetUserDirectory = (char*(__cdecl *)()) 0x580F00;
 		this->Misc.pfSpawnCar = (void(__cdecl *)(unsigned int modelID)) 0x490FA0;
+		this->Misc.pfCAnimManagerBlendAnimation = (int(__cdecl *)(int pRpClump, int dwAnimGroupId, int dwAnimId, float fSpeed)) 0x403710;
 		break;
 	case GAME_VSTEAM:
 		// Scripts
@@ -258,7 +260,7 @@ void GtaGame::InitAndPatch()
 		this->Scripts.RemoveScriptFromList = (void(__thiscall *)(CScript *, CScript **))0x438FB0;
 		this->Scripts.StoreParameters = (void(__thiscall *)(CScript *, unsigned int *, unsigned int))0x4385A0;
 		this->Scripts.UpdateCompareFlag = (void(__thiscall *)(CScript *, bool))0x44FD90;
-		this->Scripts.GepPointerToScriptVariable = (void *(__thiscall *)(CScript *, unsigned int *, unsigned char))0x438640;
+		this->Scripts.GetPointerToScriptVariable = (void *(__thiscall *)(CScript *, unsigned int *, unsigned char))0x438640;
 		this->Scripts.OpcodeHandlers[0] = (OpcodeHandler)0x439650;
 		this->Scripts.OpcodeHandlers[1] = (OpcodeHandler)0x43AEA0;
 		this->Scripts.OpcodeHandlers[2] = (OpcodeHandler)0x43D530;
@@ -331,6 +333,7 @@ void GtaGame::InitAndPatch()
 		this->Misc.Multiply3x3 = (void(__cdecl *)(CVector *out, uintptr_t *m, CVector *in)) 0x4BA4D0;
 		this->Misc.pfGetUserDirectory = (char*(__cdecl *)()) 0x580E00;
 		this->Misc.pfSpawnCar = (void(__cdecl *)(unsigned int modelID)) 0x490F30;
+		this->Misc.pfCAnimManagerBlendAnimation = (int(__cdecl *)(int pRpClump, int dwAnimGroupId, int dwAnimId, float fSpeed)) 0x403710;
 		break;
 	default:
 		break;

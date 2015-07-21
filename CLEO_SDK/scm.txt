@@ -18,6 +18,7 @@
 0607=1, %1d% = get_current_weather
 0608=3, show_text_position %1d% %2d% text %3d%
 0609=-1, show_formatted_text_position %1d% %2d% text %3d%
+0673=4,play_animation on actor %1d% animgroup %2d% anim %3d% blendfactor %4f%
 0A8C=4,write_memory %1d% size %2d% value %3d% virtual_protect %4d%
 0A8D=4,%4d% = read_memory %1d% size %2d% virtual_protect %3d%
 0A8E=3,%3d% = %1d% + %2d% ; int

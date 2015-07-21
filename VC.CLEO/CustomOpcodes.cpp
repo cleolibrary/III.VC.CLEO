@@ -179,6 +179,7 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x0607, GET_CURRENT_WEATHER);
 	Opcodes::RegisterOpcode(0x0608, SHOW_TEXT_POSITION);
 	Opcodes::RegisterOpcode(0x0609, SHOW_FORMATTED_TEXT_POSITION);
+	Opcodes::RegisterOpcode(0x0673, PLAY_ANIMATION);
 
 	//Scrapped opcodes (VC)
 	Opcodes::RegisterOpcode(0x016F, DRAW_SHADOW);
@@ -998,6 +999,15 @@ eOpcodeResult CustomOpcodes::SHOW_FORMATTED_TEXT_POSITION(CScript *script)
 	*game.Text.currentTextDrawer = *game.Text.currentTextDrawer + 1;
 	return OR_CONTINUE;
 };
+
+//0673=4,play_animation on actor %1d% animgroup %2d% anim %3d% blendfactor %4f%
+eOpcodeResult WINAPI CustomOpcodes::PLAY_ANIMATION(CScript* script)
+{
+	script->Collect(4);
+	void* actor = game.Pools.pfPedPoolGetStruct(*game.Pools.pPedPool, game.Scripts.Params[0].nVar);
+	game.Misc.pfCAnimManagerBlendAnimation(*(DWORD *)((uintptr_t)actor + 0x4C), game.Scripts.Params[1].nVar, game.Scripts.Params[2].nVar, game.Scripts.Params[3].fVar);
+	return OR_CONTINUE;
+}
 
 eOpcodeResult CustomOpcodes::DRAW_SHADOW(CScript *script)
 {

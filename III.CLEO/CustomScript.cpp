@@ -115,10 +115,10 @@ CScript::CScript(char *filepath)
 		return;
 	}
 	strncpy(this->m_acName, &strrchr(filepath, '\\')[1], 8);
-    this->m_pPrevCustom = NULL;
-    this->m_pNextCustom = NULL;
+	this->m_pPrevCustom = NULL;
+	this->m_pNextCustom = NULL;
 	memset(&this->m_Errors, 0, 4);
-    this->m_acName[7] = 0;
+	this->m_acName[7] = 0;
 	LOGL(LOG_PRIORITY_SCRIPT_LOADING, "Loaded script \"%s\" from \"%s\"", this->m_acName, filepath);
 }
 
@@ -153,7 +153,7 @@ void CScript::JumpTo(int address)
 	if(address >= 0)
 		this->m_dwIp = address;
 	else
-    {
+	{
 		if(this->m_nScriptType == SCRIPT_TYPE_CUSTOM)
 			this->m_dwIp = this->m_dwBaseIp - address;
 		else
@@ -327,19 +327,19 @@ void CScript::UpdateCompareFlag(bool result)
 
 void *CScript::GetPointerToScriptVariable()
 {
-	return game.Scripts.GepPointerToScriptVariable(this, &this->m_dwIp, 1);
+	return game.Scripts.GetPointerToScriptVariable(this, &this->m_dwIp, 1);
 }
 
 eOpcodeResult CScript::ProcessOneCommand()
 {
 	*game.Scripts.pNumOpcodesExecuted += 1;
 	unsigned short id = *(unsigned short *)&game.Scripts.Space[this->m_dwIp] & 0x7FFF;
-    if(*(unsigned short *)&game.Scripts.Space[this->m_dwIp] & 0x8000)
+	if(*(unsigned short *)&game.Scripts.Space[this->m_dwIp] & 0x8000)
 		this->m_bNotFlag = true;
-    else
-        this->m_bNotFlag = false;
-    this->m_dwIp += 2;
-    // check for custom opcodes here
+	else
+		this->m_bNotFlag = false;
+	this->m_dwIp += 2;
+	// check for custom opcodes here
 	if(Opcodes::functions[id])
 	{
 		// call custom opcode
@@ -347,11 +347,11 @@ eOpcodeResult CScript::ProcessOneCommand()
 		return Opcodes::functions[id](this);
 	}
 	else if(id >= CUSTOM_OPCODE_START_ID)
-    {
+	{
 		LOGL(LOG_PRIORITY_ALWAYS, "Error (incorrect opcode): %s, %04X", this->m_acName, id);
 		Error("Incorrect opcode ID: %04X", id);
 		return OR_UNDEFINED;
-    }
+	}
 	// call default opcode
 	LOGL(LOG_PRIORITY_OPCODE_ID, "%s opcode %04X", this->m_acName, id);
 	eOpcodeResult result = game.Scripts.OpcodeHandlers[id / 100](this, id);

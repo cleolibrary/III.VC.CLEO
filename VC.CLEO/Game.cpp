@@ -89,7 +89,7 @@ void GtaGame::InitAndPatch()
 		this->Scripts.RemoveScriptFromList = (void(__thiscall *)(CScript *, CScript **))0x450300;
 		this->Scripts.StoreParameters = (void(__thiscall *)(CScript *, unsigned int *, unsigned int))0x450E50;
 		this->Scripts.UpdateCompareFlag = (void(__thiscall *)(CScript *, bool))0x463F00;
-		this->Scripts.GepPointerToScriptVariable = (void *(__thiscall *)(CScript *, unsigned int *, unsigned char))0x450DD0;
+		this->Scripts.GetPointerToScriptVariable = (void *(__thiscall *)(CScript *, unsigned int *, unsigned char))0x450DD0;
 		this->Scripts.OpcodeHandlers[0] = (OpcodeHandler)0x44B400;
 		this->Scripts.OpcodeHandlers[1] = (OpcodeHandler)0x446390;
 		this->Scripts.OpcodeHandlers[2] = (OpcodeHandler)0x444BE0;
@@ -176,6 +176,7 @@ void GtaGame::InitAndPatch()
 		this->Misc.currentWeather = 0xA10AAA;
 		this->Misc.pfGetUserDirectory = (char*(__cdecl *)()) 0x602240;
 		this->Misc.pfSpawnCar = (void(__cdecl *)(unsigned int modelID)) 0x4AE8F0;
+		this->Misc.pfCAnimManagerBlendAnimation = (int(__cdecl *)(int pRpClump, int dwAnimGroupId, int dwAnimId, float fSpeed)) 0x405640;
 		break;
 	case GAME_V1_1:
 		// Scripts
@@ -191,7 +192,7 @@ void GtaGame::InitAndPatch()
 		this->Scripts.RemoveScriptFromList = (void(__thiscall *)(CScript *, CScript **))0x450300;
 		this->Scripts.StoreParameters = (void(__thiscall *)(CScript *, unsigned int *, unsigned int))0x450E50;
 		this->Scripts.UpdateCompareFlag = (void(__thiscall *)(CScript *, bool))0x463F00;
-		this->Scripts.GepPointerToScriptVariable = (void *(__thiscall *)(CScript *, unsigned int *, unsigned char))0x450DD0;
+		this->Scripts.GetPointerToScriptVariable = (void *(__thiscall *)(CScript *, unsigned int *, unsigned char))0x450DD0;
 		this->Scripts.OpcodeHandlers[0] = (OpcodeHandler)0x44B400;
 		this->Scripts.OpcodeHandlers[1] = (OpcodeHandler)0x446390;
 		this->Scripts.OpcodeHandlers[2] = (OpcodeHandler)0x444BE0;
@@ -278,6 +279,7 @@ void GtaGame::InitAndPatch()
 		this->Misc.currentWeather = 0xA10AAA + 0x8;
 		this->Misc.pfGetUserDirectory = (char*(__cdecl *)()) 0x602220;
 		this->Misc.pfSpawnCar = (void(__cdecl *)(unsigned int modelID)) 0x4AE7D0;
+		this->Misc.pfCAnimManagerBlendAnimation = (int(__cdecl *)(int pRpClump, int dwAnimGroupId, int dwAnimId, float fSpeed)) 0x405640;
 		break;
 	case GAME_VSTEAM:
 		// Scripts
@@ -293,7 +295,7 @@ void GtaGame::InitAndPatch()
 		this->Scripts.RemoveScriptFromList = (void(__thiscall *)(CScript *, CScript **))0x450210;
 		this->Scripts.StoreParameters = (void(__thiscall *)(CScript *, unsigned int *, unsigned int))0x450D60;
 		this->Scripts.UpdateCompareFlag = (void(__thiscall *)(CScript *, bool))0x463DE0;
-		this->Scripts.GepPointerToScriptVariable = (void *(__thiscall *)(CScript *, unsigned int *, unsigned char))0x450CE0;
+		this->Scripts.GetPointerToScriptVariable = (void *(__thiscall *)(CScript *, unsigned int *, unsigned char))0x450CE0;
 		this->Scripts.OpcodeHandlers[0] = (OpcodeHandler)0x44B310;
 		this->Scripts.OpcodeHandlers[1] = (OpcodeHandler)0x4462A0;
 		this->Scripts.OpcodeHandlers[2] = (OpcodeHandler)0x444AF0;
@@ -380,6 +382,7 @@ void GtaGame::InitAndPatch()
 		this->Misc.currentWeather = 0xA0FAB2;
 		this->Misc.pfGetUserDirectory = (char*(__cdecl *)()) 0x601E60;
 		this->Misc.pfSpawnCar = (void(__cdecl *)(unsigned int modelID)) 0x4AE7C0;
+		this->Misc.pfCAnimManagerBlendAnimation = (int(__cdecl *)(int pRpClump, int dwAnimGroupId, int dwAnimId, float fSpeed)) 0x405640;
 		break;
 	default:
 		break;
