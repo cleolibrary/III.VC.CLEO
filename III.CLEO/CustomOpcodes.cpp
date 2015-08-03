@@ -873,16 +873,16 @@ eOpcodeResult CustomOpcodes::STORE_COORDS_FROM_OBJECT_WITH_OFFSET(CScript *scrip
 	script->Collect(4);
 	void* object = game.Pools.pfObjectPoolGetStruct(*game.Pools.pObjectPool, game.Scripts.Params[0].nVar);
 
-	CVector in;
-	in.x = game.Scripts.Params[1].fVar;
-	in.y = game.Scripts.Params[2].fVar;
-	in.z = game.Scripts.Params[3].fVar;
-	CVector out;
-	game.Misc.Multiply3x3(&out, (uintptr_t*)((uintptr_t*)object + 4), &in);
+	CVector offset;
+	offset.x = game.Scripts.Params[1].fVar;
+	offset.y = game.Scripts.Params[2].fVar;
+	offset.z = game.Scripts.Params[3].fVar;
 
-	game.Scripts.Params[0].fVar = out.x + *(float*)((uintptr_t*)object + 52);
-	game.Scripts.Params[1].fVar = out.y + *(float*)((uintptr_t*)object + 52 + 4);
-	game.Scripts.Params[2].fVar = out.z + *(float*)((uintptr_t*)object + 52 + 8);
+	game.Misc.RwV3dTransformPoints(&offset, &offset, 1, (uintptr_t*)((uintptr_t)object + 4));
+
+	game.Scripts.Params[0].fVar = offset.x;
+	game.Scripts.Params[1].fVar = offset.y;
+	game.Scripts.Params[2].fVar = offset.z;
 
 	script->Store(3);
 	return OR_CONTINUE;
@@ -894,16 +894,16 @@ eOpcodeResult CustomOpcodes::STORE_COORDS_FROM_CAR_WITH_OFFSET(CScript *script)
 	script->Collect(4);
 	void* car = game.Pools.pfVehiclePoolGetStruct(*game.Pools.pVehiclePool, game.Scripts.Params[0].nVar);
 
-	CVector in;
-	in.x = game.Scripts.Params[1].fVar;
-	in.y = game.Scripts.Params[2].fVar;
-	in.z = game.Scripts.Params[3].fVar;
-	CVector out;
-	game.Misc.Multiply3x3(&out, (uintptr_t*)((uintptr_t*)car + 4), &in);
+	CVector offset;
+	offset.x = game.Scripts.Params[1].fVar;
+	offset.y = game.Scripts.Params[2].fVar;
+	offset.z = game.Scripts.Params[3].fVar;
 
-	game.Scripts.Params[0].fVar = out.x + *(float*)((uintptr_t*)car + 52);
-	game.Scripts.Params[1].fVar = out.y + *(float*)((uintptr_t*)car + 52 + 4);
-	game.Scripts.Params[2].fVar = out.z + *(float*)((uintptr_t*)car + 52 + 8);
+	game.Misc.RwV3dTransformPoints(&offset, &offset, 1, (uintptr_t*)((uintptr_t)car + 4));
+
+	game.Scripts.Params[0].fVar = offset.x;
+	game.Scripts.Params[1].fVar = offset.y;
+	game.Scripts.Params[2].fVar = offset.z;
 
 	script->Store(3);
 	return OR_CONTINUE;
@@ -915,16 +915,16 @@ eOpcodeResult CustomOpcodes::STORE_COORDS_FROM_ACTOR_WITH_OFFSET(CScript *script
 	script->Collect(4);
 	void* actor = game.Pools.pfPedPoolGetStruct(*game.Pools.pPedPool, game.Scripts.Params[0].nVar);
 
-	CVector in;
-	in.x = game.Scripts.Params[1].fVar;
-	in.y = game.Scripts.Params[2].fVar;
-	in.z = game.Scripts.Params[3].fVar;
-	CVector out;
-	game.Misc.Multiply3x3(&out, (uintptr_t*)((uintptr_t*)actor + 4), &in);
+	CVector offset;
+	offset.x = game.Scripts.Params[1].fVar;
+	offset.y = game.Scripts.Params[2].fVar;
+	offset.z = game.Scripts.Params[3].fVar;
 
-	game.Scripts.Params[0].fVar = out.x + *(float*)((uintptr_t*)actor + 52);
-	game.Scripts.Params[1].fVar = out.y + *(float*)((uintptr_t*)actor + 52 + 4);
-	game.Scripts.Params[2].fVar = out.z + *(float*)((uintptr_t*)actor + 52 + 8);
+	game.Misc.RwV3dTransformPoints(&offset, &offset, 1, (uintptr_t*)((uintptr_t)actor + 4));
+
+	game.Scripts.Params[0].fVar = offset.x;
+	game.Scripts.Params[1].fVar = offset.y;
+	game.Scripts.Params[2].fVar = offset.z;
 
 	script->Store(3);
 	return OR_CONTINUE;

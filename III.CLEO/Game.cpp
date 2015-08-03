@@ -156,7 +156,8 @@ void GtaGame::InitAndPatch()
 		this->Misc.pfModelForWeapon = (int(__cdecl *)(int eWeaponType)) 0x430690;
 		this->Misc.cameraWidescreen = 0x6FAD68;
 		this->Misc.currentWeather = 0x95CCEC;
-		this->Misc.Multiply3x3 = (void (__cdecl *)(CVector *out, uintptr_t *m, CVector *in)) 0x4BA4D0;
+		this->Misc.Multiply3x3 = (void (__cdecl *)(CVector *out, uintptr_t *m, CVector *in)) 0x4BA450;
+		this->Misc.RwV3dTransformPoints = (void(__cdecl *)(CVector*, CVector const*, int, uintptr_t const*)) 0x5A37D0;
 		this->Misc.pfGetUserDirectory = (char*(__cdecl *)()) 0x580BB0;
 		this->Misc.pfSpawnCar = (void(__cdecl *)(unsigned int modelID)) 0x490EE0;
 		this->Misc.pfCAnimManagerBlendAnimation = (int(__cdecl *)(int pRpClump, int dwAnimGroupId, int dwAnimId, float fSpeed)) 0x403710;
@@ -243,7 +244,8 @@ void GtaGame::InitAndPatch()
 		this->Misc.pfModelForWeapon = (int(__cdecl *)(int eWeaponType)) 0x430690;
 		this->Misc.cameraWidescreen = 0x6FAD68;
 		this->Misc.currentWeather = 0x95CEA4;
-		this->Misc.Multiply3x3 = (void(__cdecl *)(CVector *out, uintptr_t *m, CVector *in)) 0x4BA540;
+		this->Misc.Multiply3x3 = (void(__cdecl *)(CVector *out, uintptr_t *m, CVector *in)) 0x4BA4C0;
+		this->Misc.RwV3dTransformPoints = (void(__cdecl *)(CVector*, CVector const*, int, uintptr_t const*)) 0x5A3A90;
 		this->Misc.pfGetUserDirectory = (char*(__cdecl *)()) 0x580F00;
 		this->Misc.pfSpawnCar = (void(__cdecl *)(unsigned int modelID)) 0x490FA0;
 		this->Misc.pfCAnimManagerBlendAnimation = (int(__cdecl *)(int pRpClump, int dwAnimGroupId, int dwAnimId, float fSpeed)) 0x403710;
@@ -330,7 +332,8 @@ void GtaGame::InitAndPatch()
 		this->Misc.pfModelForWeapon = (int(__cdecl *)(int eWeaponType)) 0x430690;
 		this->Misc.cameraWidescreen = 0x70AEA8;
 		this->Misc.currentWeather = 0x96CFE4;
-		this->Misc.Multiply3x3 = (void(__cdecl *)(CVector *out, uintptr_t *m, CVector *in)) 0x4BA4D0;
+		this->Misc.Multiply3x3 = (void(__cdecl *)(CVector *out, uintptr_t *m, CVector *in)) 0x4BA450;
+		this->Misc.RwV3dTransformPoints = (void(__cdecl *)(CVector*, CVector const*, int, uintptr_t const*)) 0x5A4570;
 		this->Misc.pfGetUserDirectory = (char*(__cdecl *)()) 0x580E00;
 		this->Misc.pfSpawnCar = (void(__cdecl *)(unsigned int modelID)) 0x490F30;
 		this->Misc.pfCAnimManagerBlendAnimation = (int(__cdecl *)(int pRpClump, int dwAnimGroupId, int dwAnimId, float fSpeed)) 0x403710;
@@ -416,7 +419,9 @@ void GtaGame::OnMenuDrawing(float x, float y, wchar_t *text)
 	wchar_t line[128];
 	swprintf(line, L"CLEO v%d.%d.%d.%d", CLEO_VERSION_MAIN, CLEO_VERSION_MAJOR, CLEO_VERSION_MINOR, CLEO_VERSION_BINARY);
 	game.Font.PrintString(ScreenCoord(30.0f), (float)*game.Screen.Height - ScreenCoord(34.0f), line);
+	scriptMgr.numLoadedCustomScripts ?
 	swprintf(line, L"%d %s, %d %s loaded", scriptMgr.numLoadedCustomScripts, scriptMgr.numLoadedCustomScripts == 1? L"script" : L"scripts",
-		CleoPlugins::numLoadedPlugins, CleoPlugins::numLoadedPlugins == 1? L"plugin" : L"plugins");
+		CleoPlugins::numLoadedPlugins, CleoPlugins::numLoadedPlugins == 1? L"plugin" : L"plugins") :
+	swprintf(line, L"%d %s loaded", CleoPlugins::numLoadedPlugins, CleoPlugins::numLoadedPlugins == 1 ? L"plugin" : L"plugins");
 	game.Font.PrintString(ScreenCoord(30.0f), (float)*game.Screen.Height - ScreenCoord(20.0f), line);
 }
