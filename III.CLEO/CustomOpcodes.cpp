@@ -1536,6 +1536,9 @@ eOpcodeResult CustomOpcodes::OPCODE_0AD4(CScript *script)
 		ExParams[18], ExParams[19], ExParams[20], ExParams[21], ExParams[22], ExParams[23],
 		ExParams[24], ExParams[25], ExParams[26], ExParams[27], ExParams[28], ExParams[29],
 		ExParams[30], ExParams[31], ExParams[32], ExParams[33], ExParams[34]);
+
+	if (*result)
+		script->UpdateCompareFlag(true);
 	return OR_CONTINUE;
 };
 
