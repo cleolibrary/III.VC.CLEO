@@ -159,7 +159,7 @@ void GtaGame::InitAndPatch()
 		this->Misc.Multiply3x3 = (void (__cdecl *)(CVector *out, uintptr_t *m, CVector *in)) 0x4BA450;
 		this->Misc.RwV3dTransformPoints = (void(__cdecl *)(CVector*, CVector const*, int, uintptr_t const*)) 0x5A37D0;
 		this->Misc.pfGetUserDirectory = (char*(__cdecl *)()) 0x580BB0;
-		this->Misc.pfSpawnCar = (void(__cdecl *)(unsigned int modelID)) 0x490EE0;
+		this->Misc.pfSpawnCar = (void(__cdecl *)()) 0x490EE0;
 		this->Misc.pfCAnimManagerBlendAnimation = (int(__cdecl *)(int pRpClump, int dwAnimGroupId, int dwAnimId, float fSpeed)) 0x403710;
 		break;
 	case GAME_V1_1:
@@ -247,7 +247,7 @@ void GtaGame::InitAndPatch()
 		this->Misc.Multiply3x3 = (void(__cdecl *)(CVector *out, uintptr_t *m, CVector *in)) 0x4BA4C0;
 		this->Misc.RwV3dTransformPoints = (void(__cdecl *)(CVector*, CVector const*, int, uintptr_t const*)) 0x5A3A90;
 		this->Misc.pfGetUserDirectory = (char*(__cdecl *)()) 0x580F00;
-		this->Misc.pfSpawnCar = (void(__cdecl *)(unsigned int modelID)) 0x490FA0;
+		this->Misc.pfSpawnCar = (void(__cdecl *)()) 0x490FA0;
 		this->Misc.pfCAnimManagerBlendAnimation = (int(__cdecl *)(int pRpClump, int dwAnimGroupId, int dwAnimId, float fSpeed)) 0x403710;
 		break;
 	case GAME_VSTEAM:
@@ -335,7 +335,7 @@ void GtaGame::InitAndPatch()
 		this->Misc.Multiply3x3 = (void(__cdecl *)(CVector *out, uintptr_t *m, CVector *in)) 0x4BA450;
 		this->Misc.RwV3dTransformPoints = (void(__cdecl *)(CVector*, CVector const*, int, uintptr_t const*)) 0x5A4570;
 		this->Misc.pfGetUserDirectory = (char*(__cdecl *)()) 0x580E00;
-		this->Misc.pfSpawnCar = (void(__cdecl *)(unsigned int modelID)) 0x490F30;
+		this->Misc.pfSpawnCar = (void(__cdecl *)()) 0x490F30;
 		this->Misc.pfCAnimManagerBlendAnimation = (int(__cdecl *)(int pRpClump, int dwAnimGroupId, int dwAnimId, float fSpeed)) 0x403710;
 		break;
 	default:

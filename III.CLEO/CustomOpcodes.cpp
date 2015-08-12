@@ -1636,6 +1636,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0ADB(CScript *script)
 	char *gxt = (char*)((game.Misc.stVehicleModelInfo + 0x36) + ((mi - 90) * 0x1F8));
 	wchar_t *text = CustomText::GetText(game.Text.CText, 0, gxt);
 	wcstombs(result, text, wcslen(text));
+	result[wcslen(text)] = '\0';
 	return OR_CONTINUE;
 }
 
@@ -1664,7 +1665,12 @@ eOpcodeResult CustomOpcodes::OPCODE_0ADC(CScript *script)
 eOpcodeResult CustomOpcodes::OPCODE_0ADD(CScript *script)
 {
 	script->Collect(1);
-	game.Misc.pfSpawnCar(game.Scripts.Params[0].nVar);
+	unsigned mID = game.Scripts.Params[0].nVar;
+	*(unsigned char*)((DWORD)game.Misc.pfSpawnCar + 0x22) = mID;
+	*(unsigned char*)((DWORD)game.Misc.pfSpawnCar + 0xA5) = mID;
+	game.Misc.pfSpawnCar();
+	*(unsigned char*)((DWORD)game.Misc.pfSpawnCar + 0x22) = 122;
+	*(unsigned char*)((DWORD)game.Misc.pfSpawnCar + 0xA5) = 122;
 	return OR_CONTINUE;
 }
 
@@ -1676,6 +1682,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0ADE(CScript *script)
 	char *result = game.Scripts.Params[1].cVar;
 	wchar_t *text = CustomText::GetText(game.Text.CText, 0, gxt);
 	wcstombs(result, text, wcslen(text));
+	result[wcslen(text)] = '\0';
 	return OR_CONTINUE;
 }
 
@@ -1843,6 +1850,7 @@ int format(CScript *script, char *str, size_t len, const char *format)
 			{
 			case 's':
 			{
+				script->Collect(1);
 				static const char none[] = "(null)";
 				const char *astr = game.Scripts.Params[0].cVar;
 				const char *striter = astr ? astr : none;

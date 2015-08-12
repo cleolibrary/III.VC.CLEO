@@ -144,7 +144,7 @@ public:
 		uintptr_t cameraWidescreen;
 		uintptr_t currentWeather;
 		char*(__cdecl *pfGetUserDirectory)();
-		void(__cdecl *pfSpawnCar)(unsigned int);
+		void(__cdecl *pfSpawnCar)();
 		void(__cdecl *Multiply3x3)(CVector *out, uintptr_t *m, CVector *in);
 		void(__cdecl *RwV3dTransformPoints)(CVector*, CVector const*, int, uintptr_t const*);
 		int(__cdecl *pfCAnimManagerBlendAnimation)(int pRpClump, int dwAnimGroupId, int dwAnimId, float fSpeed);
