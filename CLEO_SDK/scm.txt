@@ -114,3 +114,5 @@
 0B1B=2,%1d% %= %2d%
 0B1C=2,%1d% >>= %2d%
 0B1D=2,%1d% <<= %2d%
+0B20=2,read_clipboard_data %1d% size %2d%
+0B21=2,write_clipboard_data %1d% size %2d%

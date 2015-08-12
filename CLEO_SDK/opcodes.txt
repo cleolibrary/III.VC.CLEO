@@ -114,3 +114,5 @@
 0B1B: 0@ %= 1@
 0B1C: 0@ >>= 1@
 0B1D: 0@ <<= 1@
+0B20: read_clipboard_text_to 0@ size 64
+0B21: write_clipboard_data_from 0@ size 64
