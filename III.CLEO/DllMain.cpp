@@ -321,29 +321,25 @@ BOOL __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 		CustomOpcodes::Register();
 		CleoPlugins::LoadPlugins();
 
-		DWORD attr = GetFileAttributes("audio\\HEAD.wav");
-		if(attr != -1 && !(attr & FILE_ATTRIBUTE_DIRECTORY))
+		switch (game.Version)
 		{
-			switch(game.Version)
-			{
-			case GAME_V1_0:
-				CPatch::SetChar(0x566A15, 0);
-				CPatch::Nop(0x566A56, 6);
-				CPatch::Nop(0x581C44, 2);
-				CPatch::Nop(0x581C52, 6);
-				*(unsigned char *)0x604B24 = 0;
-				break;
-			case GAME_V1_1:
-				CPatch::SetChar(0x566B55, 0);
-				CPatch::Nop(0x566B96, 6);
-				CPatch::Nop(0x581F84, 2);
-				CPatch::Nop(0x581F92, 6);
-				*(unsigned char *)0x6043EC = 0;
-				break;
-			case GAME_VSTEAM:
-			default:
-				break;
-			}
+		case GAME_V1_0:
+			CPatch::SetChar(0x566A15, 0);
+			CPatch::Nop(0x566A56, 6);
+			CPatch::Nop(0x581C44, 2);
+			CPatch::Nop(0x581C52, 6);
+			*(unsigned char *)0x604B24 = 0;
+			break;
+		case GAME_V1_1:
+			CPatch::SetChar(0x566B55, 0);
+			CPatch::Nop(0x566B96, 6);
+			CPatch::Nop(0x581F84, 2);
+			CPatch::Nop(0x581F92, 6);
+			*(unsigned char *)0x6043EC = 0;
+			break;
+		case GAME_VSTEAM:
+		default:
+			break;
 		}
 	}
 	else if(fdwReason == DLL_PROCESS_DETACH)

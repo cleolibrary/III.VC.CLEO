@@ -73,7 +73,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)
 	{
 		if (CLEO_GetVersion() < CLEO_VERSION)
 		{
-			MessageBox(HWND_DESKTOP, "An incorrect version of CLEO was loaded.", "IntOperations.cleo", MB_ICONERROR);
+			MessageBox(HWND_DESKTOP, "An incorrect version of CLEO was loaded.", "ClipboardControl.cleo", MB_ICONERROR);
 			return FALSE;
 		}
 

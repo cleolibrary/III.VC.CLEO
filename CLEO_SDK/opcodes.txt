@@ -116,3 +116,6 @@
 0B1D: 0@ <<= 1@
 0B20: read_clipboard_text_to 0@ size 64
 0B21: write_clipboard_data_from 0@ size 64
+0BA2: 15@ = memory_load_library 15@ // IF and SET
+0BA4: 10@ = memory_get_proc_address "?SetPointers@@YAXPAM000@Z" library 15@ // IF and SET
+0BA3: memory_free_library 15@

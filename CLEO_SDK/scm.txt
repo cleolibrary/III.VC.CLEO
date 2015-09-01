@@ -116,3 +116,6 @@
 0B1D=2,%1d% <<= %2d%
 0B20=2,read_clipboard_data %1d% size %2d%
 0B21=2,write_clipboard_data %1d% size %2d%
+0BA2=2,%2h% = memory_load_library %1s%
+0BA3=1,memory_free_library %1h%
+0BA4=3,%3d% = memory_get_proc_address %1s% library %2d%

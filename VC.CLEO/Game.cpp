@@ -462,11 +462,6 @@ void GtaGame::OnMenuDrawing(float x, float y, wchar_t *text)
 	game.Font.SetFontStyle(0);
 	game.Font.SetScale(ScreenCoord(0.45f), ScreenCoord(0.7f));
 	game.Font.SetLeftJustifyOn();
-	if (*(unsigned*)0x49E8E5 == 0x000000AA) //gtalc
-	{
-		unsigned char color[4] = { 0xEB, 0xAA, 0x32, 0xFF };
-		game.Font.SetColor((unsigned int *)color);
-	}
 	wchar_t line[128];
 	swprintf(line, L"CLEO v%d.%d.%d.%d", CLEO_VERSION_MAIN, CLEO_VERSION_MAJOR, CLEO_VERSION_MINOR, CLEO_VERSION_BINARY);
 	game.Font.PrintString(ScreenCoord(30.0f), (float)*game.Screen.Height - ScreenCoord(34.0f), line);
