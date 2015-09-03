@@ -8,6 +8,12 @@
 04C4=7,create_coordinate %5d% %6d% %7d% from_actor %1d% offset %2d% %3d% %4d%
 046F=2,store_player %1d% currently_armed_weapon_to %2d%
 04DD=2,%2d% = actor %1d% armour
+04C9=1,  player %1d% driving_plane
+04A8=1,  player %1d% driving_boat
+04AA=1,  player %1d% driving_heli
+047E=1,  player %1d% driving_a_motorbike
+0485=0,  pc_version  ;; never used in VC, always returns true
+059A=0,  australian_game  ;; always returns false
 }
 0601=2, is_button_pressed_on_pad %1d% with_sensitivity %2d%
 0602=2, emulate_button_press_on_pad %1d% with_sensitivity %2d%

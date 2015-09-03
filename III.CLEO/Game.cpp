@@ -161,6 +161,7 @@ void GtaGame::InitAndPatch()
 		this->Misc.pfGetUserDirectory = (char*(__cdecl *)()) 0x580BB0;
 		this->Misc.pfSpawnCar = (void(__cdecl *)()) 0x490EE0;
 		this->Misc.pfCAnimManagerBlendAnimation = (int(__cdecl *)(int pRpClump, int dwAnimGroupId, int dwAnimId, float fSpeed)) 0x403710;
+		this->Misc.pfIsBoatModel = (bool(__cdecl *)(int mID)) 0x50BB90;
 		break;
 	case GAME_V1_1:
 		// Scripts
@@ -249,6 +250,7 @@ void GtaGame::InitAndPatch()
 		this->Misc.pfGetUserDirectory = (char*(__cdecl *)()) 0x580F00;
 		this->Misc.pfSpawnCar = (void(__cdecl *)()) 0x490FA0;
 		this->Misc.pfCAnimManagerBlendAnimation = (int(__cdecl *)(int pRpClump, int dwAnimGroupId, int dwAnimId, float fSpeed)) 0x403710;
+		this->Misc.pfIsBoatModel = (bool(__cdecl *)(int mID)) 0x50BC80;
 		break;
 	case GAME_VSTEAM:
 		// Scripts
@@ -337,6 +339,7 @@ void GtaGame::InitAndPatch()
 		this->Misc.pfGetUserDirectory = (char*(__cdecl *)()) 0x580E00;
 		this->Misc.pfSpawnCar = (void(__cdecl *)()) 0x490F30;
 		this->Misc.pfCAnimManagerBlendAnimation = (int(__cdecl *)(int pRpClump, int dwAnimGroupId, int dwAnimId, float fSpeed)) 0x403710;
+		this->Misc.pfIsBoatModel = (bool(__cdecl *)(int mID)) 0x50BC10;
 		break;
 	default:
 		break;

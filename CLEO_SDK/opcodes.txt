@@ -8,6 +8,12 @@
 04C4: create_coordinate 0@ 1@ 2@ from_actor $PLAYER_ACTOR offset 0.0 1.2 0.0
 046F: store_player $player_char currently_armed_weapon_to 13@
 04DD: $873 = actor $player_actor armour
+04C9: player $PLAYER_CHAR driving_plane 
+04A8: player $PLAYER_CHAR driving_boat
+04aa: player $PLAYER_CHAR driving_heli
+047E: player $PLAYER_CHAR driving_a_motorbike 
+0485: return_true
+059a: return_false
 }
 0601: is_button_pressed_on_pad 3 with_sensitivity 0xFF
 0602: emulate_button_press_on_pad 2 with_sensitivity 0xFF

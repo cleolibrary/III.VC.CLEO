@@ -188,6 +188,13 @@ void CustomOpcodes::Register()
 
 	Opcodes::RegisterOpcode(0x046F, STORE_PLAYER_CURRENTLY_ARMED_WEAPON);
 	Opcodes::RegisterOpcode(0x04DD, GET_CHAR_ARMOUR);
+
+	Opcodes::RegisterOpcode(0x04C9, PLAYER_DRIVING_PLANE);
+	Opcodes::RegisterOpcode(0x04A8, PLAYER_DRIVING_BOAT);
+	Opcodes::RegisterOpcode(0x04AA, PLAYER_DRIVING_HELI);
+	Opcodes::RegisterOpcode(0x047E, PLAYER_DRIVING_A_MOTORBIKE);
+	Opcodes::RegisterOpcode(0x0485, IS_PC_VERSION);
+	Opcodes::RegisterOpcode(0x059A, IS_AUSTRALIAN_GAME);
 	
 }
 
@@ -944,6 +951,84 @@ eOpcodeResult CustomOpcodes::GET_CHAR_ARMOUR(CScript *script)
 	void* actor = game.Pools.pfPedPoolGetStruct(*game.Pools.pPedPool, game.Scripts.Params[0].nVar);
 	game.Scripts.Params[0].nVar = static_cast<int>(*(float*)((uintptr_t)actor + 0x2C4));
 	script->Store(1);
+	return OR_CONTINUE;
+}
+
+eOpcodeResult CustomOpcodes::PLAYER_DRIVING_PLANE(CScript *script)
+{
+	script->Collect(1);
+	DWORD player = game.Pools.pCPlayerPedPool[79 * game.Scripts.Params[0].nVar];
+	if (*(BYTE *)(player + 0x314))
+	{
+		DWORD vehicle = *(DWORD *)(player + 0x310);
+		if (*(DWORD *)(vehicle + 0x5C) == 126) //#DODO
+		{
+			script->UpdateCompareFlag(true);
+			return OR_CONTINUE;
+		}
+
+		DWORD dwFlags = *(DWORD *)(*(DWORD *)(vehicle + 0x128) + 0xC8);
+		if ((dwFlags & 0x20000) != false /*|| (dwFlags & 0x40000) != false*/)
+		{
+			script->UpdateCompareFlag(true);
+			return OR_CONTINUE;
+		}
+	}
+	script->UpdateCompareFlag(false);
+	return OR_CONTINUE;
+}
+
+eOpcodeResult CustomOpcodes::PLAYER_DRIVING_BOAT(CScript *script)
+{
+	script->Collect(1);
+	DWORD player = game.Pools.pCPlayerPedPool[79 * game.Scripts.Params[0].nVar];
+	if (*(BYTE *)(player + 0x314))
+	{
+		DWORD vehicle = *(DWORD *)(player + 0x310);
+		if (game.Misc.pfIsBoatModel(*(DWORD *)(vehicle + 0x5C)))
+		{
+			script->UpdateCompareFlag(true);
+			return OR_CONTINUE;
+		}
+	}
+	script->UpdateCompareFlag(false);
+	return OR_CONTINUE;
+}
+
+eOpcodeResult CustomOpcodes::PLAYER_DRIVING_HELI(CScript *script)
+{
+	script->Collect(1);
+	DWORD player = game.Pools.pCPlayerPedPool[79 * game.Scripts.Params[0].nVar];
+	if (*(BYTE *)(player + 0x314))
+	{
+		DWORD vehicle = *(DWORD *)(player + 0x310);
+		DWORD dwFlags = *(DWORD *)(*(DWORD *)(vehicle + 0x128) + 0xC8);
+		if ((dwFlags & 0x20000) != false)
+		{
+			script->UpdateCompareFlag(true);
+			return OR_CONTINUE;
+		}
+	}
+	script->UpdateCompareFlag(false);
+	return OR_CONTINUE;
+}
+
+eOpcodeResult CustomOpcodes::PLAYER_DRIVING_A_MOTORBIKE(CScript *script)
+{
+	script->Collect(1);
+	script->UpdateCompareFlag(false);
+	return OR_CONTINUE;
+}
+
+eOpcodeResult CustomOpcodes::IS_PC_VERSION(CScript *script)
+{
+	script->UpdateCompareFlag(true);
+	return OR_CONTINUE;
+}
+
+eOpcodeResult CustomOpcodes::IS_AUSTRALIAN_GAME(CScript *script)
+{
+	script->UpdateCompareFlag(false);
 	return OR_CONTINUE;
 }
 

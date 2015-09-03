@@ -62,6 +62,12 @@ class CustomOpcodes
 	static eOpcodeResult WINAPI DRAW_SHADOW(CScript *script);
 	static eOpcodeResult WINAPI SET_TEXT_DRAW_FONT(CScript *script);
 	static eOpcodeResult WINAPI GET_CHAR_ARMOUR(CScript *script);
+	static eOpcodeResult WINAPI PLAYER_DRIVING_PLANE(CScript *script);
+	static eOpcodeResult WINAPI PLAYER_DRIVING_BOAT(CScript *script);
+	static eOpcodeResult WINAPI PLAYER_DRIVING_HELI(CScript *script);
+	static eOpcodeResult WINAPI PLAYER_DRIVING_A_MOTORBIKE(CScript *script);
+	static eOpcodeResult WINAPI IS_PC_VERSION(CScript *script);
+	static eOpcodeResult WINAPI IS_AUSTRALIAN_GAME(CScript *script);
 	static eOpcodeResult WINAPI PLAY_ANIMATION(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0A8E(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0A8F(CScript *script);

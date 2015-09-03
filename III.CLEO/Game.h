@@ -148,6 +148,7 @@ public:
 		void(__cdecl *Multiply3x3)(CVector *out, uintptr_t *m, CVector *in);
 		void(__cdecl *RwV3dTransformPoints)(CVector*, CVector const*, int, uintptr_t const*);
 		int(__cdecl *pfCAnimManagerBlendAnimation)(int pRpClump, int dwAnimGroupId, int dwAnimId, float fSpeed);
+		bool(__cdecl *pfIsBoatModel)(int mID);
 	} Misc;
 };
 
