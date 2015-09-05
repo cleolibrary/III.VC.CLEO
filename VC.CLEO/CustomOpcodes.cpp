@@ -1052,7 +1052,7 @@ eOpcodeResult CustomOpcodes::DRAW_SHADOW(CScript *script)
 		return OR_CONTINUE;
 	}
 
-	game.Shadows.StoreShadowToBeRendered(Type, *game.Shadows.pRwTexture, &pos, Size, 0.0, 0.0, -Size, game.Scripts.Params[6].nVar, game.Scripts.Params[7].nVar, game.Scripts.Params[8].nVar, game.Scripts.Params[9].nVar, 150.0f, true, 1.0f, false, false);
+	game.Shadows.StoreShadowToBeRendered(Type, *game.Shadows.pRwTexture, &pos, Size, 0.0, 0.0, -Size, game.Scripts.Params[6].nVar, game.Scripts.Params[7].nVar, game.Scripts.Params[8].nVar, game.Scripts.Params[9].nVar, 150.0f, true, 1.0f, nullptr, false);
 	return OR_CONTINUE;
 }
 
@@ -1354,9 +1354,9 @@ eOpcodeResult CustomOpcodes::OPCODE_0AC9(CScript *script)
 //0ACA=1,show_text_box %1s%
 eOpcodeResult CustomOpcodes::OPCODE_0ACA(CScript *script)
 {
-	static wchar_t message_buf[0x80];
+	static wchar_t message_buf[MAX_PATH];
 	script->Collect(1);
-	swprintf(message_buf, 100, L"%hs", game.Scripts.Params[0].cVar);
+	swprintf(message_buf, MAX_PATH, L"%hs", game.Scripts.Params[0].cVar);
 	game.Text.TextBox(message_buf, false, false, false);
 	return OR_CONTINUE;
 };
@@ -1364,11 +1364,11 @@ eOpcodeResult CustomOpcodes::OPCODE_0ACA(CScript *script)
 //0ACB=3,show_styled_text %1s% time %2d% style %3d%
 eOpcodeResult CustomOpcodes::OPCODE_0ACB(CScript *script)
 {
-	static wchar_t message_buf[0x80];
+	static wchar_t message_buf[MAX_PATH];
 	script->Collect(3);
 	const char *text = game.Scripts.Params[0].cVar;
 	unsigned time, style;
-	swprintf(message_buf, 100, L"%hs", text);
+	swprintf(message_buf, MAX_PATH, L"%hs", text);
 	game.Text.StyledText(message_buf, game.Scripts.Params[1].nVar, game.Scripts.Params[2].nVar - 1);
 	return OR_CONTINUE;
 };
@@ -1376,10 +1376,10 @@ eOpcodeResult CustomOpcodes::OPCODE_0ACB(CScript *script)
 //0ACC=2,show_text_lowpriority %1s% time %2d%
 eOpcodeResult CustomOpcodes::OPCODE_0ACC(CScript *script)
 {
-	static wchar_t message_buf[0x80];
+	static wchar_t message_buf[MAX_PATH];
 	script->Collect(2);
 	const char *text = game.Scripts.Params[0].cVar;
-	swprintf(message_buf, 100, L"%hs", text);
+	swprintf(message_buf, MAX_PATH, L"%hs", text);
 	game.Text.TextLowPriority(message_buf, game.Scripts.Params[1].nVar, false, false);
 	return OR_CONTINUE;
 };
@@ -1387,10 +1387,10 @@ eOpcodeResult CustomOpcodes::OPCODE_0ACC(CScript *script)
 //0ACD=2,show_text_highpriority %1s% time %2d%
 eOpcodeResult CustomOpcodes::OPCODE_0ACD(CScript *script)
 {
-	static wchar_t message_buf[0x80];
+	static wchar_t message_buf[MAX_PATH];
 	script->Collect(2);
 	const char *text = game.Scripts.Params[0].cVar;
-	swprintf(message_buf, 100, L"%hs", text);
+	swprintf(message_buf, MAX_PATH, L"%hs", text);
 	game.Text.TextHighPriority(message_buf, game.Scripts.Params[1].nVar, false, false);
 	return OR_CONTINUE;
 };
@@ -1398,13 +1398,13 @@ eOpcodeResult CustomOpcodes::OPCODE_0ACD(CScript *script)
 //0ACE=-1,show_formatted_text_box %1s%
 eOpcodeResult CustomOpcodes::OPCODE_0ACE(CScript *script)
 {
-	static wchar_t message_buf[0x80];
+	static wchar_t message_buf[MAX_PATH];
 	script->Collect(1);
-	char fmt[100]; char text[100];
+	char fmt[MAX_PATH]; char text[MAX_PATH];
 	strcpy(fmt, game.Scripts.Params[0].cVar);
 	format(script, text, sizeof(text), fmt);
 
-	swprintf(message_buf, 100, L"%hs", text);
+	swprintf(message_buf, MAX_PATH, L"%hs", text);
 	game.Text.TextBox(message_buf, false, false, false);
 
 	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
@@ -1417,13 +1417,13 @@ eOpcodeResult CustomOpcodes::OPCODE_0ACE(CScript *script)
 eOpcodeResult CustomOpcodes::OPCODE_0ACF(CScript *script)
 {
 	script->Collect(3);
-	char fmt[100]; char text[100]; static wchar_t message_buf[100];
+	char fmt[MAX_PATH]; char text[MAX_PATH]; static wchar_t message_buf[MAX_PATH];
 	unsigned time, style;
 	strcpy(fmt, game.Scripts.Params[0].cVar);
 	time = game.Scripts.Params[1].nVar;
 	style = game.Scripts.Params[2].nVar;
 	format(script, text, sizeof(text), fmt);
-	swprintf(message_buf, 100, L"%hs", text);
+	swprintf(message_buf, MAX_PATH, L"%hs", text);
 	game.Text.StyledText(message_buf, time, style - 1);
 	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
 		script->Collect(1);
@@ -1435,12 +1435,12 @@ eOpcodeResult CustomOpcodes::OPCODE_0ACF(CScript *script)
 eOpcodeResult CustomOpcodes::OPCODE_0AD0(CScript *script)
 {
 	script->Collect(2);
-	char fmt[100]; char text[100]; static wchar_t message_buf[0x80];
+	char fmt[MAX_PATH]; char text[MAX_PATH]; static wchar_t message_buf[MAX_PATH];
 	unsigned time;
 	strcpy(fmt, game.Scripts.Params[0].cVar);
 	time = game.Scripts.Params[1].nVar;
 	format(script, text, sizeof(text), fmt);
-	swprintf(message_buf, 100, L"%hs", text);
+	swprintf(message_buf, MAX_PATH, L"%hs", text);
 	game.Text.TextLowPriority(message_buf, time, false, false);
 	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
 		script->Collect(1);
@@ -1452,12 +1452,12 @@ eOpcodeResult CustomOpcodes::OPCODE_0AD0(CScript *script)
 eOpcodeResult CustomOpcodes::OPCODE_0AD1(CScript *script)
 {
 	script->Collect(2);
-	char fmt[100]; char text[100]; static wchar_t message_buf[0x80];
+	char fmt[MAX_PATH]; char text[MAX_PATH]; static wchar_t message_buf[MAX_PATH];
 	unsigned time;
 	strcpy(fmt, game.Scripts.Params[0].cVar);
 	time = game.Scripts.Params[1].nVar;
 	format(script, text, sizeof(text), fmt);
-	swprintf(message_buf, 100, L"%hs", text);
+	swprintf(message_buf, MAX_PATH, L"%hs", text);
 	game.Text.TextHighPriority(message_buf, time, false, false);
 	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
 		script->Collect(1);
@@ -1471,7 +1471,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0AD1(CScript *script)
 eOpcodeResult CustomOpcodes::OPCODE_0AD3(CScript *script)
 {
 	script->Collect(2);
-	char fmt[100], *dst;
+	char fmt[MAX_PATH], *dst;
 	dst = (char*)game.Scripts.Params[0].pVar;
 	strcpy(fmt, game.Scripts.Params[1].cVar);
 	format(script, dst, -1ul, fmt);
@@ -1485,7 +1485,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0AD3(CScript *script)
 eOpcodeResult CustomOpcodes::OPCODE_0AD4(CScript *script)
 {
 	script->Collect(2);
-	char fmt[100], *src;
+	char fmt[MAX_PATH], *src;
 	src = game.Scripts.Params[0].cVar;
 	strcpy(fmt, game.Scripts.Params[1].cVar);
 	size_t cExParams = 0;
@@ -1557,7 +1557,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0AD8(CScript *script)
 eOpcodeResult CustomOpcodes::OPCODE_0AD9(CScript *script)
 {
 	script->Collect(2);
-	char fmt[100]; char text[100];
+	char fmt[MAX_PATH]; char text[MAX_PATH];
 	FILE* file = (FILE*)game.Scripts.Params[1].pVar;
 	strcpy(fmt, game.Scripts.Params[1].cVar);
 	format(script, text, sizeof(text), fmt);
@@ -1573,7 +1573,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0AD9(CScript *script)
 eOpcodeResult CustomOpcodes::OPCODE_0ADA(CScript *script)
 {
 	script->Collect(2);
-	char fmt[100];
+	char fmt[MAX_PATH];
 	FILE* file = (FILE*)game.Scripts.Params[0].pVar;
 	strcpy(fmt, game.Scripts.Params[1].cVar);
 	size_t cExParams = 0;

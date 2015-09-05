@@ -302,11 +302,23 @@ BOOL __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 		{
 		case GAME_V1_0:
 			LOGL(LOG_PRIORITY_GAME_EVENT, "GTA III v%d.%d", 1, 0);
+			CPatch::SetChar(0x566A15, 0);
+			CPatch::Nop(0x566A56, 6);
+			CPatch::Nop(0x581C44, 2);
+			CPatch::Nop(0x581C52, 6);
+			*(unsigned char *)0x604B24 = 0;
+
 			RwRenderStateSetHook<0x51F965>();
 			PatchArrays();
 			break;
 		case GAME_V1_1:
 			LOGL(LOG_PRIORITY_GAME_EVENT, "GTA III v%d.%d", 1, 1);
+			CPatch::SetChar(0x566B55, 0);
+			CPatch::Nop(0x566B96, 6);
+			CPatch::Nop(0x581F84, 2);
+			CPatch::Nop(0x581F92, 6);
+			*(unsigned char *)0x6043EC = 0;
+
 			RwRenderStateSetHook<0x51FB95>();
 			break;
 		case GAME_VSTEAM:
@@ -320,27 +332,6 @@ BOOL __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 
 		CustomOpcodes::Register();
 		CleoPlugins::LoadPlugins();
-
-		switch (game.Version)
-		{
-		case GAME_V1_0:
-			CPatch::SetChar(0x566A15, 0);
-			CPatch::Nop(0x566A56, 6);
-			CPatch::Nop(0x581C44, 2);
-			CPatch::Nop(0x581C52, 6);
-			*(unsigned char *)0x604B24 = 0;
-			break;
-		case GAME_V1_1:
-			CPatch::SetChar(0x566B55, 0);
-			CPatch::Nop(0x566B96, 6);
-			CPatch::Nop(0x581F84, 2);
-			CPatch::Nop(0x581F92, 6);
-			*(unsigned char *)0x6043EC = 0;
-			break;
-		case GAME_VSTEAM:
-		default:
-			break;
-		}
 	}
 	else if(fdwReason == DLL_PROCESS_DETACH)
 	{

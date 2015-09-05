@@ -52,7 +52,8 @@ void PatchArrays()
 
 	injector::WriteMemory<char>(0x450B1D + 3, 121, true);
 	injector::WriteMemory<char>(0x450C9B + 3, 121, true);
-	injector::WriteMemory<char>(0x45167E + 3, 121, true);
+	//injector::WriteMemory<char>(0x45167E + 3, 121, true); //CMissionCleanup::Process()
+	injector::WriteMemory<unsigned char>(0x451692, 0xEB, true); //CMissionCleanup::Process()
 	injector::WriteMemory<char>(0x5569BD + 3, 121, true);
 	injector::WriteMemory<char>(0x55AE0C + 3, 121, true);
 
@@ -145,15 +146,18 @@ BOOL __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 		case GAME_V1_0:
 			LOGL(LOG_PRIORITY_GAME_EVENT, "GTA VC v%d.%d", 1, 0);
 			RwRenderStateSetHook<0x578737>();
+			RwRenderStateSetHook<0x578737 - 0x50>();
 			PatchArrays();
 			break;
 		case GAME_V1_1:
 			LOGL(LOG_PRIORITY_GAME_EVENT, "GTA VC v%d.%d", 1, 1);
 			RwRenderStateSetHook<0x578757>();
+			RwRenderStateSetHook<0x578757 - 0x50>();
 			break;
 		case GAME_VSTEAM:
 			LOGL(LOG_PRIORITY_GAME_EVENT, "GTA VC steam version");
 			RwRenderStateSetHook<0x5786A5>();
+			RwRenderStateSetHook<0x5786A5 - 0x50>();
 			break;
 		case GAME_VSTEAMENC:
 			LOGL(LOG_PRIORITY_GAME_EVENT, "GTA VC steam version");
