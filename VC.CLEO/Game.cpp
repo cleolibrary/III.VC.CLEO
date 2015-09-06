@@ -79,10 +79,11 @@ void GtaGame::InitAndPatch()
 		// Scripts
 		CPatch::SetPointer(0x4504E4, scriptMgr.gameScripts);
 		CPatch::SetPointer(0x450508, scriptMgr.gameScripts);
+		CPatch::SetPointer(0x45050E, (DWORD*)(scriptMgr.gameScripts)+1);
 		CPatch::SetInt(0x450527 + 2, sizeof(CScript));
 		CPatch::SetInt(0x45052D + 2, sizeof(CScript));
 		CPatch::RedirectJump(0x450CF0, ScriptManager::InitialiseScript);
-		CPatch::RedirectJump(0x44FBE0, ScriptManager::ProcessScriptCommand);
+		CPatch::RedirectJump(0x44FBE0, ScriptManager::ProcessScriptCommand); 
 		CPatch::RedirectJump(0x451010, ScriptManager::CollectScriptParameters);
 		CPatch::RedirectJump(0x450EF0, ScriptManager::CollectScriptNextParameterWithoutIncreasingPC);
 		this->Scripts.AddScriptToList = (void(__thiscall *)(CScript *, CScript **))0x4502E0;
@@ -182,6 +183,7 @@ void GtaGame::InitAndPatch()
 		// Scripts
 		CPatch::SetPointer(0x4504E4, scriptMgr.gameScripts);
 		CPatch::SetPointer(0x450508, scriptMgr.gameScripts);
+		CPatch::SetPointer(0x45050E, (DWORD*)(scriptMgr.gameScripts) + 1);
 		CPatch::SetInt(0x450527 + 2, sizeof(CScript));
 		CPatch::SetInt(0x45052D + 2, sizeof(CScript));
 		CPatch::RedirectJump(0x450CF0, ScriptManager::InitialiseScript);
@@ -285,6 +287,7 @@ void GtaGame::InitAndPatch()
 		// Scripts
 		CPatch::SetPointer(0x4503F4, scriptMgr.gameScripts);
 		CPatch::SetPointer(0x450418, scriptMgr.gameScripts);
+		CPatch::SetPointer(0x45041E, (DWORD*)(scriptMgr.gameScripts) + 1);
 		CPatch::SetInt(0x450437 + 2, sizeof(CScript));
 		CPatch::SetInt(0x45043D + 2, sizeof(CScript));
 		CPatch::RedirectJump(0x450C00, ScriptManager::InitialiseScript);
