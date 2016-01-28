@@ -157,7 +157,7 @@ BOOL __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 		case GAME_VSTEAM:
 			LOGL(LOG_PRIORITY_GAME_EVENT, "GTA VC steam version");
 			RwRenderStateSetHook<0x5786A5>();
-			RwRenderStateSetHook<0x5786A5 - 0x50>();
+			RwRenderStateSetHook<0x5786A5 - 0x7E>();
 			break;
 		case GAME_VSTEAMENC:
 			LOGL(LOG_PRIORITY_GAME_EVENT, "GTA VC steam version");
