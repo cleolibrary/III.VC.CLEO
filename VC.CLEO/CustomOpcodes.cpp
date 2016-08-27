@@ -1558,7 +1558,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0AD9(CScript *script)
 {
 	script->Collect(2);
 	char fmt[MAX_PATH]; char text[MAX_PATH];
-	FILE* file = (FILE*)game.Scripts.Params[1].pVar;
+	FILE* file = (FILE*)game.Scripts.Params[0].pVar;
 	strcpy(fmt, game.Scripts.Params[1].cVar);
 	format(script, text, sizeof(text), fmt);
 	fputs(text, file);
