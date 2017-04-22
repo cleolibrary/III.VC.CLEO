@@ -6,7 +6,7 @@
 
 #include "ScmFunction.h"
 
-enum eScriptType
+enum eScriptType :unsigned short
 {
 	SCRIPT_TYPE_DEFAULT = 0,
 	SCRIPT_TYPE_CUSTOM = 1
@@ -27,20 +27,7 @@ union tScriptVar
 	void *pVar;
 };
 
-struct tParamType
-{
-	unsigned char type : 6; // eParamType
-	unsigned char isLongString : 1; // did we process long string already
-	unsigned char isString : 1; // did we process string already
-};
-
-struct tParamTypeString
-{
-	unsigned char length : 7; // string length, max - 127
-	unsigned char isString : 1; // did we process string already
-};
-
-enum eParamType
+enum eParamType :unsigned char
 {
 	PARAM_TYPE_END_OF_PARAMS = 0,
 	PARAM_TYPE_INT32 = 1,
@@ -50,6 +37,12 @@ enum eParamType
 	PARAM_TYPE_INT16 = 5,
 	PARAM_TYPE_FLOAT = 6,
 	PARAM_TYPE_STRING = 14
+};
+
+struct tParamType
+{
+	eParamType type : 7; // eParamType
+	bool processed : 1; // did we process long string already
 };
 
 class CScript

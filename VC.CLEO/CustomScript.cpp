@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "ScriptManager.h"
 #include "Log.h"
+#include <algorithm>
 
 void CScript::Init()
 {
@@ -163,10 +164,7 @@ void CScript::JumpTo(int address)
 
 eParamType CScript::GetNextParamType()
 {
-	tParamType paramType = *(tParamType *)&game.Scripts.Space[this->m_dwIp];
-	if(paramType.isString)
-		return PARAM_TYPE_STRING;
-	return (eParamType)paramType.type;
+	return ((tParamType *)&game.Scripts.Space[this->m_dwIp])->type;
 }
 
 void CScript::Collect(unsigned int numParams)
@@ -176,137 +174,83 @@ void CScript::Collect(unsigned int numParams)
 
 void CScript::Collect(unsigned int *pIp, unsigned int numParams)
 {
-	for(int i = 0; i < numParams; i++)
+	for(unsigned int i = 0; i < numParams; i++)
 	{
-		unsigned char paramType = *(unsigned char *)&game.Scripts.Space[*pIp];
+		tParamType *paramType = (tParamType *)&game.Scripts.Space[*pIp];
 		*pIp += 1;
-		// if string parameter
-		if((*(tParamType *)&paramType).isString)
+
+		switch (paramType->type)
 		{
-			game.Scripts.Params[i].cVar = &game.Scripts.Space[*pIp];
-			*pIp += (*(tParamTypeString *)&paramType).length + 1;
-		}
-		else
-		{
-			unsigned int j;
-			unsigned char *pLength;
-			unsigned char length;
-			switch((*(tParamType *)&paramType).type)
+		case PARAM_TYPE_INT32:
+		case PARAM_TYPE_FLOAT:
+			game.Scripts.Params[i].nVar = *(int *)&game.Scripts.Space[*pIp];
+			*pIp += 4;
+			break;
+		case PARAM_TYPE_GVAR:
+			game.Scripts.Params[i].nVar = *(int *)&game.Scripts.Space[*(unsigned short *)&game.Scripts.Space[*pIp]];
+			*pIp += 2;
+			break;
+		case PARAM_TYPE_LVAR:
+			game.Scripts.Params[i].nVar = this->m_aLVars[*(unsigned short *)&game.Scripts.Space[*pIp]].nVar;
+			*pIp += 2;
+			break;
+		case PARAM_TYPE_INT8:
+			game.Scripts.Params[i].nVar = *(char *)&game.Scripts.Space[*pIp];
+			*pIp += 1;
+			break;
+		case PARAM_TYPE_INT16:
+			game.Scripts.Params[i].nVar = *(short *)&game.Scripts.Space[*pIp];
+			*pIp += 2;
+			break;
+		case PARAM_TYPE_STRING:
+			if (!paramType->processed)
 			{
-			case PARAM_TYPE_INT32:
-			case PARAM_TYPE_FLOAT:
-				game.Scripts.Params[i].nVar = *(int *)&game.Scripts.Space[*pIp];
-				*pIp += 4;
-				break;
-			case PARAM_TYPE_GVAR:
-				game.Scripts.Params[i].nVar = *(int *)&game.Scripts.Space[*(unsigned short *)&game.Scripts.Space[*pIp]];
-				*pIp += 2;
-				break;
-			case PARAM_TYPE_LVAR:
-				game.Scripts.Params[i].nVar = this->m_aLVars[*(unsigned short *)&game.Scripts.Space[*pIp]].nVar;
-				*pIp += 2;
-				break;
-			case PARAM_TYPE_INT8:
-				game.Scripts.Params[i].nVar = *(char *)&game.Scripts.Space[*pIp];
-				*pIp += 1;
-				break;
-			case PARAM_TYPE_INT16:
-				game.Scripts.Params[i].nVar = *(short *)&game.Scripts.Space[*pIp];
-				*pIp += 2;
-				break;
-			case PARAM_TYPE_STRING:
-				pLength = (unsigned char *)&game.Scripts.Space[*pIp];
-				length = *pLength;
-				if((*(tParamType *)&paramType).isLongString)
-				{
-					game.Scripts.Params[i].cVar = &game.Scripts.Space[*pIp + 1];
-					*pIp += length + 2;
-				}
-				else
-				{
-					if(length > 127)
-					{
-						(*(tParamType *)&game.Scripts.Space[*pIp - 1]).isString = false;
-						(*(tParamType *)&game.Scripts.Space[*pIp - 1]).isLongString = true;
-						game.Scripts.Space[*pIp + length] = '\0';
-						game.Scripts.Params[i].cVar = &game.Scripts.Space[*pIp + 1];
-						*pIp += length + 1;
-						*pLength = length - 1;
-					}
-					else
-					{
-						(*(tParamTypeString *)&game.Scripts.Space[*pIp - 1]).isString = true;
-						(*(tParamTypeString *)&game.Scripts.Space[*pIp - 1]).length = length;
-						for(j = 0; j < length; j++)
-							game.Scripts.Space[*pIp + j] = game.Scripts.Space[*pIp + 1 + j];
-						game.Scripts.Space[*pIp + length] = '\0';
-						game.Scripts.Params[i].cVar = &game.Scripts.Space[*pIp];
-						*pIp += length + 1;
-					}
-				}
-				break;
-			default:
-				break;
+				unsigned char length = *(unsigned char *)&game.Scripts.Space[*pIp];
+				*std::copy_n(&game.Scripts.Space[*pIp + 1], length, &game.Scripts.Space[*pIp]) = 0;
+				paramType->processed = true;
 			}
+
+			game.Scripts.Params[i].cVar = &game.Scripts.Space[*pIp];
+			*pIp += (strlen(&game.Scripts.Space[*pIp]) + 1);
+			break;
+
+		default:
+			break;
 		}
 	}
 }
 
 int CScript::CollectNextWithoutIncreasingPC(unsigned int ip)
 {
-	unsigned char paramType = *(unsigned char *)&game.Scripts.Space[ip];
+	tParamType *paramType = (tParamType *)&game.Scripts.Space[ip];
 	ip += 1;
-	// if string parameter
-	if((*(tParamType *)&paramType).isString)
-		return (int)&game.Scripts.Space[ip];
-	else
+
+	switch (paramType->type)
 	{
-		unsigned int j;
-		unsigned char *pLength;
-		unsigned char length;
-		float fParam;
-		switch((*(tParamType *)&paramType).type)
+	case PARAM_TYPE_INT32:
+	case PARAM_TYPE_FLOAT:
+		return *(int *)&game.Scripts.Space[ip];
+	case PARAM_TYPE_GVAR:
+		return *(int *)&game.Scripts.Space[*(unsigned short *)&game.Scripts.Space[ip]];
+	case PARAM_TYPE_LVAR:
+		return this->m_aLVars[*(unsigned short *)&game.Scripts.Space[ip]].nVar;
+	case PARAM_TYPE_INT8:
+		return *(char *)&game.Scripts.Space[ip];
+	case PARAM_TYPE_INT16:
+		return *(short *)&game.Scripts.Space[ip];
+	case PARAM_TYPE_STRING:
+		if (!paramType->processed)
 		{
-		case PARAM_TYPE_INT32:
-		case PARAM_TYPE_FLOAT:
-			return *(int *)&game.Scripts.Space[ip];
-		case PARAM_TYPE_GVAR:
-			return *(int *)&game.Scripts.Space[*(unsigned short *)&game.Scripts.Space[ip]];
-		case PARAM_TYPE_LVAR:
-			return this->m_aLVars[*(unsigned short *)&game.Scripts.Space[ip]].nVar;
-		case PARAM_TYPE_INT8:
-			return *(char *)&game.Scripts.Space[ip];
-		case PARAM_TYPE_INT16:
-			return *(short *)&game.Scripts.Space[ip];
-		case PARAM_TYPE_STRING:
-			pLength = (unsigned char *)&game.Scripts.Space[ip];
-			length = *pLength;
-			if((*(tParamType *)&paramType).isLongString)
-				return (int)&game.Scripts.Space[ip + 1];
-			else
-			{
-				if(length > 127)
-				{
-					(*(tParamType *)&game.Scripts.Space[ip - 1]).isString = false;
-					(*(tParamType *)&game.Scripts.Space[ip - 1]).isLongString = true;
-					game.Scripts.Space[ip + length] = '\0';
-					*pLength = length - 1;
-					return (int)&game.Scripts.Space[ip + 1];
-				}
-				else
-				{
-					(*(tParamTypeString *)&game.Scripts.Space[ip - 1]).isString = true;
-					(*(tParamTypeString *)&game.Scripts.Space[ip - 1]).length = length;
-					for(j = 0; j < length; j++)
-						game.Scripts.Space[ip + j] = game.Scripts.Space[ip + 1 + j];
-					game.Scripts.Space[ip + length] = '\0';
-					return (int)&game.Scripts.Space[ip];
-				}
-			}
-			break;
-		default:
-			return -1;
+			unsigned char length = *(unsigned char *)&game.Scripts.Space[ip];
+			*std::copy_n(&game.Scripts.Space[ip + 1], length, &game.Scripts.Space[ip]) = 0;
+			paramType->processed = true;
 		}
+
+		return (int)&game.Scripts.Space[ip];
+		break;
+
+	default:
+		return -1;
 	}
 }
 
