@@ -254,7 +254,7 @@ eOpcodeResult CustomOpcodes::TERMINATE_NAMED_CUSTOM_THREAD(CScript *script)
 	while(search)
 	{
 		CScript *next = search->m_pNextCustom;
-		if(!stricmp(search->m_acName, name))
+		if(!_stricmp(search->m_acName, name))
 		{
 			if(search == script)
 				result = OR_TERMINATE;
@@ -520,7 +520,7 @@ eOpcodeResult CustomOpcodes::GET_NAMED_THREAD_POINTER(CScript *script)
 	CScript *search = scriptMgr.pCusomScripts;
 	while(search)
 	{
-		if(!stricmp(search->m_acName, name))
+		if(!_stricmp(search->m_acName, name))
 		{
 			result_ptr = search;
 			break;
@@ -531,7 +531,7 @@ eOpcodeResult CustomOpcodes::GET_NAMED_THREAD_POINTER(CScript *script)
 	{
 		for(int i = 0; i < 128; i++)
 		{
-			if(!stricmp(scriptMgr.gameScripts[i].m_acName, name))
+			if(!_stricmp(scriptMgr.gameScripts[i].m_acName, name))
 			{
 				result_ptr = &scriptMgr.gameScripts[i];
 				break;

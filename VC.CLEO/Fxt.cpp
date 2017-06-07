@@ -8,9 +8,9 @@ CustomTextEntry *CustomText::pCustomTextList;
 
 CustomTextEntry::CustomTextEntry(char *key, char *text)
 {
-	unsigned int len = strlen(text);
+    size_t len = strlen(text);
 	this->m_pText = new wchar_t[len + 1];
-	for(int i = 0; i < len; i++)
+	for(size_t i = 0; i < len; i++)
 		this->m_pText[i] =  (unsigned char)text[i];
 	this->m_pText[len] = 0;
 	strncpy(m_key, key, 7);
@@ -30,7 +30,7 @@ wchar_t *CustomText::GetText(int theText, int, char *key)
 	CustomTextEntry *entry = pCustomTextList;
 	while(entry)
 	{
-		if(!stricmp(entry->m_key, key))
+		if(!_stricmp(entry->m_key, key))
 		{
 			result = entry->m_pText;
 			break;

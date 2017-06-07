@@ -242,7 +242,7 @@ eOpcodeResult CustomOpcodes::TERMINATE_NAMED_CUSTOM_THREAD(CScript *script)
 	while(search)
 	{
 		CScript *next = search->m_pNextCustom;
-		if(!stricmp(search->m_acName, name))
+		if(!_stricmp(search->m_acName, name))
 		{
 			if(search == script)
 				result = OR_TERMINATE;
@@ -508,7 +508,7 @@ eOpcodeResult CustomOpcodes::GET_NAMED_THREAD_POINTER(CScript *script)
 	CScript *search = scriptMgr.pCusomScripts;
 	while(search)
 	{
-		if(!stricmp(search->m_acName, name))
+		if(!_stricmp(search->m_acName, name))
 		{
 			result_ptr = search;
 			break;
@@ -519,7 +519,7 @@ eOpcodeResult CustomOpcodes::GET_NAMED_THREAD_POINTER(CScript *script)
 	{
 		for(int i = 0; i < 128; i++)
 		{
-			if(!stricmp(scriptMgr.gameScripts[i].m_acName, name))
+			if(!_stricmp(scriptMgr.gameScripts[i].m_acName, name))
 			{
 				result_ptr = &scriptMgr.gameScripts[i];
 				break;
@@ -1367,7 +1367,6 @@ eOpcodeResult CustomOpcodes::OPCODE_0ACB(CScript *script)
 	static wchar_t message_buf[MAX_PATH];
 	script->Collect(3);
 	const char *text = game.Scripts.Params[0].cVar;
-	unsigned time, style;
 	swprintf(message_buf, MAX_PATH, L"%hs", text);
 	game.Text.StyledText(message_buf, game.Scripts.Params[1].nVar, game.Scripts.Params[2].nVar - 1);
 	return OR_CONTINUE;
