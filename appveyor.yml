@@ -1,0 +1,21 @@
+version: 1.0.{build}
+skip_tags: true
+image: Visual Studio 2017
+configuration: Release
+install:
+- cmd: >-
+    git submodule update --init --recursive
+
+    premake5.bat
+build:
+  project: build/III.VC.CLEO.sln
+  verbosity: minimal
+before_package:
+- cmd: msbuild.exe build/CLEO_SDK.sln /t:Build /p:Configuration=Release;Platform=Win32
+after_build:
+- cmd: release.bat
+artifacts:
+- path: III.CLEOv2.0.0.5.zip
+  name: III.CLEOv2.0.0.5.zip
+- path: VC.CLEOv2.0.0.5.zip
+  name: VC.CLEOv2.0.0.5.zip
