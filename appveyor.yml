@@ -1,7 +1,7 @@
 version: 1.0.{build}
 skip_tags: true
 image: Visual Studio 2017
-configuration: Release
+configuration: Release_xp
 install:
 - cmd: >-
     git submodule update --init --recursive
@@ -11,7 +11,7 @@ build:
   project: build/III.VC.CLEO.sln
   verbosity: minimal
 before_package:
-- cmd: msbuild.exe build/CLEO_SDK.sln /t:Build /p:Configuration=Release;Platform=Win32
+- cmd: msbuild.exe build/CLEO_SDK.sln /t:Build /p:Configuration=Release_xp;Platform=Win32
 after_build:
 - cmd: release.bat
 artifacts:
