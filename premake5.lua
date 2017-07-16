@@ -1,5 +1,5 @@
 workspace "III.VC.CLEO"
-   configurations { "Release", "Debug" }
+   configurations { "Release", "Debug", "Release_xp" }
    platforms { "Win32" }
    architecture "x32"
    location "build"
@@ -51,11 +51,15 @@ workspace "III.VC.CLEO"
       targetdir ("bin" .. scriptspath)
    end
    
-   filter "configurations:Debug"
+   configuration "Release_xp"
+      toolset "v141_xp"
+      buildoptions { "/Zc:threadSafeInit-" }
+   
+   filter "configurations:Debug*"
       defines "DEBUG"
       symbols "On"
 
-   filter "configurations:Release"
+   filter "configurations:Release*"
       defines "NDEBUG"
       optimize "On"
 
@@ -72,7 +76,7 @@ project "VC.CLEO"
    
    
 workspace "CLEO_SDK"
-   configurations { "Release", "Debug" }
+   configurations { "Release", "Debug", "Release_xp" }
    platforms { "Win32" }
    architecture "x32"
    location "build"
@@ -96,11 +100,15 @@ workspace "CLEO_SDK"
    includedirs { "source/CLEO_SDK" }
    libdirs { "bin" }
    
-   filter "configurations:Debug"
+   configuration "Release_xp"
+      toolset "v141_xp"
+      buildoptions { "/Zc:threadSafeInit-" }
+   
+   filter "configurations:Debug*"
       defines "DEBUG"
       symbols "On"
 
-   filter "configurations:Release"
+   filter "configurations:Release*"
       defines "NDEBUG"
       optimize "On"
 
