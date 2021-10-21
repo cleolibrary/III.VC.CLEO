@@ -8,6 +8,8 @@
 #include <direct.h>
 int format(CScript *script, char *str, size_t len, const char *format);
 
+tScriptVar CustomOpcodes::SHARED_VAR[0xFFFF];
+
 CLEOAPI tScriptVar* CLEO_GetParamsAddress()
 {
 	return game.Scripts.Params;
@@ -47,7 +49,7 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x05EB, GET_OBJECT_HANDLE);
 	Opcodes::RegisterOpcode(0x05EC, GET_THREAD_POINTER);
 	Opcodes::RegisterOpcode(0x05ED, GET_NAMED_THREAD_POINTER);
-	Opcodes::RegisterOpcode(0x05EE, IS_KEY_PRESSED);
+	Opcodes::RegisterOpcode(0x05EE, IS_OLD_KEY_PRESSED);
 	Opcodes::RegisterOpcode(0x05EF, FIND_RANDOM_CHAR);
 	Opcodes::RegisterOpcode(0x05F0, FIND_RANDOM_CAR);
 	Opcodes::RegisterOpcode(0x05F1, FIND_RANDOM_OBJECT);
@@ -106,8 +108,8 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x0AB0, IS_KEY_PRESSED);
 	Opcodes::RegisterOpcode(0x0AB1, CALL_SCM_FUNCTION);
 	Opcodes::RegisterOpcode(0x0AB2, SCM_FUNCTION_RET);
-	Opcodes::RegisterOpcode(0x0AB3, DUMMY);
-	Opcodes::RegisterOpcode(0x0AB4, DUMMY);
+	Opcodes::RegisterOpcode(0x0AB3, OPCODE_0AB3);
+	Opcodes::RegisterOpcode(0x0AB4, OPCODE_0AB4);
 	Opcodes::RegisterOpcode(0x0AB5, DUMMY);
 	Opcodes::RegisterOpcode(0x0AB6, DUMMY);
 	Opcodes::RegisterOpcode(0x0AB7, DUMMY);
@@ -552,9 +554,179 @@ eOpcodeResult CustomOpcodes::GET_NAMED_THREAD_POINTER(CScript *script)
 	return OR_CONTINUE;
 }
 
-eOpcodeResult CustomOpcodes::IS_KEY_PRESSED(CScript *script)
+eOpcodeResult CustomOpcodes::IS_OLD_KEY_PRESSED(CScript *script)
 {
 	script->Collect(1);
+#if CLEO_VC
+	switch (game.Scripts.Params[0].nVar)
+	{
+	case OVK_F1:
+		game.Scripts.Params[0].nVar = VK_F1;
+		break;
+	case OVK_F2:
+		game.Scripts.Params[0].nVar = VK_F2;
+		break;
+	case OVK_F3:
+		game.Scripts.Params[0].nVar = VK_F3;
+		break;
+	case OVK_F4:
+		game.Scripts.Params[0].nVar = VK_F4;
+		break;
+	case OVK_F5:
+		game.Scripts.Params[0].nVar = VK_F5;
+		break;
+	case OVK_F6:
+		game.Scripts.Params[0].nVar = VK_F6;
+		break;
+	case OVK_F7:
+		game.Scripts.Params[0].nVar = VK_F7;
+		break;
+	case OVK_F8:
+		game.Scripts.Params[0].nVar = VK_F8;
+		break;
+	case OVK_F9:
+		game.Scripts.Params[0].nVar = VK_F9;
+		break;
+	case OVK_F10:
+		game.Scripts.Params[0].nVar = VK_F10;
+		break;
+	case OVK_F11:
+		game.Scripts.Params[0].nVar = VK_F11;
+		break;
+	case OVK_F12:
+		game.Scripts.Params[0].nVar = VK_F12;
+		break;
+	case OVK_INSERT:
+		game.Scripts.Params[0].nVar = VK_INSERT;
+		break;
+	case OVK_DELETE:
+		game.Scripts.Params[0].nVar = VK_DELETE;
+		break;
+	case OVK_HOME:
+        game.Scripts.Params[0].nVar = VK_HOME;
+		break;
+	case OVK_END:
+		game.Scripts.Params[0].nVar = VK_END;
+		break;
+	case OVK_PRIOR:
+		game.Scripts.Params[0].nVar = VK_PRIOR;
+		break;
+	case OVK_NEXT:
+		game.Scripts.Params[0].nVar = VK_NEXT;
+		break;
+	case OVK_UP:
+		game.Scripts.Params[0].nVar = VK_UP;
+		break;
+	case OVK_DOWN:
+		game.Scripts.Params[0].nVar = VK_DOWN;
+		break;
+	case OVK_LEFT:
+		game.Scripts.Params[0].nVar = VK_LEFT;
+		break;
+	case OVK_RIGHT:
+		game.Scripts.Params[0].nVar = VK_RIGHT;
+		break;
+	case OVK_DIVIDE:
+		game.Scripts.Params[0].nVar = VK_DIVIDE;
+		break;
+	case OVK_MULTIPLY:
+		game.Scripts.Params[0].nVar = VK_MULTIPLY;
+		break;
+	case OVK_ADD:
+		game.Scripts.Params[0].nVar = VK_ADD;
+		break;
+	case OVK_SUBTRACT:
+		game.Scripts.Params[0].nVar = VK_SUBTRACT;
+		break;
+	case OVK_DECIMAL:
+		game.Scripts.Params[0].nVar = VK_DECIMAL;
+		break;
+	case OVK_NUMPAD1:
+		game.Scripts.Params[0].nVar = VK_NUMPAD1;
+		break;
+	case OVK_NUMPAD2:
+		game.Scripts.Params[0].nVar = VK_NUMPAD2;
+		break;
+	case OVK_NUMPAD3:
+		game.Scripts.Params[0].nVar = VK_NUMPAD3;
+		break;
+	case OVK_NUMPAD4:
+		game.Scripts.Params[0].nVar = VK_NUMPAD4;
+		break;
+	case OVK_NUMPAD5:
+		game.Scripts.Params[0].nVar = VK_NUMPAD5;
+		break;
+	case OVK_NUMLOCK:
+		game.Scripts.Params[0].nVar = VK_NUMLOCK;
+		break;
+	case OVK_NUMPAD6:
+		game.Scripts.Params[0].nVar = VK_NUMPAD6;
+		break;
+	case OVK_NUMPAD7:
+		game.Scripts.Params[0].nVar = VK_NUMPAD7;
+		break;
+	case OVK_NUMPAD8:
+		game.Scripts.Params[0].nVar = VK_NUMPAD8;
+		break;
+	case OVK_NUMPAD9:
+		game.Scripts.Params[0].nVar = VK_NUMPAD9;
+		break;
+	case OVK_NUMPAD0:
+		game.Scripts.Params[0].nVar = VK_NUMPAD0;
+		break;
+	case OVK_SEPARATOR:
+		game.Scripts.Params[0].nVar = VK_SEPARATOR;
+		break;
+	case OVK_SCROLL:
+		game.Scripts.Params[0].nVar = VK_SCROLL;
+		break;
+	case OVK_PAUSE:
+		game.Scripts.Params[0].nVar = VK_PAUSE;
+		break;
+	case OVK_BACK:
+		game.Scripts.Params[0].nVar = VK_BACK;
+		break;
+	case OVK_TAB:
+		game.Scripts.Params[0].nVar = VK_TAB;
+		break;
+	case OVK_CAPITAL:
+		game.Scripts.Params[0].nVar = VK_CAPITAL;
+		break;
+	case OVK_RETURN:
+		game.Scripts.Params[0].nVar = VK_RETURN;
+		break;
+	case OVK_LSHIFT:
+		game.Scripts.Params[0].nVar = VK_LSHIFT;
+		break;
+	case OVK_RSHIFT:
+		game.Scripts.Params[0].nVar = VK_RSHIFT;
+		break;
+	case OVK_LCONTROL:
+		game.Scripts.Params[0].nVar = VK_LCONTROL;
+		break;
+	case OVK_RCONTROL:
+		game.Scripts.Params[0].nVar = VK_RCONTROL;
+		break;
+	case OVK_LMENU:
+		game.Scripts.Params[0].nVar = VK_LMENU;
+		break;
+	case OVK_RMENU:
+		game.Scripts.Params[0].nVar = VK_RMENU;
+		break;
+	case OVK_LWIN:
+		game.Scripts.Params[0].nVar = VK_LWIN;
+		break;
+	case OVK_RWIN:
+		game.Scripts.Params[0].nVar = VK_RWIN;
+		break;
+	case OVK_APPS:
+		game.Scripts.Params[0].nVar = VK_APPS;
+		break;
+	default:
+		break;
+	}
+#else
+#endif
 	script->UpdateCompareFlag(GetKeyState(game.Scripts.Params[0].nVar) & 0x8000);
 	return OR_CONTINUE;
 }
@@ -1507,11 +1679,35 @@ eOpcodeResult CustomOpcodes::OPCODE_0AAB(CScript *script)
 //0AAE=1,release_mp3 %1d%
 //0AAF=2,%2d% = get_mp3_length %1d%
 
-//0AB0=1,  key_pressed %1d% //dup
+//0AB0=1,  key_pressed %1d%
+eOpcodeResult CustomOpcodes::IS_KEY_PRESSED(CScript* script)
+{
+	script->Collect(1);
+	script->UpdateCompareFlag(GetKeyState(game.Scripts.Params[0].nVar) & 0x8000);
+	return OR_CONTINUE;
+}
+
 //0AB1=-1,call_scm_func %1p% //dup
 //0AB2=-1,ret  //dup
+
 //0AB3=2,var %1d% = %2d% //not supported
+eOpcodeResult CustomOpcodes::OPCODE_0AB3(CScript* script)
+{
+	script->Collect(2);
+	SHARED_VAR[game.Scripts.Params[0].nVar].dVar = game.Scripts.Params[1].nVar;
+	return OR_CONTINUE;
+}
+
 //0AB4=2,%2d% = var %1d% //not supported
+eOpcodeResult CustomOpcodes::OPCODE_0AB4(CScript* script)
+{
+	script->Collect(1);
+	int Value = SHARED_VAR[game.Scripts.Params[0].nVar].dVar;
+	game.Scripts.Params[0].nVar = Value;
+	script->Store(1);
+	return OR_CONTINUE;
+}
+
 //0AB5=3,store_actor %1d% closest_vehicle_to %2d% closest_ped_to %3d%
 //0AB6=3,store_target_marker_coords_to %1d% %2d% %3d% // IF and SET //not supported
 //0AB7=2,get_vehicle %1d% number_of_gears_to %2d%

@@ -19,12 +19,15 @@ enum eOpcodeResult :char
 	OR_UNDEFINED = -1
 };
 
+typedef unsigned long DWORD;
+
 union tScriptVar
 {
 	int nVar;
 	float fVar;
 	char *cVar;
 	void *pVar;
+	DWORD dVar;
 };
 
 enum eParamType :unsigned char

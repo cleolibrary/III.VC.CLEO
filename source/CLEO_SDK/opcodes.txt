@@ -58,6 +58,8 @@
 0AB0: key_pressed 0x73
 0AB1: call_scm_func @GetSQR 1 10 $result
 0AB2: ret 1 0@
+0AB3: cleo_shared_var 0 = 2021
+0AB4: 1@ = cleo_shared_var 100
 0ABA: end_custom_thread_named 'BENZIN'
 0AC6: 0@ = label @label offset
 0AC7: 0@ = var 0@ offset
