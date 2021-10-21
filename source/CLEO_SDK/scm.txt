@@ -58,6 +58,8 @@
 0AB0=1,  key_pressed %1d%
 0AB1=-1,call_scm_func %1p%
 0AB2=-1,ret
+0AB3=2,cleo_shared_var %1d% = %2d%
+0AB4=2,%2d% = cleo_shared_var %1d%
 0ABA=1,end_custom_thread_named %1s%
 0AC6=2,%2d% = label %1p% offset
 0AC7=2,%2d% = var %1d% offset

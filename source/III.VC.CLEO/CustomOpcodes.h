@@ -27,7 +27,8 @@ class CustomOpcodes
 	static eOpcodeResult WINAPI GET_OBJECT_HANDLE(CScript *script);
 	static eOpcodeResult WINAPI GET_THREAD_POINTER(CScript *script);
 	static eOpcodeResult WINAPI GET_NAMED_THREAD_POINTER(CScript *script);
-	static eOpcodeResult WINAPI IS_KEY_PRESSED(CScript *script);
+	static eOpcodeResult WINAPI IS_OLD_KEY_PRESSED(CScript *script);
+	static eOpcodeResult WINAPI IS_KEY_PRESSED(CScript* script);
 	static eOpcodeResult WINAPI FIND_RANDOM_CHAR(CScript *script);
 	static eOpcodeResult WINAPI FIND_RANDOM_CAR(CScript *script);
 	static eOpcodeResult WINAPI FIND_RANDOM_OBJECT(CScript *script);
@@ -86,6 +87,8 @@ class CustomOpcodes
 	static eOpcodeResult WINAPI OPCODE_0AA4(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0AA9(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0AAB(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0AB3(CScript* script);
+	static eOpcodeResult WINAPI OPCODE_0AB4(CScript* script);
 	static eOpcodeResult WINAPI OPCODE_0AC8(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0AC9(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0ACA(CScript *script);
@@ -112,4 +115,5 @@ class CustomOpcodes
 	static eOpcodeResult WINAPI OPCODE_0AE0(CScript *script);
 public:
 	static void Register();
+	static tScriptVar SHARED_VAR[0xFFFF];
 };
