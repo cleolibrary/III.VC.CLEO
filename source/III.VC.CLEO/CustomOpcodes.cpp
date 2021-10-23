@@ -1906,40 +1906,35 @@ eOpcodeResult CustomOpcodes::OPCODE_0AE0(CScript *script)
 	script->Collect(1);
 
 	CustomTextEntry *entry = CustomText::pCustomTextList;
-	while (entry)
+	if (entry)
 	{
-		CustomTextEntry *next = entry->m_pNext;
-		if (next)
+		if (strcmp(game.Scripts.Params[0].cVar, entry->m_key) == 0)
 		{
-			if (strcmp(game.Scripts.Params[0].cVar, next->m_key) == 0)
-			{
-				if (entry->m_pNext != next->m_pNext)
-					entry->m_pNext = next->m_pNext;
-				else
-					entry->m_pNext = 0;
-
-				LOGL(LOG_PRIORITY_CUSTOM_TEXT, "Unloaded custom text \"%s\"", next->m_key);
-				delete next;
-				return OR_CONTINUE;
-			}
-			else
-			{
-				if (strcmp(game.Scripts.Params[0].cVar, entry->m_key) == 0)
-				{
-					CustomText::pCustomTextList = next;
-					LOGL(LOG_PRIORITY_CUSTOM_TEXT, "Unloaded custom text \"%s\"", entry->m_key);
-					delete entry;
-					return OR_CONTINUE;
-				}
-			}
+			CustomText::pCustomTextList = entry->m_pNext;
+			LOGL(LOG_PRIORITY_CUSTOM_TEXT, "Unloaded custom text \"%s\"", entry->m_key);
+			delete entry;
+			return OR_CONTINUE;
 		}
 		else
 		{
-			if (strcmp(game.Scripts.Params[0].cVar, entry->m_key) == 0)
+			CustomTextEntry *next = entry->m_pNext;
+			while (next)
 			{
-				LOGL(LOG_PRIORITY_CUSTOM_TEXT, "Unloaded custom text \"%s\"", entry->m_key);
-				delete entry;
-				CustomText::pCustomTextList = 0;
+				if (strcmp(game.Scripts.Params[0].cVar, next->m_key) == 0)
+				{
+					break;
+				}
+				else
+				{
+					entry = next;
+					next = next->m_pNext;
+				}
+			}
+			if (next)
+			{
+				LOGL(LOG_PRIORITY_CUSTOM_TEXT, "Unloaded custom text \"%s\"", next->m_key);
+				entry->m_pNext = next->m_pNext;
+				delete next;
 				return OR_CONTINUE;
 			}
 		}
