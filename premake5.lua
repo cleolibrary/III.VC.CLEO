@@ -15,7 +15,6 @@ workspace "III.VC.CLEO"
    
    defines { "rsc_CompanyName=\"CLEO\"" }
    defines { "rsc_LegalCopyright=\"MIT License\""} 
-   defines { "rsc_FileVersion=\"1.0.0.0\"", "rsc_ProductVersion=\"1.0.0.0\"" }
    defines { "rsc_InternalName=\"%{prj.name}\"", "rsc_ProductName=\"%{prj.name}\"", "rsc_OriginalFilename=\"%{prj.name}.asi\"" }
    defines { "rsc_FileDescription=\"https://cleo.li\"" }
    defines { "rsc_UpdateUrl=\"https://github.com/cleolibrary/III.VC.CLEO\"" }
@@ -92,7 +91,6 @@ workspace "CLEO_SDK"
    
    defines { "rsc_CompanyName=\"CLEO\"" }
    defines { "rsc_LegalCopyright=\"MIT License\""} 
-   defines { "rsc_FileVersion=\"1.0.0.0\"", "rsc_ProductVersion=\"1.0.0.0\"" }
    defines { "rsc_InternalName=\"%{prj.name}\"", "rsc_ProductName=\"%{prj.name}\"", "rsc_OriginalFilename=\"%{prj.name}.asi\"" }
    defines { "rsc_FileDescription=\"https://cleo.li\"" }
    defines { "rsc_UpdateUrl=\"https://github.com/cleolibrary/III.VC.CLEO\"" }

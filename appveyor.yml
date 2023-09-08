@@ -13,9 +13,9 @@ build:
 before_package:
 - cmd: msbuild.exe build/CLEO_SDK.sln /t:Build /p:Configuration=Release_xp;Platform=Win32
 after_build:
-- cmd: release.bat
+- cmd: pack_release.bat
 artifacts:
-- path: III.CLEOv2.0.0.5.zip
-  name: III.CLEOv2.0.0.5.zip
-- path: VC.CLEOv2.0.0.5.zip
-  name: VC.CLEOv2.0.0.5.zip
+- path: CLEO.III_v2.0.1.zip
+  name: CLEO.III_v2.0.1.zip
+- path: CLEO.VC_v2.0.1.zip
+  name: CLEO.VC_v2.0.1.zip
