@@ -31,11 +31,8 @@ CLEO scripts can be found on Grand Theft Auto fansites and modding sites such as
 
 ## Credits
 
-The author and original developer of the CLEO library is Seemann. Today the CLEO library is an open-source project being maintained at https://github.com/cleolibrary
-
-Special thanks to:
-
-- Stanislav Golovin (a.k.a. listener) for his great work in exploration of the GTA series.
+Initially, CLEO was designed and made for San Andreas. The huge success of it and popularity of previous games inspired Alien to port the library for GTA 3 and Vice City, without some features, such as custom saves storing CLEO variables and scripts state. After Alien's retirement, the development slowed down until Silent issued a version with some fixes. Soon after that DK22Pac announced the next version of CLEO for GTA III and Vice City, written from scratch. It was never released, but ThirteenAG helped to finish his work and the second version is now available for download. 
+Today the CLEO library is an open-source project being maintained at https://github.com/cleolibrary
 
 The developers have no connection with Take 2 Interactive or Rockstar Games.
 By using this product or any of the additional products included you take your own personal responsibility for any negative consequences should they arise.
