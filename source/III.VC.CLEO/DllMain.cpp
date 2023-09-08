@@ -408,8 +408,7 @@ BOOL __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 	{
 		Log::Initialise("cleo.log");
 #if CLEO_VC
-		LOGL(LOG_PRIORITY_ALWAYS, "GTA VC CLEO v%d.%d.%d.%d Log File", CLEO_VERSION_MAIN, CLEO_VERSION_MAJOR, 
-			CLEO_VERSION_MINOR, CLEO_VERSION_BINARY);
+		LOGL(LOG_PRIORITY_ALWAYS, "GTA VC CLEO v%d.%d.%d Log File", CLEO_VERSION_MAIN, CLEO_VERSION_MAJOR, CLEO_VERSION_MINOR);
 
 		switch (game.Version)
 		{
@@ -437,8 +436,7 @@ BOOL __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 			break;
 		}
 #else
-		LOGL(LOG_PRIORITY_ALWAYS, "GTA 3 CLEO v%d.%d.%d.%d Log File", CLEO_VERSION_MAIN, CLEO_VERSION_MAJOR,
-			CLEO_VERSION_MINOR, CLEO_VERSION_BINARY);
+		LOGL(LOG_PRIORITY_ALWAYS, "GTA 3 CLEO v%d.%d.%d Log File", CLEO_VERSION_MAIN, CLEO_VERSION_MAJOR, CLEO_VERSION_MINOR);
 
 		switch (game.Version)
 		{

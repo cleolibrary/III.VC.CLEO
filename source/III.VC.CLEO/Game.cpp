@@ -762,7 +762,7 @@ void GtaGame::OnMenuDrawing(float x, float y, wchar_t *text)
 	game.Font.SetScale(ScreenCoord(0.45f), ScreenCoord(0.7f));
 	game.Font.SetLeftJustifyOn();
 	wchar_t line[128];
-	swprintf(line, L"CLEO v%d.%d.%d.%d", CLEO_VERSION_MAIN, CLEO_VERSION_MAJOR, CLEO_VERSION_MINOR, CLEO_VERSION_BINARY);
+	swprintf(line, L"CLEO v%d.%d.%d", CLEO_VERSION_MAIN, CLEO_VERSION_MAJOR, CLEO_VERSION_MINOR);
 	game.Font.PrintString(ScreenCoord(30.0f), (float)*game.Screen.Height - ScreenCoord(34.0f), line);
 	scriptMgr.numLoadedCustomScripts ?
 	swprintf(line, L"%d %s, %d %s loaded", scriptMgr.numLoadedCustomScripts, scriptMgr.numLoadedCustomScripts == 1? L"script" : L"scripts",
