@@ -42,11 +42,13 @@ enum eParamType :unsigned char
 	PARAM_TYPE_STRING = 14
 };
 
+#pragma pack(push, 1)
 struct tParamType
 {
 	eParamType type : 7; // eParamType
 	bool processed : 1; // did we process long string already
 };
+#pragma pack(pop)
 
 class CScript
 {
