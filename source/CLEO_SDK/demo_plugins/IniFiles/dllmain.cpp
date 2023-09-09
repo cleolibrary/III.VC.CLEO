@@ -195,8 +195,8 @@ Opcode Format
 	//if path is short, GetPrivateProfileInt() searches for the file in the Windows directory
 	MakeFullPath(path, iniPath);
 
-	DWORD result = GetPrivateProfileString(sectionName, key, NULL, strValue, sizeof(strValue), iniPath);
-	if (result != 0)
+	DWORD readCount = GetPrivateProfileString(sectionName, key, NULL, strValue, sizeof(strValue), iniPath);
+	if (readCount == 0)
 	{
 		script->Collect(1); // skip result param
 		script->UpdateCompareFlag(false);
