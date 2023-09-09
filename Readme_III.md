@@ -18,6 +18,8 @@ Extract files into main game's directory (same location where gta3.exe is placed
 
 All plugins are optional, however they may be required by various CLEO scripts.
 
+After correct installation and staring the game the bottom left corner of main menu will be displaying text "CLEO" followed by version number.
+
 ## CLEO Scripts
 
 CLEO allows the installation of 'CLEO scripts', which often use the extension '.cs'. These third-party scripts are entirely user-made and are in no way supported by the developers of this library. While CLEO itself should work in a wide range of game installations, individual scripts are known to have their own compatibility restrictions and can not be guaranteed to work.
