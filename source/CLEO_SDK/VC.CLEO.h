@@ -38,22 +38,18 @@ union tScriptVar
 	DWORD dVar;
 };
 
-#pragma pack(push, 1)
 struct tParamType
 {
 	unsigned char type : 6; // eParamType
 	unsigned char isLongString : 1; // did we process long string already
 	unsigned char isString : 1; // did we process string already
 };
-#pragma pack(pop)
 
-#pragma pack(push, 1)
 struct tParamTypeString
 {
 	unsigned char length : 7; // string length, max - 127
 	unsigned char isString : 1; // did we process string already
 };
-#pragma pack(pop)
 
 enum eParamType : unsigned char
 {
