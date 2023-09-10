@@ -2014,17 +2014,16 @@ eOpcodeResult CustomOpcodes::OPCODE_0ADA(CScript *script)
 eOpcodeResult CustomOpcodes::OPCODE_0ADB(CScript *script)
 {
 	script->Collect(2);
-	unsigned mi = game.Scripts.Params[0].nVar;
+	auto modelId = game.Scripts.Params[0].nVar;
 	char *result = game.Scripts.Params[1].cVar;
+
 #if CLEO_VC
-	char *gxt = (char*)((game.Misc.stVehicleModelInfo + 0x32) + ((mi - 130) * 0x174));
+	char *gxt = (char*)((game.Misc.stVehicleModelInfo + 0x32) + ((modelId - 130) * 0x174));
 #else
-	char *gxt = (char*)((game.Misc.stVehicleModelInfo + 0x36) + ((mi - 90) * 0x1F8));
+	char *gxt = (char*)((game.Misc.stVehicleModelInfo + 0x36) + ((modelId - 90) * 0x1F8));
 #endif
-	
-	wchar_t *text = CustomText::GetText(game.Text.CText, 0, gxt);
-	wcstombs(result, text, wcslen(text));
-	result[wcslen(text)] = '\0';
+
+	strcpy(result, gxt);
 	return OR_CONTINUE;
 }
 
