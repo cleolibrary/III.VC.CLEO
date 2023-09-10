@@ -38,20 +38,24 @@ union tScriptVar
 	DWORD dVar;
 };
 
+#pragma pack(push, 1)
 struct tParamType
 {
 	unsigned char type : 6; // eParamType
 	unsigned char isLongString : 1; // did we process long string already
 	unsigned char isString : 1; // did we process string already
 };
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 struct tParamTypeString
 {
 	unsigned char length : 7; // string length, max - 127
 	unsigned char isString : 1; // did we process string already
 };
+#pragma pack(pop)
 
-enum eParamType
+enum eParamType : unsigned char
 {
 	PARAM_TYPE_END_OF_PARAMS = 0,
 	PARAM_TYPE_INT32 = 1,
@@ -138,6 +142,7 @@ public:
 
 	eOpcodeResult ProcessOneCommand();
 };
+static_assert(sizeof(CScript) == 0xAC, "Error with CScript");
 
 #define CUSTOM_OPCODE_START_ID 0x05DC
 #define MAX_NUMBER_OF_OPCODES 0x8000

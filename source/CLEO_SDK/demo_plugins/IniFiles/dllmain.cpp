@@ -181,29 +181,43 @@ Opcode Format
 0AF4=4,%4d% = read_string_from_ini_file %1s% section %2s% key %3s%
 ****************************************************************/
 {
-	script->Collect(3);
-
 	char iniPath[MAX_PATH];
 	char path[100];
 	char sectionName[100];
 	char key[100];
 	char strValue[100];
-	BOOL result;
 
-	strcpy(path, Params[0].cVar);
+	script->Collect(3);
+  	strcpy(path, Params[0].cVar);
 	strcpy(sectionName, Params[1].cVar);
 	strcpy(key, Params[2].cVar);
 
 	//if path is short, GetPrivateProfileInt() searches for the file in the Windows directory
 	MakeFullPath(path, iniPath);
 
-	result = GetPrivateProfileString(sectionName, key, NULL, strValue, sizeof(strValue), iniPath);
+	DWORD readCount = GetPrivateProfileString(sectionName, key, NULL, strValue, sizeof(strValue), iniPath);
+	if (readCount == 0)
+	{
+		script->Collect(1); // skip result param
+		script->UpdateCompareFlag(false);
+		return OR_CONTINUE;
+	}
 
-	strcpy(Params[0].cVar, strValue);
-	script->Store(1);
+	auto resultType = script->GetNextParamType();
+	switch (resultType)
+	{
+	// pointer to target buffer
+	case eParamType::PARAM_TYPE_LVAR:
+	case eParamType::PARAM_TYPE_GVAR:
+		script->Collect(1); 
+		strcpy(Params[0].cVar, strValue);
+		script->UpdateCompareFlag(true);
+		return OR_CONTINUE;
+	}
 
-	script->UpdateCompareFlag(result != 0);
-
+	// unsupported result param type
+	script->Collect(1); // skip result param
+	script->UpdateCompareFlag(false);
 	return OR_CONTINUE;
 }
 
