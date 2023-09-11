@@ -2060,11 +2060,28 @@ eOpcodeResult CustomOpcodes::OPCODE_0ADD(CScript *script)
 	game.Misc.pfSpawnCar(game.Scripts.Params[0].nVar);
 #else
 	unsigned mID = game.Scripts.Params[0].nVar;
-	*(unsigned char*)((DWORD)game.Misc.pfSpawnCar + 0x22) = mID;
-	*(unsigned char*)((DWORD)game.Misc.pfSpawnCar + 0xA5) = mID;
-	game.Misc.pfSpawnCar();
-	*(unsigned char*)((DWORD)game.Misc.pfSpawnCar + 0x22) = 122;
-	*(unsigned char*)((DWORD)game.Misc.pfSpawnCar + 0xA5) = 122;
+	
+	if (game.Misc.pfIsBoatModel(mID)) // pfSpawnCar crashes with boats
+	{
+		return OR_CONTINUE; // TODO: check for other unsupported vehicle types 
+	}
+
+	DWORD fun = (DWORD)game.Misc.pfSpawnCar;
+
+	// pfSpawnCar checks in models info table if model was loaded
+	// calculate new address of 'model loaded' byte
+	DWORD oriAddress = *(DWORD*)(fun + 0x33);
+	DWORD newAddrres = DWORD((int)oriAddress + (mID - 122) * 20); // 20 bytes peer model entry
+
+	*(unsigned char*)(fun + 0x22) = mID;
+	*(DWORD*)(fun + 0x33) = newAddrres;
+	*(unsigned char*)(fun + 0xA5) = mID;
+
+	game.Misc.pfSpawnCar(); // TODO: fix crash when model index is >= 128
+
+	*(unsigned char*)(fun + 0x22) = 122;
+	*(DWORD*)(fun + 0x33) = oriAddress;
+	*(unsigned char*)(fun + 0xA5) = 122;
 #endif
 	return OR_CONTINUE;
 }
