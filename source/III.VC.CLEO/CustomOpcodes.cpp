@@ -2013,17 +2013,29 @@ eOpcodeResult CustomOpcodes::OPCODE_0ADA(CScript *script)
 //0ADB=2,%2d% = car_model %1o% name
 eOpcodeResult CustomOpcodes::OPCODE_0ADB(CScript *script)
 {
-	script->Collect(2);
-	auto modelId = game.Scripts.Params[0].nVar;
-	char *result = game.Scripts.Params[1].cVar;
+	script->Collect(1);
+	auto modelIdx = game.Scripts.Params[0].nVar;
 
 #if CLEO_VC
-	char *gxt = (char*)((game.Misc.stVehicleModelInfo + 0x32) + ((modelId - 130) * 0x174));
+	char *gxt = (char*)((game.Misc.stVehicleModelInfo + 0x32) + ((modelIdx - 130) * 0x174));
 #else
-	char *gxt = (char*)((game.Misc.stVehicleModelInfo + 0x36) + ((modelId - 90) * 0x1F8));
+	char *gxt = (char*)((game.Misc.stVehicleModelInfo + 0x36) + ((modelIdx - 90) * 0x1F8));
 #endif
 
-	strcpy(result, gxt);
+	auto resultType = script->GetNextParamType();
+	switch (resultType)
+	{
+	// pointer to target buffer
+	case eParamType::PARAM_TYPE_LVAR:
+	case eParamType::PARAM_TYPE_GVAR:
+		script->Collect(1);
+		strcpy(game.Scripts.Params[0].cVar, gxt);
+		script->UpdateCompareFlag(true);
+		return OR_CONTINUE;
+	}
+
+	// unsupported result param type
+	script->Collect(1); // skip result param
 	return OR_CONTINUE;
 }
 
