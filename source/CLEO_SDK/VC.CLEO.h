@@ -51,7 +51,7 @@ struct tParamTypeString
 	unsigned char isString : 1; // did we process string already
 };
 
-enum eParamType
+enum eParamType : unsigned char
 {
 	PARAM_TYPE_END_OF_PARAMS = 0,
 	PARAM_TYPE_INT32 = 1,
@@ -138,6 +138,7 @@ public:
 
 	eOpcodeResult ProcessOneCommand();
 };
+static_assert(sizeof(CScript) == 0xAC, "Error with CScript");
 
 #define CUSTOM_OPCODE_START_ID 0x05DC
 #define MAX_NUMBER_OF_OPCODES 0x8000
