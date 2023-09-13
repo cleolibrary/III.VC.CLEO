@@ -1,9 +1,9 @@
-{$CLEO}
-0000: 
+{$CLEO .cs}
+{$USE CLEO, bitwise}
 
-0ADF: add_dynamic_GXT_entry "_CLEO" text "CLEO v2.0.0.0 test script"
+0ADF: add_dynamic_GXT_entry "_CLEO" text "CLEO III test script"
 03E5: text_box '_CLEO' 
-wait 4000
+wait 2000
 03E6: remove_text_box 
 0AE0: remove_dynamic_GXT_entry "_CLEO"
 
@@ -20,40 +20,34 @@ wait 4000
 0B1A: ~ 0@
 0B1B: 0@ %= 1@
 0B1C: 0@ >>= 1@
-0B1D: 0@ <<= 1@    
+0B1D: 0@ <<= 1@
+0ACE: show_formatted_text_box "var 0 is %d" 0@
+wait 2000
 
 if
- 0AAB: file_exists "III.CLEO.asi"  
+    8AAB: not file_exists "III.CLEO.asi"  
 then
- 0ACE: show_formatted_text_box "%d" 0@
- wait 1000
- 03E6: remove_text_box 
-end
-
-if
- 0AC8: 10@ = allocate_memory_size 260
-then
- 0ADB: 10@ = car_model #BFINJECT name
- 0ACA: show_text_box 10@
- wait 4000
- 03E6: remove_text_box 
- 0AC9: free_allocated_memory 10@
+    0AD0: show_formatted_text_lowpriority "ERROR: 0AAB: not found III.CLEO.asi" time 5000
+    wait 5000
 end
 
 0AC7: 0@ = var 1@ offset
 0ADE: 0@ = text_by_GXT_entry "DEAD"
 0ACA: show_text_box 0@
-wait 1000
+wait 2000
 03E6: remove_text_box 
 
 if
- 0AC8: 0@ = allocate_memory_size 260
+    0AC8: 0@ = allocate_memory_size 260
 then
- 0AD3: 0@ = format "%d + %d = %d" 2 2 4
- 0ACA: show_text_box 0@
- wait 1000
- 03E6: remove_text_box 
- 0AC9: free_allocated_memory 0@
+    0AD3: 0@ = format "%d + %d = %d" 2 2 4
+    0ACA: show_text_box 0@
+    wait 2000
+    03E6: remove_text_box 
+    0AC9: free_allocated_memory 0@
+else
+    0AD0: show_formatted_text_lowpriority "ERROR: 0AC8: failed to allocate memory" time 5000
+    wait 5000
 end
 
 0A8E: 4@ = 3 + 2 // int
@@ -65,24 +59,22 @@ wait 2000
 
 17@ = 0
 repeat
-wait 0
-03F0: enable_text_draw 1 
-0604: 6@ = weapon 13 model
-0605: 7@ = model #AK47 weapon_id
-0607: 8@ = get_current_weather
-0343: set_text_linewidth 500.0
-0349: text_draw_style = 1
-0609: show_formatted_text_position 50.0 50.0 text "model id = %d; weapon id = %d; weather = %d" 6@ 7@ 8@
+    wait 0
+    03F0: enable_text_draw 1 
+    0604: 6@ = weapon 13 model
+    0605: 7@ = model 9 weapon_id // AK47 
+    0607: 8@ = get_current_weather
+    0343: set_text_linewidth 500.0
+    0349: text_draw_style = 0
+    0609: show_formatted_text_position 50.0 50.0 text "model id = %d; weapon id = %d; weather = %d" 6@ 7@ 8@
 until 17@ > 2000
-
-
 
 17@ = 0
 repeat
-wait 0
-03F0: enable_text_draw 1 
-0349: text_draw_style = 0
-0608: show_text_position 50.0 150.0 text "Test string" 
+    wait 0
+    03F0: enable_text_draw 1 
+    0349: text_draw_style = 1
+    0608: show_text_position 50.0 150.0 text "Test string" 
 until 17@ > 2000
 
 0AC6: 10@ = label @label offset
@@ -93,56 +85,137 @@ wait 2000
 
 0A99: chdir 0
 if
- 0A9A: 1@ = openfile "VC.CLEO.asi" mode "rb"  // IF and SET
+    0A9A: 1@ = openfile "III.CLEO.asi" mode "rb" // IF and SET
 then
- 0A9C: 2@ = file 1@ size
- 0AD0: show_formatted_text_lowpriority "VC.CLEO.asi size is %d bytes"  time 2000 2@
- 0A9B: closefile 1@
+    0A9C: 2@ = file 1@ size
+    0AD0: show_formatted_text_lowpriority "III.CLEO.asi size is %d bytes" time 2000 2@
+    0A9B: closefile 1@
+else
+    0AD0: show_formatted_text_lowpriority "ERROR: Failed to open III.CLEO.asi" time 2000 
 end   
-
-
 wait 2000
-0A8C: write_memory 0x400044 size 4 value 0xDEAD virtual_protect 0
-0A8D: 8@ = read_memory 0x400044 size 4 virtual_protect 0
-0ACE: show_formatted_text_box "0x400044 = %.6X" 8@
 
+0AD0: show_formatted_text_lowpriority "Write and read memory..." time 2000
+wait 0
+wait 0 
+0A8C: write_memory 0x400044 size 4 value 0xDEAD virtual_protect 1
+0A8D: 8@ = read_memory 0x400044 size 4 virtual_protect 1
+0ACE: show_formatted_text_box "0x400044 = %.6X" 8@
+wait 2000
+
+
+0AD1: show_formatted_text_highpriority "Use CLEO export..." time 2000
+wait 0
+wait 0
+0AB1: cleo_call @CLEO_VERSION_GET args 0 result 0@
+0ACE: show_formatted_text_box "Read CLEO version %08x" 0@
+wait 2000
 
 while true
-wait 0   
-04DD: 14@ = actor $PLAYER_ACTOR armour 
-03F0: enable_text_draw 1 
-0609: show_formatted_text_position 350.0 350.0 text "%d" 14@
+    wait 0   
+    04DD: 14@ = actor $PLAYER_ACTOR armour 
+    03F0: enable_text_draw 1 
+    0609: show_formatted_text_position 350.0 350.0 text "ARMOUR: %d" 14@
 
     if
-     0601: is_button_pressed_on_pad 15 with_sensitivity 0xFF  // Vehicle Enter/Exit
+        0601: is_button_pressed_on_pad 15 with_sensitivity 0xFF  // Vehicle Enter/Exit
     then
-     0054: store_player $PLAYER_CHAR position_to 0@ 1@ 2@        
-     02CE: 2@ = ground_z 0@ 1@ 2@
-     inc(2@, 0.1)   
-     016F: draw_shadow 3 at 0@ 1@ 2@ angle 0.0 size 1.0 intensity 150 colour 255 0 0
-     0608: show_text_position 150.0 150.0 text "0601"
-     0602: emulate_button_press_on_pad 2 with_sensitivity 0xFF
-     
-     0ADD: spawn_car_with_model #RHINO like_a_cheat
+        0054: store_player $PLAYER_CHAR position_to 0@ 1@ 2@        
+        02CE: 2@ = ground_z 0@ 1@ 2@
+        inc(2@, 0.1)   
+        016F: draw_shadow 3 at 0@ 1@ 2@ angle 0.0 size 5.0 intensity 150 colour 255 0 0
+        0AD0: show_formatted_text_lowpriority "0601: is button pressed on pad" time 1000
+    end
+    
+    if
+        0AB0: is_key_pressed 0x74 // F5
+    then
+        while 0AB0: is_key_pressed 0x74 // F5
+            0602: emulate_button_press_on_pad 1 with_sensitivity 0xFF
+            0608: show_text_position 150.0 150.0 text "0602: emulate button press on pad"
+            wait 0  
+        end
+    end
+    
+    if
+        0AB0: is_key_pressed 0x75 // F6
+    then
+        // vehicles spawning
+        while true
+            if or
+                5@ == 124 // train
+                5@ == 125 // chopper
+                5@ == 140 // airtrain
+                5@ == 141 // deaddodo
+            then
+                5@ += 1
+            else
+                break
+            end 
+        end
+        if or
+            5@ < 90 // first vehicle model index
+            5@ > 150 // last vehicle model index
+        then
+            5@ = 90
+        end    
+    
+        while 0AB0: is_key_pressed 0x75 // F6
+            0AD1: show_formatted_text_highpriority "0ADD: spawn car with model %d like a cheat" time 2000 5@
+            wait 0
+        end
+                
+        0ADD: spawn_car_with_model 5@ like_a_cheat
+        
+        wait 0
+        
+        // get and display the name
+        if
+            0AC8: 10@ = allocate_memory_size 16
+        then
+            0ADB: 10@ = car_model 5@ name
+            0ACA: show_text_box 10@
+            0AC9: free_allocated_memory 10@
+        else
+            0AD0: show_formatted_text_lowpriority "ERROR: 0AC8: failed to allocate memory" time 5000
+        end
+        
+        5@ += 1    
+    end
+
+    /*if
+        8603: not is_camera_in_widescreen_mode
+    then
+        0606: set_memory_offset memory_pointer 0x400040 memory_to_point 0x500040 virtual_protect 1
+        0A8D: 3@ = read_memory 0x400040 size 4 virtual_protect 0
+        3@ += 0x400040
+        0AD1: show_formatted_text_highpriority "%.6X points to %.6X" time 1 0x400040 3@
+    end*/
+    
+    if
+        0ADC: test_cheat "BIGMONEY"
+    then
+        0ACE: show_formatted_text_box "Money Cheat"
+        0109: player $PLAYER_CHAR money += 2000000 
     end 
-
-    if
-     8603: not is_camera_in_widescreen_mode
-    then
-     0606: set_memory_offset memory_pointer 0x400040 memory_to_point 0x500040 virtual_protect 1
-     0A8D: 3@ = read_memory 0x400040 size 4 virtual_protect 0
-     3@ += 0x400040
-     0AD1: show_formatted_text_highpriority "%.6X points to %.6X" time 1 0x400040 3@
-    end
-    
-    if
-     0ADC: test_cheat "BIGMONEY"
-    then
-     0109: player $PLAYER_CHAR money += 2000000 
-    end
-    
-    
 end
+
+
+:CLEO_VERSION_GET
+	5@ = 0
+	
+	0A99: chdir 0
+    if
+        0AA2: 0@ = load_dynamic_library "III.CLEO.asi"
+    then
+        if 
+            0AA4: 1@ = get_dynamic_library_procedure "_CLEO_GetVersion@0" library 0@
+        then
+            0AA7: call_function_return 1@ params 0 pop 0 result 5@
+        end
+        0AA3: free_dynamic_library 0@
+    end
+0AB2: cleo_return 1 5@
 
 
 :label

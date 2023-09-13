@@ -10,12 +10,17 @@ int format(CScript *script, char *str, size_t len, const char *format);
 
 tScriptVar CustomOpcodes::SHARED_VAR[0xFFFF];
 
+// Exports
+CLEOAPI unsigned CLEO_GetVersion() { return CLEO_VERSION; }
+CLEOAPI char* CLEO_GetScriptSpaceAddress() { return game.Scripts.Space; }
+CLEOAPI tScriptVar* CLEO_GetParamsAddress() { return game.Scripts.Params; }
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-	unsigned __stdcall CLEO_GetVersion() { return CLEO_VERSION; }
-	char* __stdcall CLEO_GetScriptSpaceAddress() { return game.Scripts.Space; }
-	tScriptVar* __stdcall CLEO_GetParamsAddress() { return game.Scripts.Params; }
+	unsigned __stdcall _CLEO_GetVersion() { return CLEO_GetVersion(); }
+	char* __stdcall _CLEO_GetScriptSpaceAddress() { return CLEO_GetScriptSpaceAddress(); }
+	tScriptVar* __stdcall _CLEO_GetParamsAddress() { return CLEO_GetParamsAddress(); }
 	bool __stdcall CLEO_RegisterOpcode(unsigned short id, Opcode func) { return Opcodes::RegisterOpcode(id, func); }
 
 	// CScript methods
