@@ -1,6 +1,7 @@
 ﻿#include "CustomOpcodes.h"
 #include "Game.h"
 #include "OpcodesSystem.h"
+#include "CPatch.h"
 #include "ScriptManager.h"
 #include "Log.h"
 #include "Fxt.h"
@@ -2082,12 +2083,30 @@ eOpcodeResult CustomOpcodes::OPCODE_0ADD(CScript *script)
 #if CLEO_VC
 	game.Misc.pfSpawnCar(game.Scripts.Params[0].nVar);
 #else
-	unsigned mID = game.Scripts.Params[0].nVar;
-	*(unsigned char*)((DWORD)game.Misc.pfSpawnCar + 0x22) = mID;
-	*(unsigned char*)((DWORD)game.Misc.pfSpawnCar + 0xA5) = mID;
-	game.Misc.pfSpawnCar();
-	*(unsigned char*)((DWORD)game.Misc.pfSpawnCar + 0x22) = 122;
-	*(unsigned char*)((DWORD)game.Misc.pfSpawnCar + 0xA5) = 122;
+	int modelIdx = game.Scripts.Params[0].nVar;
+	
+	if (game.Misc.pfIsBoatModel(modelIdx)) // pfSpawnCar crashes with boats
+	{
+		return OR_CONTINUE; // TODO: check for other unsupported vehicle types 
+	}
+
+	int fun = (int)game.Misc.pfSpawnCar;
+	const char oriModelIdx = 122; // by default function spawns tank
+
+	// pfSpawnCar checks in models info table if model was loaded
+	// calculate new address of 'model loaded' byte
+	int oriAddress = *(int*)(fun + 0x33);
+	int newAddrres = oriAddress + (modelIdx - oriModelIdx) * 20; // 20 bytes peer model entry
+
+	CPatch::SetChar(fun + 0x22, modelIdx);
+	CPatch::SetInt(fun + 0x33, newAddrres);
+	CPatch::SetChar(fun + 0xA5, modelIdx);
+
+	game.Misc.pfSpawnCar(); // TODO: fix crash when model index is >= 128
+
+	CPatch::SetChar(fun + 0x22, oriModelIdx);
+	CPatch::SetInt(fun + 0x33, oriAddress);
+	CPatch::SetChar(fun + 0xA5, oriModelIdx);
 #endif
 	return OR_CONTINUE;
 }
