@@ -51,7 +51,7 @@ struct tParamTypeString
 	unsigned char isString : 1; // did we process string already
 };
 
-enum eParamType
+enum eParamType : unsigned char
 {
 	PARAM_TYPE_END_OF_PARAMS = 0,
 	PARAM_TYPE_INT32 = 1,
@@ -104,6 +104,12 @@ public:
 	/* 0xA4 */ CScript *m_pNextCustom;
 	/* 0xA8 */ CScript *m_pPrevCustom;
 
+	CScript();
+
+	CScript(char* filepath);
+
+	~CScript();
+
 	void Init();
 
 	bool Loaded();
@@ -128,16 +134,10 @@ public:
 
 	CLEOAPI void *GetPointerToScriptVariable();
 
-	CScript();
-
-	CScript(char *filepath);
-
-	~CScript();
-
-	CLEOAPI void JumpTo(int address);
 
 	eOpcodeResult ProcessOneCommand();
 };
+static_assert(sizeof(CScript) == 0xAC, "Error with CScript");
 
 #define CUSTOM_OPCODE_START_ID 0x05DC
 #define MAX_NUMBER_OF_OPCODES 0x8000
@@ -153,6 +153,25 @@ public:
 	static bool CLEOAPI RegisterOpcode(unsigned short id, Opcode func);
 };
 
-CLEOAPI tScriptVar* CLEO_GetParamsAddress();
-CLEOAPI char* CLEO_GetScriptSpaceAddress();
-CLEOAPI unsigned CLEO_GetVersion();
+// Exports
+#ifdef __cplusplus
+extern "C" {
+#endif
+	unsigned __stdcall CLEO_GetVersion();
+	char* __stdcall CLEO_GetScriptSpaceAddress();
+	tScriptVar* __stdcall CLEO_GetParamsAddress();
+	bool __stdcall CLEO_RegisterOpcode(unsigned short id, Opcode func);
+
+	// CScript methods
+	void __stdcall CLEO_Collect(CScript* script, unsigned int numParams);
+	void __stdcall CLEO_CollectAt(CScript* script, unsigned int* pIp, unsigned int numParams);
+	int __stdcall CLEO_CollectNextWithoutIncreasingPC(CScript* script, unsigned int ip);
+	eParamType __stdcall CLEO_GetNextParamType(CScript* script);
+	void __stdcall CLEO_Store(CScript* script, unsigned int numParams);
+	void __stdcall CLEO_ReadShortString(CScript* script, char* out);
+	void __stdcall CLEO_UpdateCompareFlag(CScript* script, bool result);
+	void* __stdcall CLEO_GetPointerToScriptVariable(CScript* script);
+	void __stdcall CLEO_JumpTo(CScript* script, int address);
+#ifdef __cplusplus
+}
+#endif

@@ -10,20 +10,27 @@ int format(CScript *script, char *str, size_t len, const char *format);
 
 tScriptVar CustomOpcodes::SHARED_VAR[0xFFFF];
 
-CLEOAPI tScriptVar* CLEO_GetParamsAddress()
-{
-	return game.Scripts.Params;
-}
+#ifdef __cplusplus
+extern "C" {
+#endif
+	unsigned __stdcall CLEO_GetVersion() { return CLEO_VERSION; }
+	char* __stdcall CLEO_GetScriptSpaceAddress() { return game.Scripts.Space; }
+	tScriptVar* __stdcall CLEO_GetParamsAddress() { return game.Scripts.Params; }
+	bool __stdcall CLEO_RegisterOpcode(unsigned short id, Opcode func) { return Opcodes::RegisterOpcode(id, func); }
 
-CLEOAPI char* CLEO_GetScriptSpaceAddress()
-{
-	return game.Scripts.Space;
+	// CScript methods
+	void __stdcall CLEO_Collect(CScript* script, unsigned int numParams) { script->Collect(numParams); }
+	void __stdcall CLEO_CollectAt(CScript* script, unsigned int* pIp, unsigned int numParams) { script->Collect(pIp, numParams); }
+	int __stdcall CLEO_CollectNextWithoutIncreasingPC(CScript* script, unsigned int ip) { return script->CollectNextWithoutIncreasingPC(ip); }
+	eParamType __stdcall CLEO_GetNextParamType(CScript* script) { return script->GetNextParamType(); }
+	void __stdcall CLEO_Store(CScript* script, unsigned int numParams) { script->Store(numParams); }
+	void __stdcall CLEO_ReadShortString(CScript* script, char* out) { script->ReadShortString(out); }
+	void __stdcall CLEO_UpdateCompareFlag(CScript* script, bool result) { script->UpdateCompareFlag(result); }
+	void* __stdcall CLEO_GetPointerToScriptVariable(CScript* script) { return script->GetPointerToScriptVariable(); }
+	void __stdcall CLEO_JumpTo(CScript* script, int address) { script->JumpTo(address); }
+#ifdef __cplusplus
 }
-
-CLEOAPI unsigned CLEO_GetVersion()
-{
-	return CLEO_VERSION;
-}
+#endif
 
 void CustomOpcodes::Register()
 {
@@ -2013,18 +2020,29 @@ eOpcodeResult CustomOpcodes::OPCODE_0ADA(CScript *script)
 //0ADB=2,%2d% = car_model %1o% name
 eOpcodeResult CustomOpcodes::OPCODE_0ADB(CScript *script)
 {
-	script->Collect(2);
-	unsigned mi = game.Scripts.Params[0].nVar;
-	char *result = game.Scripts.Params[1].cVar;
+	script->Collect(1);
+	auto modelIdx = game.Scripts.Params[0].nVar;
+
 #if CLEO_VC
-	char *gxt = (char*)((game.Misc.stVehicleModelInfo + 0x32) + ((mi - 130) * 0x174));
+	char *gxt = (char*)((game.Misc.stVehicleModelInfo + 0x32) + ((modelIdx - 130) * 0x174));
 #else
-	char *gxt = (char*)((game.Misc.stVehicleModelInfo + 0x36) + ((mi - 90) * 0x1F8));
+	char *gxt = (char*)((game.Misc.stVehicleModelInfo + 0x36) + ((modelIdx - 90) * 0x1F8));
 #endif
-	
-	wchar_t *text = CustomText::GetText(game.Text.CText, 0, gxt);
-	wcstombs(result, text, wcslen(text));
-	result[wcslen(text)] = '\0';
+
+	auto resultType = script->GetNextParamType();
+	switch (resultType)
+	{
+	// pointer to target buffer
+	case eParamType::PARAM_TYPE_LVAR:
+	case eParamType::PARAM_TYPE_GVAR:
+		script->Collect(1);
+		strcpy(game.Scripts.Params[0].cVar, gxt);
+		script->UpdateCompareFlag(true);
+		return OR_CONTINUE;
+	}
+
+	// unsupported result param type
+	script->Collect(1); // skip result param
 	return OR_CONTINUE;
 }
 
