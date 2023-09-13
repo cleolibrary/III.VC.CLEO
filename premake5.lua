@@ -11,7 +11,7 @@ workspace "III.VC.CLEO"
    targetdir "bin"
    targetextension ".asi"
    characterset ("MBCS")
-   flags { "StaticRuntime" }
+   staticruntime "On"
    
    defines { "rsc_CompanyName=\"CLEO\"" }
    defines { "rsc_LegalCopyright=\"MIT License\""} 
@@ -20,6 +20,7 @@ workspace "III.VC.CLEO"
    defines { "rsc_UpdateUrl=\"https://github.com/cleolibrary/III.VC.CLEO\"" }
    
    files { "source/III.VC.CLEO/*.h", "source/III.VC.CLEO/*.cpp" }
+   files { "source/III.VC.CLEO/*.def" }
    files { "Resources/*.rc" }
    includedirs { "external/injector/include" }
    
@@ -50,7 +51,7 @@ workspace "III.VC.CLEO"
       targetdir ("bin" .. scriptspath)
    end
    
-   configuration "Release_xp"
+   filter "configurations:Release_xp"
       toolset "v141_xp"
       buildoptions { "/Zc:threadSafeInit-" }
    
@@ -87,7 +88,7 @@ workspace "CLEO_SDK"
    targetdir "bin/CLEO/CLEO_PLUGINS"
    targetextension ".cleo"
    characterset ("MBCS")
-   flags { "StaticRuntime" }
+   staticruntime "On"
    
    defines { "rsc_CompanyName=\"CLEO\"" }
    defines { "rsc_LegalCopyright=\"MIT License\""} 
@@ -98,7 +99,7 @@ workspace "CLEO_SDK"
    includedirs { "source/CLEO_SDK" }
    libdirs { "bin" }
    
-   configuration "Release_xp"
+   filter "configurations:Release_xp"
       toolset "v141_xp"
       buildoptions { "/Zc:threadSafeInit-" }
    

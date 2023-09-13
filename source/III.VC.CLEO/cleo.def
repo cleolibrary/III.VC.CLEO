@@ -1,0 +1,16 @@
+LIBRARY
+
+EXPORTS
+	_CLEO_GetVersion@0						@1
+	_CLEO_GetScriptSpaceAddress@0			@2
+	_CLEO_GetParamsAddress@0				@3
+	_CLEO_RegisterOpcode@8					@4
+	_CLEO_Collect@8							@5
+	_CLEO_CollectAt@12						@6
+	_CLEO_CollectNextWithoutIncreasingPC@8	@7
+	_CLEO_GetNextParamType@4				@8
+	_CLEO_Store@8							@9
+	_CLEO_ReadShortString@8					@10
+	_CLEO_UpdateCompareFlag@8				@11
+	_CLEO_GetPointerToScriptVariable@4		@12
+	_CLEO_JumpTo@8							@13
