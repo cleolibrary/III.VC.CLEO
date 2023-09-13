@@ -134,6 +134,7 @@ public:
 
 	CLEOAPI void *GetPointerToScriptVariable();
 
+	CLEOAPI void JumpTo(int address);
 
 	eOpcodeResult ProcessOneCommand();
 };
@@ -154,12 +155,16 @@ public:
 };
 
 // Exports
+CLEOAPI unsigned CLEO_GetVersion();
+CLEOAPI char* CLEO_GetScriptSpaceAddress();
+CLEOAPI tScriptVar* CLEO_GetParamsAddress();
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-	unsigned __stdcall CLEO_GetVersion();
-	char* __stdcall CLEO_GetScriptSpaceAddress();
-	tScriptVar* __stdcall CLEO_GetParamsAddress();
+	unsigned __stdcall _CLEO_GetVersion();
+	char* __stdcall _CLEO_GetScriptSpaceAddress();
+	tScriptVar* __stdcall _CLEO_GetParamsAddress();
 	bool __stdcall CLEO_RegisterOpcode(unsigned short id, Opcode func);
 
 	// CScript methods
