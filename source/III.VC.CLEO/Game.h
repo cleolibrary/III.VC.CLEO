@@ -13,6 +13,21 @@ enum eGameVersion
 	GAME_VSTEAMENC
 };
 
+// returned by 0DD5: get_platform opcode
+enum ePlatform
+{
+	PLATFORM_NONE,
+	PLATFORM_ANDROID,
+	PLATFORM_PSP,
+	PLATFORM_IOS,
+	PLATFORM_FOS,
+	PLATFORM_XBOX,
+	PLATFORM_PS2,
+	PLATFORM_PS3,
+	PLATFORM_MAC,
+	PLATFORM_WINDOWS
+};
+
 enum OldVirtualKeys
 {
 	OVK_F1 = 1001,

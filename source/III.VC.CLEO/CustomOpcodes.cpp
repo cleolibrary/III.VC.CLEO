@@ -216,6 +216,8 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x0485, IS_PC_VERSION);
 	Opcodes::RegisterOpcode(0x059A, IS_AUSTRALIAN_GAME);
 #endif
+
+	Opcodes::RegisterOpcode(0x0DD5, GET_PLATFORM);
 }
 
 eOpcodeResult CustomOpcodes::DUMMY(CScript *script)
@@ -2177,6 +2179,14 @@ eOpcodeResult CustomOpcodes::OPCODE_0AE0(CScript *script)
 			}
 		}
 	}
+	return OR_CONTINUE;
+}
+
+//0DD5=1,%1d% = get_platform
+eOpcodeResult __stdcall CustomOpcodes::GET_PLATFORM(CScript* script)
+{
+	game.Scripts.Params[0].nVar = PLATFORM_WINDOWS;
+	script->Store(1);
 	return OR_CONTINUE;
 }
 

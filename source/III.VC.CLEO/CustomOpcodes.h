@@ -113,6 +113,7 @@ class CustomOpcodes
 	static eOpcodeResult WINAPI OPCODE_0ADE(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0ADF(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0AE0(CScript *script);
+	static eOpcodeResult WINAPI GET_PLATFORM(CScript* script);
 public:
 	static void Register();
 	static tScriptVar SHARED_VAR[0xFFFF];
