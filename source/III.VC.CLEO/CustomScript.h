@@ -5,6 +5,8 @@
 #endif
 
 #include "ScmFunction.h"
+#include <wtypes.h>
+
 
 enum eScriptType :unsigned short
 {
@@ -48,6 +50,36 @@ struct tParamType
 	bool processed : 1; // did we process long string already
 };
 
+enum eLogicalOperation : WORD
+{
+	NONE = 0, // just replace
+
+	AND_2 = 1, // AND operation on results of next two conditional opcodes
+	AND_3,
+	AND_4,
+	AND_5,
+	AND_6,
+	AND_7,
+	AND_END,
+
+	OR_2 = 21, // OR operation on results of next two conditional opcodes
+	OR_3,
+	OR_4,
+	OR_5,
+	OR_6,
+	OR_7,
+	OR_END,
+};
+static eLogicalOperation& operator--(eLogicalOperation& o)
+{
+	if (o == eLogicalOperation::NONE) return o; // can not be decremented anymore
+	if (o == eLogicalOperation::OR_2) return o = eLogicalOperation::NONE;
+
+	auto val = static_cast<WORD>(o); // to number
+	val--;
+	return o = static_cast<eLogicalOperation>(val);
+}
+
 class CScript
 {
 public:
@@ -70,7 +102,7 @@ public:
 #endif
 	/* 0x7B */ bool m_bAwake;
 	/* 0x7C */ unsigned int m_dwWakeTime;
-	/* 0x80 */ unsigned short m_wIfOp;
+	/* 0x80 */ eLogicalOperation m_wIfOp;
 	/* 0x82 */ bool m_bNotFlag;
 	/* 0x83 */ bool m_bDeathArrestCheckEnabled;
 	/* 0x84 */ bool m_bWastedOrBusted;
