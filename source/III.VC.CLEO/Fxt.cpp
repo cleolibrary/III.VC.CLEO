@@ -9,9 +9,17 @@ CustomTextEntry *CustomText::pCustomTextList;
 CustomTextEntry::CustomTextEntry(char *key, char *text)
 {
 	size_t len = strlen(text);
-	this->m_pText = new wchar_t[len + 1];
-	for(size_t i = 0; i < len; i++)
-		this->m_pText[i] =  (unsigned char)text[i];
+	this->m_pText = new wchar16_t[len + 1];
+	static bool is_cn = GtaGame::IsChineseVersion();
+	if (is_cn)
+	{
+		CustomText::Utf8ToUtf16(text, this->m_pText, len, len + 1);
+	}
+	else
+	{
+		for (size_t i = 0; i < len; i++) 
+			this->m_pText[i] = (unsigned char)text[i];
+	}
 	this->m_pText[len] = 0;
 	strncpy(m_key, key, 7);
 	this->m_key[7] = '\0';
@@ -24,6 +32,40 @@ CustomTextEntry::~CustomTextEntry()
 		delete m_pText;
 }
 
+void CustomText::Utf8ToUtf16(const char* utf8, wchar16_t* utf16, size_t utf8_len, size_t utf16_len)
+{
+	static auto get_utf8_bytes = [](uint8_t utf8) -> uint8_t
+	{
+			for (uint8_t i = 0; i < 6; i++)
+			{
+				if ((utf8 & (0x80 >> i)) == 0)
+					return i == 0 ? 1 : i;
+			}
+			return 1;
+	};
+	
+	size_t len = 0;
+	for (size_t i = 0; i < utf8_len && len < utf16_len; i++, len++)
+	{
+		uint8_t bytes = get_utf8_bytes(static_cast<uint8_t>(utf8[i]));
+		if (bytes > 1)
+		{
+			utf16[len] = utf8[i] & (0xFF >> (bytes + 1));
+			for (uint8_t j = 1; j < bytes; j++)
+			{
+				i++;
+				utf16[len] <<= 6;
+				utf16[len] += utf8[i] & 0x3F;
+			}
+		}
+		else
+		{
+			utf16[len] = utf8[i];
+		}
+	}
+	utf16[len] = 0;
+}
+
 wchar_t *CustomText::GetText(int theText, int, char *key)
 {
 	wchar_t *result = nullptr;
@@ -32,7 +74,7 @@ wchar_t *CustomText::GetText(int theText, int, char *key)
 	{
 		if(!_stricmp(entry->m_key, key))
 		{
-			result = entry->m_pText;
+			result = reinterpret_cast<wchar_t*>(entry->m_pText);
 			break;
 		}
 		entry = entry->m_pNext;

@@ -138,6 +138,8 @@ public:
 
 	eGameVersion GetGameVersion();
 
+	static bool IsChineseVersion();
+
 	static void InitScripts_OnGameSaveLoad();
 	static void InitScripts_OnGameInit();
 	static void InitScripts_OnGameReinit();

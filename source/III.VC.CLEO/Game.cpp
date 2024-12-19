@@ -85,6 +85,14 @@ eGameVersion GtaGame::GetGameVersion()
 	return this->Version;
 }
 
+bool GtaGame::IsChineseVersion()
+{
+	bool is_cn = false;
+	if (GetModuleHandleA("wm_vcchs.asi") || GetModuleHandleA("wm_vcchs.dll") || GetModuleHandleA("wm_lcchs.asi") || GetModuleHandleA("wm_lcchs.asi")) 
+		is_cn = true;
+	return is_cn;
+}
+
 void GtaGame::InitAndPatch()
 {
 	this->Misc.openedFiles = new std::set<FILE *>;
