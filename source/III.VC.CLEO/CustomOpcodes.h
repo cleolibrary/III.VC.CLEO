@@ -27,8 +27,7 @@ class CustomOpcodes
 	static eOpcodeResult WINAPI GET_OBJECT_HANDLE(CScript *script);
 	static eOpcodeResult WINAPI GET_THREAD_POINTER(CScript *script);
 	static eOpcodeResult WINAPI GET_NAMED_THREAD_POINTER(CScript *script);
-	static eOpcodeResult WINAPI IS_OLD_KEY_PRESSED(CScript *script);
-	static eOpcodeResult WINAPI IS_KEY_PRESSED(CScript* script);
+	static eOpcodeResult WINAPI IS_KEY_PRESSED(CScript *script);
 	static eOpcodeResult WINAPI FIND_RANDOM_CHAR(CScript *script);
 	static eOpcodeResult WINAPI FIND_RANDOM_CAR(CScript *script);
 	static eOpcodeResult WINAPI FIND_RANDOM_OBJECT(CScript *script);

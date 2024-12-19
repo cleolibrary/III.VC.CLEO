@@ -29,19 +29,19 @@ class Log
 	static unsigned int logPriority;
 
 public:
-	static void Initialise(char *filepath);
+	static void Initialise(const char *filepath);
 
 	static void Close();
 
 	static void Restart();
 
-	static void Record(unsigned int priority, char *string, ...);
+	static void Record(unsigned int priority, const char *string, ...);
 
-	static void RecordAndRestart(unsigned int priority, char *string, ...);
+	static void RecordAndRestart(unsigned int priority, const char *string, ...);
 
-	static void RecordLineAndRestart(unsigned int priority, char *string, ...);
+	static void RecordLineAndRestart(unsigned int priority, const char *string, ...);
 
-	static void RecordLine(unsigned int priority, char *string, ...);
+	static void RecordLine(unsigned int priority, const char *string, ...);
 };
 
 #define LOG Log::Record

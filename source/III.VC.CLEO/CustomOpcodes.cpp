@@ -7,6 +7,7 @@
 #include "Fxt.h"
 #include "CleoVersion.h"
 #include <direct.h>
+
 int format(CScript *script, char *str, size_t len, const char *format);
 
 tScriptVar CustomOpcodes::SHARED_VAR[0xFFFF];
@@ -62,7 +63,7 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x05EB, GET_OBJECT_HANDLE);
 	Opcodes::RegisterOpcode(0x05EC, GET_THREAD_POINTER);
 	Opcodes::RegisterOpcode(0x05ED, GET_NAMED_THREAD_POINTER);
-	Opcodes::RegisterOpcode(0x05EE, IS_OLD_KEY_PRESSED);
+	Opcodes::RegisterOpcode(0x05EE, IS_KEY_PRESSED);
 	Opcodes::RegisterOpcode(0x05EF, FIND_RANDOM_CHAR);
 	Opcodes::RegisterOpcode(0x05F0, FIND_RANDOM_CAR);
 	Opcodes::RegisterOpcode(0x05F1, FIND_RANDOM_OBJECT);
@@ -569,7 +570,7 @@ eOpcodeResult CustomOpcodes::GET_NAMED_THREAD_POINTER(CScript *script)
 	return OR_CONTINUE;
 }
 
-eOpcodeResult CustomOpcodes::IS_OLD_KEY_PRESSED(CScript *script)
+eOpcodeResult CustomOpcodes::IS_KEY_PRESSED(CScript *script)
 {
 	script->Collect(1);
 #if CLEO_VC
@@ -618,7 +619,7 @@ eOpcodeResult CustomOpcodes::IS_OLD_KEY_PRESSED(CScript *script)
 		game.Scripts.Params[0].nVar = VK_DELETE;
 		break;
 	case OVK_HOME:
-        game.Scripts.Params[0].nVar = VK_HOME;
+		game.Scripts.Params[0].nVar = VK_HOME;
 		break;
 	case OVK_END:
 		game.Scripts.Params[0].nVar = VK_END;
@@ -716,6 +717,9 @@ eOpcodeResult CustomOpcodes::IS_OLD_KEY_PRESSED(CScript *script)
 	case OVK_RSHIFT:
 		game.Scripts.Params[0].nVar = VK_RSHIFT;
 		break;
+	case OVK_ESC:
+		game.Scripts.Params[0].nVar = VK_ESCAPE;
+		break;
 	case OVK_LCONTROL:
 		game.Scripts.Params[0].nVar = VK_LCONTROL;
 		break;
@@ -740,7 +744,6 @@ eOpcodeResult CustomOpcodes::IS_OLD_KEY_PRESSED(CScript *script)
 	default:
 		break;
 	}
-#else
 #endif
 	script->UpdateCompareFlag(GetKeyState(game.Scripts.Params[0].nVar) & 0x8000);
 	return OR_CONTINUE;
@@ -1694,18 +1697,12 @@ eOpcodeResult CustomOpcodes::OPCODE_0AAB(CScript *script)
 //0AAE=1,release_mp3 %1d%
 //0AAF=2,%2d% = get_mp3_length %1d%
 
-//0AB0=1,  key_pressed %1d%
-eOpcodeResult CustomOpcodes::IS_KEY_PRESSED(CScript* script)
-{
-	script->Collect(1);
-	script->UpdateCompareFlag(GetKeyState(game.Scripts.Params[0].nVar) & 0x8000);
-	return OR_CONTINUE;
-}
+//0AB0=1,  key_pressed %1d% // dup
 
 //0AB1=-1,call_scm_func %1p% //dup
 //0AB2=-1,ret  //dup
 
-//0AB3=2,var %1d% = %2d% //not supported
+//0AB3=2,var %1d% = %2d%
 eOpcodeResult CustomOpcodes::OPCODE_0AB3(CScript* script)
 {
 	script->Collect(2);
@@ -1713,7 +1710,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0AB3(CScript* script)
 	return OR_CONTINUE;
 }
 
-//0AB4=2,%2d% = var %1d% //not supported
+//0AB4=2,%2d% = var %1d%
 eOpcodeResult CustomOpcodes::OPCODE_0AB4(CScript* script)
 {
 	script->Collect(1);
@@ -1903,7 +1900,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0AD3(CScript *script)
 	char fmt[MAX_PATH], *dst;
 	dst = (char*)game.Scripts.Params[0].pVar;
 	strcpy(fmt, game.Scripts.Params[1].cVar);
-	format(script, dst, -1ul, fmt);
+	format(script, dst, static_cast<size_t>(-1), fmt);
 	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
 		script->Collect(1);
 	script->m_dwIp++;

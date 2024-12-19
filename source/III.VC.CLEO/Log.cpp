@@ -7,7 +7,7 @@ FILE *Log::logFile;
 bool Log::opened = false;
 unsigned int Log::logPriority = LOG_PRIORITY_DEFAULT;
 
-void Log::Initialise(char *filepath)
+void Log::Initialise(const char *filepath)
 {
 	strcpy(fileName, filepath);
 	logFile = fopen(filepath, "wt");
@@ -32,7 +32,7 @@ void Log::Close()
 	}
 }
 
-void Log::Record(unsigned int priority, char *format, ...)
+void Log::Record(unsigned int priority, const char *format, ...)
 {
 	if(priority > logPriority || !opened)
 		return;
@@ -44,7 +44,7 @@ void Log::Record(unsigned int priority, char *format, ...)
 	fputs(final, logFile);
 }
 
-void Log::RecordAndRestart(unsigned int priority, char *format, ...)
+void Log::RecordAndRestart(unsigned int priority, const char *format, ...)
 {
 	if(priority > logPriority || !opened)
 		return;
@@ -57,7 +57,7 @@ void Log::RecordAndRestart(unsigned int priority, char *format, ...)
 	Restart();
 }
 
-void Log::RecordLine(unsigned int priority, char *format, ...)
+void Log::RecordLine(unsigned int priority, const char *format, ...)
 {
 	if(priority > logPriority || !opened)
 		return;
@@ -70,7 +70,7 @@ void Log::RecordLine(unsigned int priority, char *format, ...)
 	fputs("\n", logFile);
 }
 
-void Log::RecordLineAndRestart(unsigned int priority, char *format, ...)
+void Log::RecordLineAndRestart(unsigned int priority, const char *format, ...)
 {
 	if(priority > logPriority || !opened)
 		return;

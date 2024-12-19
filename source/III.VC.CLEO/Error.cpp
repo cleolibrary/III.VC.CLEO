@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <Windows.h>
 
-bool Error(char *message, ...)
+bool Error(const char *message, ...)
 {
 	char text[512];
 	va_list ap;

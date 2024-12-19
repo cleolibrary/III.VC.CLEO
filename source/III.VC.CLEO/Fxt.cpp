@@ -8,7 +8,7 @@ CustomTextEntry *CustomText::pCustomTextList;
 
 CustomTextEntry::CustomTextEntry(char *key, char *text)
 {
-    size_t len = strlen(text);
+	size_t len = strlen(text);
 	this->m_pText = new wchar_t[len + 1];
 	for(size_t i = 0; i < len; i++)
 		this->m_pText[i] =  (unsigned char)text[i];
@@ -26,7 +26,7 @@ CustomTextEntry::~CustomTextEntry()
 
 wchar_t *CustomText::GetText(int theText, int, char *key)
 {
-	wchar_t *result = NULL;
+	wchar_t *result = nullptr;
 	CustomTextEntry *entry = pCustomTextList;
 	while(entry)
 	{
@@ -40,7 +40,7 @@ wchar_t *CustomText::GetText(int theText, int, char *key)
 	if(!result)
 		result = game.Text.pfGetText(theText, key);
 	if(!result)
-		return L"";
+		return nullptr;
 	return result;
 }
 
@@ -52,7 +52,7 @@ char *StrFindKeyBegin(char *str)
 			return str;
 		str++;
 	}
-	return NULL;
+	return nullptr;
 }
 
 char *StrFindKeyEnd(char *str)
@@ -63,7 +63,7 @@ char *StrFindKeyEnd(char *str)
 			return str;
 		str++;
 	}
-	return NULL;
+	return nullptr;
 }
 
 char *StrFindTextBegin(char *str)
@@ -76,7 +76,7 @@ char *StrFindTextBegin(char *str)
 			return str;
 		str++;
 	}
-	return NULL;
+	return nullptr;
 }
 
 char *StrFindTextEnd(char *str)

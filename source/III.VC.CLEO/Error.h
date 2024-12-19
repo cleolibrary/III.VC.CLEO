@@ -1,3 +1,3 @@
 #pragma once
 
-bool Error(char *message, ...);
+bool Error(const char *message, ...);
