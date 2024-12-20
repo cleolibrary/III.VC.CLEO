@@ -88,7 +88,7 @@ eGameVersion GtaGame::GetGameVersion()
 bool GtaGame::IsChineseVersion()
 {
 	bool is_cn = false;
-	if (GetModuleHandleA("wm_vcchs.asi") || GetModuleHandleA("wm_vcchs.dll") || GetModuleHandleA("wm_lcchs.asi") || GetModuleHandleA("wm_lcchs.asi")) 
+	if (GetModuleHandleA("wm_vcchs.asi") || GetModuleHandleA("wm_vcchs.dll") || GetModuleHandleA("wm_lcchs.asi") || GetModuleHandleA("wm_lcchs.dll")) 
 		is_cn = true;
 	return is_cn;
 }

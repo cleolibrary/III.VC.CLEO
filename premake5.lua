@@ -88,6 +88,8 @@ workspace "CLEO_SDK"
    
    kind "SharedLib"
    language "C++"
+   cdialect "C17"
+   cppdialect "C++latest"
    targetdir "bin/CLEO/CLEO_PLUGINS"
    targetextension ".cleo"
    characterset ("MBCS")

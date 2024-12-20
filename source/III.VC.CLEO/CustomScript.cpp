@@ -13,11 +13,6 @@ void CScript::Init()
 	this->m_bDeathArrestCheckEnabled = true;
 }
 
-CScript::CScript()
-{
-
-}
-
 bool CScript::Loaded()
 {
 	if(this->m_Errors.m_bAllocationFailed || this->m_Errors.m_bEmptyFile || this->m_Errors.m_bEofReached
@@ -247,7 +242,7 @@ int CScript::CollectNextWithoutIncreasingPC(unsigned int ip)
 #else
 		{
 		auto fParam = ((float)(*(short *)&game.Scripts.Space[ip]) / 16.0f);
-		return *(float*)&fParam;
+		return static_cast<int>(*(float*)&fParam);
 		}
 #endif
 	case PARAM_TYPE_INT32:

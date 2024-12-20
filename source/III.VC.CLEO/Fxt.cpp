@@ -32,7 +32,7 @@ CustomTextEntry::~CustomTextEntry()
 		delete m_pText;
 }
 
-void CustomText::Utf8ToUtf16(const char* utf8, wchar16_t* utf16, size_t utf8_len, size_t utf16_len)
+void CustomText::Utf8ToUtf16(const char *utf8, wchar16_t *utf16, size_t utf8_len, size_t utf16_len)
 {
 	static auto get_utf8_bytes = [](uint8_t utf8) -> uint8_t
 	{

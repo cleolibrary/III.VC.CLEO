@@ -8,6 +8,9 @@
 #include "CleoVersion.h"
 #include <direct.h>
 
+#pragma warning(disable: 6031)
+#pragma warning(disable: 28182)
+
 int format(CScript *script, char *str, size_t len, const char *format);
 
 tScriptVar CustomOpcodes::SHARED_VAR[0xFFFF];
@@ -334,53 +337,59 @@ eOpcodeResult CustomOpcodes::START_CUSTOM_THREAD(CScript *script)
 eOpcodeResult CustomOpcodes::MEMORY_WRITE(CScript *script)
 {
 	script->Collect(4);
-	DWORD flOldProtect;
-	if(game.Scripts.Params[3].nVar)
-		VirtualProtect(game.Scripts.Params[0].pVar, game.Scripts.Params[1].nVar, PAGE_EXECUTE_READWRITE, &flOldProtect);
-	switch(game.Scripts.Params[1].nVar)
+	if (game.Scripts.Params[0].pVar)
 	{
-	case 1:
-		*(char *)game.Scripts.Params[0].pVar = game.Scripts.Params[2].nVar;
-		break;
-	case 2:
-		*(short *)game.Scripts.Params[0].pVar = game.Scripts.Params[2].nVar;
-		break;
-	case 4:
-		*(int *)game.Scripts.Params[0].pVar = game.Scripts.Params[2].nVar;
-		break;
-	default:
-		memset(game.Scripts.Params[0].pVar, game.Scripts.Params[2].nVar, game.Scripts.Params[1].nVar);
-		break;
+		DWORD flOldProtect;
+		if (game.Scripts.Params[3].nVar) 
+			VirtualProtect(game.Scripts.Params[0].pVar, game.Scripts.Params[1].nVar, PAGE_EXECUTE_READWRITE, &flOldProtect);
+		switch (game.Scripts.Params[1].nVar)
+		{
+		case 1:
+			*(char*)game.Scripts.Params[0].pVar = game.Scripts.Params[2].nVar;
+			break;
+		case 2:
+			*(short*)game.Scripts.Params[0].pVar = game.Scripts.Params[2].nVar;
+			break;
+		case 4:
+			*(int*)game.Scripts.Params[0].pVar = game.Scripts.Params[2].nVar;
+			break;
+		default:
+			memset(game.Scripts.Params[0].pVar, game.Scripts.Params[2].nVar, game.Scripts.Params[1].nVar);
+			break;
+		}
+		if (game.Scripts.Params[3].nVar)
+			VirtualProtect(game.Scripts.Params[0].pVar, game.Scripts.Params[1].nVar, flOldProtect, &flOldProtect);
 	}
-	if(game.Scripts.Params[3].nVar)
-		VirtualProtect(game.Scripts.Params[0].pVar, game.Scripts.Params[1].nVar, flOldProtect, &flOldProtect);
 	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::MEMORY_READ(CScript *script)
 {
 	script->Collect(3);
-	DWORD flOldProtect;
-	void *pMemory = game.Scripts.Params[0].pVar;
-	if(game.Scripts.Params[2].nVar)
-		VirtualProtect(pMemory, game.Scripts.Params[1].nVar, PAGE_EXECUTE_READWRITE, &flOldProtect);
-	switch(game.Scripts.Params[1].nVar)
+	if (game.Scripts.Params[0].pVar)
 	{
-	case 1:
-		game.Scripts.Params[0].nVar = *(unsigned char *)pMemory;
-		break;
-	case 2:
-		game.Scripts.Params[0].nVar = *(unsigned short *)pMemory;
-		break;
-	case 4:
-		game.Scripts.Params[0].nVar = *(int *)pMemory;
-		break;
-	default:
-		game.Scripts.Params[0].nVar = 0;
-		break;
+		DWORD flOldProtect;
+		void* pMemory = game.Scripts.Params[0].pVar;
+		if (game.Scripts.Params[2].nVar)
+			VirtualProtect(pMemory, game.Scripts.Params[1].nVar, PAGE_EXECUTE_READWRITE, &flOldProtect);
+		switch (game.Scripts.Params[1].nVar)
+		{
+		case 1:
+			game.Scripts.Params[0].nVar = *(unsigned char*)pMemory;
+			break;
+		case 2:
+			game.Scripts.Params[0].nVar = *(unsigned short*)pMemory;
+			break;
+		case 4:
+			game.Scripts.Params[0].nVar = *(int*)pMemory;
+			break;
+		default:
+			game.Scripts.Params[0].nVar = 0;
+			break;
+		}
+		if (game.Scripts.Params[2].nVar)
+			VirtualProtect(pMemory, game.Scripts.Params[1].nVar, flOldProtect, &flOldProtect);
 	}
-	if(game.Scripts.Params[2].nVar)
-		VirtualProtect(pMemory, game.Scripts.Params[1].nVar, flOldProtect, &flOldProtect);
 	script->Store(1);
 	return OR_CONTINUE;
 }
@@ -1917,6 +1926,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0AD4(CScript *script)
 	size_t cExParams = 0;
 	int *result = (int *)script->GetPointerToScriptVariable();
 	tScriptVar *ExParams[35];
+	memset(ExParams, 0, 35 * sizeof(tScriptVar*));
 	// read extra params
 	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
 	{
@@ -2005,6 +2015,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0ADA(CScript *script)
 	size_t cExParams = 0;
 	int *result = (int *)script->GetPointerToScriptVariable();
 	tScriptVar *ExParams[35];
+	memset(ExParams, 0, 35 * sizeof(tScriptVar*));
 	// read extra params
 	while ((*(tParamType *)(&game.Scripts.Space[script->m_dwIp])).type)
 	{

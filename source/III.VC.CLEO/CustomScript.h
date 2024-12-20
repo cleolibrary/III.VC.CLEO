@@ -119,7 +119,7 @@ public:
 
 	CLEOAPI void *GetPointerToScriptVariable();
 
-	CScript();
+	CScript() = default;
 
 	CScript(char *filepath);
 
