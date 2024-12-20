@@ -1,3 +1,9 @@
+## 2.1.1
+
+- Added support for Chinese text in fxt files. ([#16](https://github.com/cleolibrary/III.VC.CLEO/issues/16)) ([#18](https://github.com/cleolibrary/III.VC.CLEO/issues/18))
+- Opcode 0605 supports negative values for the parameter model id. ([#17](https://github.com/cleolibrary/III.VC.CLEO/issues/17))
+- A some other minor fixes and improvements.
+
 ## 2.1.0
 
 - Added opcode 0DD5 (get_platform).

@@ -545,6 +545,7 @@ void GtaGame::InitAndPatch()
 		this->Scripts.Params = (tScriptVar *)0x6ED460;
 		this->Scripts.Space = (char *)0x74B248;
 		this->Scripts.pNumOpcodesExecuted = (unsigned short *)0x95CE5E;
+		this->Scripts.usedObjectArray = (tUsedObject*)0x6E69E0;
 		// Text
 		this->Text.pfGetText = (wchar_t *(__thiscall *)(int, char *))0x52C1F0;
 		CPatch::RedirectJump(0x52C7E0, CustomText::GetText);
