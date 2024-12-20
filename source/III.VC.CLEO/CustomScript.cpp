@@ -11,6 +11,7 @@ void CScript::Init()
 	memset(this, 0, sizeof(CScript));
 	strcpy(this->m_acName, "noname");
 	this->m_bDeathArrestCheckEnabled = true;
+	this->m_pLocalArray = new tScriptVar[0xFF];
 }
 
 bool CScript::Loaded()
@@ -30,6 +31,9 @@ CScript::~CScript()
 		delete scmf;
 		scmf = prev;
 	}
+	this->m_pScmFunction = nullptr;
+	delete[] this->m_pLocalArray;
+	this->m_pLocalArray = nullptr;
 }
 
 CScript::CScript(char *filepath)

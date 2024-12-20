@@ -28,8 +28,8 @@ CustomTextEntry::CustomTextEntry(char *key, char *text)
 
 CustomTextEntry::~CustomTextEntry()
 {
-	if(this->m_pText)
-		delete m_pText;
+	delete[] this->m_pText;
+	this->m_pText = nullptr;
 }
 
 void CustomText::Utf8ToUtf16(const char *utf8, wchar16_t *utf16, size_t utf8_len, size_t utf16_len)

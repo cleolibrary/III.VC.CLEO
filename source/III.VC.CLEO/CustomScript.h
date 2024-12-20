@@ -94,6 +94,7 @@ public:
 	/* 0xA0 */ class ScmFunction *m_pScmFunction;
 	/* 0xA4 */ CScript *m_pNextCustom;
 	/* 0xA8 */ CScript *m_pPrevCustom;
+	/* 0xAC */ tScriptVar *m_pLocalArray;
 
 	void Init();
 
@@ -130,4 +131,4 @@ public:
 	eOpcodeResult ProcessOneCommand();
 };
 
-static_assert(sizeof(CScript) == 0xAC, "Error with CScript");
+static_assert(sizeof(CScript) == 0xB0, "Error with CScript");

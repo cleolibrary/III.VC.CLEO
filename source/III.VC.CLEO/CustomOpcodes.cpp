@@ -221,6 +221,11 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x059A, IS_AUSTRALIAN_GAME);
 #endif
 
+	// CLEO 2.1 opcodes
+	Opcodes::RegisterOpcode(0x0AF8, SET_CLEO_ARRAY);
+	Opcodes::RegisterOpcode(0x0AF9, GET_CLEO_ARRAY);
+	Opcodes::RegisterOpcode(0x0AFA, GET_CLEO_ARRAY_OFFSET);
+	Opcodes::RegisterOpcode(0x0AFB, GET_CLEO_ARRAY_SCRIPT);
 	Opcodes::RegisterOpcode(0x0DD5, GET_PLATFORM);
 }
 
@@ -1717,7 +1722,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0AAB(CScript *script)
 eOpcodeResult CustomOpcodes::OPCODE_0AB3(CScript* script)
 {
 	script->Collect(2);
-	SHARED_VAR[game.Scripts.Params[0].nVar].dVar = game.Scripts.Params[1].nVar;
+	SHARED_VAR[game.Scripts.Params[0].nVar].dVar = game.Scripts.Params[1].dVar;
 	return OR_CONTINUE;
 }
 
@@ -1725,8 +1730,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0AB3(CScript* script)
 eOpcodeResult CustomOpcodes::OPCODE_0AB4(CScript* script)
 {
 	script->Collect(1);
-	int Value = SHARED_VAR[game.Scripts.Params[0].nVar].dVar;
-	game.Scripts.Params[0].nVar = Value;
+	game.Scripts.Params[0].dVar = SHARED_VAR[game.Scripts.Params[0].nVar].dVar;
 	script->Store(1);
 	return OR_CONTINUE;
 }
@@ -2192,29 +2196,15 @@ eOpcodeResult CustomOpcodes::OPCODE_0AE0(CScript *script)
 	return OR_CONTINUE;
 }
 
-//0DD5=1,%1d% = get_platform
-eOpcodeResult __stdcall CustomOpcodes::GET_PLATFORM(CScript* script)
-{
-	game.Scripts.Params[0].nVar = PLATFORM_WINDOWS;
-	script->Store(1);
-	return OR_CONTINUE;
-}
-
 //0AE1=7,%7d% = random_actor_near_point %1d% %2d% %3d% in_radius %4d% find_next %5h% pass_deads %6h% //IF and SET //dup
 //0AE2=7,%7d% = random_vehicle_near_point %1d% %2d% %3d% in_radius %4d% find_next %5h% pass_wrecked %6h% //IF and SET //dup
 //0AE3=6,%6d% = random_object_near_point %1d% %2d% %3d% in_radius %4d% find_next %5h% //IF and SET //dup
 //0AE4=1,directory_exists %1d%
 //0AE5=1,create_directory %1d% ; IF and SET
 
-
 //0AE6=3,%2d% = find_first_file %1d% get_filename_to %3d% ; IF and SET
-
-
 //0AE7=2,%2d% = find_next_file %1d% ; IF and SET
-
-
 //0AE8=1,find_close %1d%
-
 
 //0AE9=1,pop_float %1d% //dup
 //0AEA=2,%2d% = actor_struct %1d% handle //dup
@@ -2223,6 +2213,53 @@ eOpcodeResult __stdcall CustomOpcodes::GET_PLATFORM(CScript* script)
 //0AED=3,%3d% = float %1d% to_string_format %2d%
 //0AEE=3,%3d% = exp %1d% base %2d% //all floats //dup
 //0AEF=3,%3d% = log %1d% base %2d% //all floats //dup
+
+//0AF8=2,cleo_array %1d% = %2d%
+eOpcodeResult __stdcall CustomOpcodes::SET_CLEO_ARRAY(CScript *script)
+{
+	script->Collect(2);
+	script->m_pLocalArray[game.Scripts.Params[0].nVar].dVar = game.Scripts.Params[1].dVar;
+	return OR_CONTINUE;
+}
+
+//0AF9=2,%2d% = cleo_array %1d%
+eOpcodeResult __stdcall CustomOpcodes::GET_CLEO_ARRAY(CScript *script)
+{
+	script->Collect(1);
+	game.Scripts.Params[0].dVar = script->m_pLocalArray[game.Scripts.Params[0].nVar].dVar;
+	script->Store(1);
+	return OR_CONTINUE;
+}
+
+//0AFA=2,%2d% = cleo_array %1d% pointer
+eOpcodeResult __stdcall CustomOpcodes::GET_CLEO_ARRAY_OFFSET(CScript* script)
+{
+	script->Collect(1);
+	game.Scripts.Params[0].pVar = &script->m_pLocalArray[game.Scripts.Params[0].nVar].dVar;
+	script->Store(1);
+	return OR_CONTINUE;
+}
+
+//0AFB=3,%3d% = script %1d% cleo_array %2d% pointer
+eOpcodeResult __stdcall CustomOpcodes::GET_CLEO_ARRAY_SCRIPT(CScript* script)
+{
+	script->Collect(2);
+	CScript *pScript = reinterpret_cast<CScript*>(game.Scripts.Params[0].pVar);
+	if (pScript)
+	{
+		game.Scripts.Params[0].pVar = &pScript->m_pLocalArray[game.Scripts.Params[1].nVar].dVar;
+	}
+	script->Store(1);
+	return OR_CONTINUE;
+}
+
+//0DD5=1,%1d% = get_platform
+eOpcodeResult __stdcall CustomOpcodes::GET_PLATFORM(CScript *script)
+{
+	game.Scripts.Params[0].nVar = PLATFORM_WINDOWS;
+	script->Store(1);
+	return OR_CONTINUE;
+}
 
 // perform 'sprintf'-operation for parameters, passed through SCM
 int format(CScript *script, char *str, size_t len, const char *format)

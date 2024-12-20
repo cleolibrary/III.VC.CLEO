@@ -112,6 +112,10 @@ class CustomOpcodes
 	static eOpcodeResult WINAPI OPCODE_0ADE(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0ADF(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0AE0(CScript *script);
+	static eOpcodeResult WINAPI SET_CLEO_ARRAY(CScript* script);
+	static eOpcodeResult WINAPI GET_CLEO_ARRAY(CScript* script);
+	static eOpcodeResult WINAPI GET_CLEO_ARRAY_OFFSET(CScript* script);
+	static eOpcodeResult WINAPI GET_CLEO_ARRAY_SCRIPT(CScript* script);
 	static eOpcodeResult WINAPI GET_PLATFORM(CScript* script);
 public:
 	static void Register();
