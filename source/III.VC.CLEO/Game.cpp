@@ -93,6 +93,12 @@ bool GtaGame::IsChineseVersion()
 	return is_cn;
 }
 
+bool GtaGame::IsChinese()
+{
+	static bool is_cn = IsChineseVersion();
+	return is_cn;
+}
+
 void GtaGame::InitAndPatch()
 {
 	this->Misc.openedFiles = new std::set<FILE *>;
@@ -136,6 +142,7 @@ void GtaGame::InitAndPatch()
 		this->Scripts.Params = (tScriptVar *)0x7D7438;
 		this->Scripts.Space = (char *)0x821280;
 		this->Scripts.pNumOpcodesExecuted = (unsigned short *)0xA10A66;
+		this->Scripts.usedObjectArray = (tUsedObject *)0x7D1DE0;
 		// Text
 		this->Text.pfGetText = (wchar_t *(__thiscall *)(int, char *))0x584DA2;
 		CPatch::SetInt(0x584DA2, 0xD98B5553); //push ebx push ebp mov ebx,ecx
@@ -448,6 +455,7 @@ void GtaGame::InitAndPatch()
 		this->Scripts.Params = (tScriptVar *)0x6ED460;
 		this->Scripts.Space = (char *)0x74B248;
 		this->Scripts.pNumOpcodesExecuted = (unsigned short *)0x95CCA6;
+		this->Scripts.usedObjectArray = (tUsedObject*)0x6E69E0;
 		// Text
 		this->Text.pfGetText = (wchar_t *(__thiscall *)(int, char *))0x52BFB0;
 		CPatch::RedirectJump(0x52C5A0, CustomText::GetText);

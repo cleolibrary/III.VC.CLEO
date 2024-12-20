@@ -1343,7 +1343,9 @@ eOpcodeResult CustomOpcodes::GET_MODEL_ID_FROM_WEAPON_ID(CScript *script)
 eOpcodeResult CustomOpcodes::GET_WEAPON_ID_FROM_MODEL_ID(CScript *script)
 {
 	script->Collect(1);
-	unsigned int mID = game.Scripts.Params[0].nVar;
+	int mID = game.Scripts.Params[0].nVar;
+	if (mID < 0) 
+		mID = game.Scripts.usedObjectArray[-mID].index;
 	for (size_t i = 0; i < 37; i++)
 	{
 		if (mID == game.Misc.pfModelForWeapon(i))

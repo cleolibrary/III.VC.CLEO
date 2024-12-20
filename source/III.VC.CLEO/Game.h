@@ -128,17 +128,19 @@ struct CTextDrawer
 class GtaGame
 {
 	void InitialiseGameVersion();
-	public: void InitAndPatch();
+	static bool IsChineseVersion();
 
 public:
-
+	
 	eGameVersion Version;
 
 	GtaGame();
 
 	eGameVersion GetGameVersion();
 
-	static bool IsChineseVersion();
+	void InitAndPatch();
+
+	static bool IsChinese();
 
 	static void InitScripts_OnGameSaveLoad();
 	static void InitScripts_OnGameInit();
@@ -150,14 +152,22 @@ public:
 
 	static void OnMenuDrawing(float x, float y, wchar_t *text);
 
-	struct GamePool{
+	struct GamePool
+	{
 		char *objects;
 		unsigned char *flags;
 		unsigned int capacity;
 		unsigned int count;
 	};
 
-	struct _Scripts{
+	struct tUsedObject
+	{
+		char name[24];
+		int index;
+	};
+
+	struct _Scripts
+	{
 		char *Space;
 		tScriptVar *Params;
 		unsigned short *pNumOpcodesExecuted;
@@ -167,13 +177,16 @@ public:
 		OpcodeHandler OpcodeHandlers[12];
 #endif
 		CScript **pActiveScriptsList;
+		tUsedObject *usedObjectArray;
 		void (__thiscall *AddScriptToList)(CScript *, CScript **);
 		void (__thiscall *RemoveScriptFromList)(CScript *, CScript **);
 		void (__thiscall *StoreParameters)(CScript *, unsigned int *, unsigned int);
 		void (__thiscall *UpdateCompareFlag)(CScript *, bool);
 		void *(__thiscall *GetPointerToScriptVariable)(CScript *, unsigned int *, unsigned char);
 	} Scripts;
-	struct _Text{
+
+	struct _Text
+	{
 		wchar_t *(__thiscall *pfGetText)(int, char *);
 #if CLEO_VC
 		void(__cdecl *TextBox)(const wchar_t *text, bool flag1, bool infinite, bool flag2);
@@ -188,11 +201,15 @@ public:
 		unsigned short *currentTextDrawer;
 		char *cheatString;
 	} Text;
-	struct _Screen{
+
+	struct _Screen
+	{
 		int *Width;
 		int *Height;
 	} Screen;
-	struct _Font{
+
+	struct _Font
+	{
 		void (__cdecl *AsciiToUnicode)(const char *ascii, short *pUni);
 		void (__cdecl *PrintString)(float x, float y, wchar_t *text);
 		void (__cdecl *SetFontStyle)(int style);
@@ -202,7 +219,9 @@ public:
 		void (__cdecl *SetDropShadowPosition)(int position);
 		void (__cdecl *SetPropOn)();
 	} Font;
-	struct _Pools{
+
+	struct _Pools
+	{
 		GamePool **pPedPool;
 		GamePool **pVehiclePool;
 		GamePool **pObjectPool;
@@ -214,7 +233,9 @@ public:
 		int (__thiscall *pfVehiclePoolGetHandle)(GamePool *pool, void *vehicle);
 		int (__thiscall *pfObjectPoolGetHandle)(GamePool *pool, void *object);
 	} Pools;
-	struct _Events{
+
+	struct _Events
+	{
 		void (__cdecl *pfInitScripts_OnGameSaveLoad)();
 		void (__cdecl *pfInitScripts_OnGameInit)();
 		void (__cdecl *pfInitScripts_OnGameReinit)();
@@ -223,7 +244,8 @@ public:
 		void (__cdecl *pfDrawInMenu)(float, float, wchar_t *);
 	} Events;
 
-	struct _Shadows{
+	struct _Shadows
+	{
 		float (__cdecl *StoreShadowToBeRendered)(unsigned char, uintptr_t *, CVector *, float, float, float, float, short, unsigned char, unsigned char, unsigned char, float, bool, float, uintptr_t *, bool);
 		uintptr_t **pRwTexture;
 		uintptr_t **pRwTexture_shad_car;
@@ -236,24 +258,29 @@ public:
 		uintptr_t **pRwTexture_bloodpool_64;
 	} Shadows;
 
-	struct _Misc{
+	struct _Misc
+	{
+		// variables
 		std::set<FILE *> *openedFiles;
 		std::set<void *> *allocatedMemory;
 		uintptr_t stVehicleModelInfo;
 		uintptr_t activePadState;
-		int(__cdecl *pfModelForWeapon)(int eWeaponType);
 		uintptr_t cameraWidescreen;
 		uintptr_t currentWeather;
+
+		// functions
+		int(__cdecl* pfModelForWeapon)(int eWeaponType);
 		char*(__cdecl *pfGetUserDirectory)();
 #if CLEO_VC
 		void(__cdecl *pfSpawnCar)(unsigned int);
 #else
 		void(__cdecl *pfSpawnCar)();
 #endif
-		void(__cdecl *Multiply3x3)(CVector *out, uintptr_t *m, CVector *in);
-		void(__cdecl *RwV3dTransformPoints)(CVector*, CVector const*, int, uintptr_t const*);
+		void(__cdecl* Multiply3x3)(CVector* out, uintptr_t* m, CVector* in);
+		void(__cdecl* RwV3dTransformPoints)(CVector*, CVector const*, int, uintptr_t const*);
+		bool(__cdecl* pfIsBoatModel)(int mID);
 		int(__cdecl *pfCAnimManagerBlendAnimation)(int pRpClump, int dwAnimGroupId, int dwAnimId, float fSpeed);
-		bool(__cdecl *pfIsBoatModel)(int mID);
+
 	} Misc;
 };
 

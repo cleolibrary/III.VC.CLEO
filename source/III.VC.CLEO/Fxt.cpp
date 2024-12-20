@@ -10,8 +10,7 @@ CustomTextEntry::CustomTextEntry(char *key, char *text)
 {
 	size_t len = strlen(text);
 	this->m_pText = new wchar16_t[len + 1];
-	static bool is_cn = GtaGame::IsChineseVersion();
-	if (is_cn)
+	if (GtaGame::IsChinese())
 	{
 		CustomText::Utf8ToUtf16(text, this->m_pText, len, len + 1);
 	}
@@ -23,6 +22,7 @@ CustomTextEntry::CustomTextEntry(char *key, char *text)
 	this->m_pText[len] = 0;
 	strncpy(m_key, key, 7);
 	this->m_key[7] = '\0';
+	this->m_pNext = nullptr;
 	LOGL(LOG_PRIORITY_CUSTOM_TEXT, "Registered custom text: \"%s\", \"%s\"", this->m_key, text);
 }
 
