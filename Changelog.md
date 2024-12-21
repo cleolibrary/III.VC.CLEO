@@ -1,7 +1,11 @@
 ## 2.1.1
 
-- Added support for Chinese text in fxt files. ([#16](https://github.com/cleolibrary/III.VC.CLEO/issues/16)) ([#18](https://github.com/cleolibrary/III.VC.CLEO/issues/18))
-- Opcode 0605 supports negative values for the parameter model id. ([#17](https://github.com/cleolibrary/III.VC.CLEO/issues/17))
+- Added support for chinese text in fxt files. ([#16](https://github.com/cleolibrary/III.VC.CLEO/issues/16)) ([#18](https://github.com/cleolibrary/III.VC.CLEO/issues/18))
+- Opcode 0605 (GET_WEAPONTYPE_FOR_MODEL) supports negative values for the parameter model id. ([#17](https://github.com/cleolibrary/III.VC.CLEO/issues/17))
+- Support short string parameters in opcodes. ([#29](https://github.com/cleolibrary/III.VC.CLEO/issues/29))
+- Added opcodes 0AF8 (SET_CLEO_ARRAY), 0AF9 (GET_CLEO_ARRAY), 0AFA (GET_CLEO_ARRAY_OFFSET), 0AFB (GET_CLEO_ARRAY_SCRIPT).
+- Added CLEO4 opcodes 0AB7 (GET_CAR_NUMBER_OF_GEARS), 0AB8 (GET_CAR_CURRENT_GEAR), 0ABD (IS_CAR_LIGHTS_ON), 0ABE (IS_CAR_ENGINE_ON), 0ABF (CLEO_SET_CAR_ENGINE_ON), 0AE4 (DOES_DIRECTORY_EXIST), 0AE5 (CREATE_DIRECTORY), 0AE6 (
+FIND_FIRST_FILE), 0AE7 (FIND_NEXT_FILE), 0AE8 (FIND_CLOSE).
 - A some other minor fixes and improvements.
 
 ## 2.1.0
