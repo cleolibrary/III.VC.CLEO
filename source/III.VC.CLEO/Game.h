@@ -166,6 +166,18 @@ public:
 		int index;
 	};
 
+	struct bVehicleFlags
+	{
+		uint8_t bIsLawEnforcer : 1; // Is this guy chasing the player at the moment
+		uint8_t bIsAmbulanceOnDuty : 1; // Ambulance trying to get to an accident
+		uint8_t bIsFireTruckOnDuty : 1; // Firetruck trying to get to a fire
+		uint8_t bIsLocked : 1; // Is this guy locked by the script (cannot be removed)
+		uint8_t bEngineOn : 1; // For sound purposes. Parked cars have their engines switched off (so do destroyed cars)
+		uint8_t bIsHandbrakeOn : 1; // How's the handbrake doing ?
+		uint8_t bLightsOn : 1; // Are the lights switched on ?
+		uint8_t bFreebies : 1; // Any freebies left in this vehicle ?
+	};
+
 	struct _Scripts
 	{
 		char *Space;

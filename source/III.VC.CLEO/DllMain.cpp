@@ -6,6 +6,10 @@
 #include "CleoVersion.h"
 #include "CleoPlugins.h"
 #include <vector>
+
+#pragma warning(disable: 26819)
+#pragma warning(disable: 26495)
+#pragma warning(disable: 26439)
 #include "injector\hooking.hpp"
 
 template<uintptr_t addr>

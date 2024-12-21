@@ -88,6 +88,11 @@ class CustomOpcodes
 	static eOpcodeResult WINAPI OPCODE_0AAB(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0AB3(CScript* script);
 	static eOpcodeResult WINAPI OPCODE_0AB4(CScript* script);
+	static eOpcodeResult WINAPI OPCODE_0AB7(CScript* script);
+	static eOpcodeResult WINAPI OPCODE_0AB8(CScript* script);
+	static eOpcodeResult WINAPI OPCODE_0ABD(CScript* script);
+	static eOpcodeResult WINAPI OPCODE_0ABE(CScript* script);
+	static eOpcodeResult WINAPI OPCODE_0ABF(CScript* script);
 	static eOpcodeResult WINAPI OPCODE_0AC8(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0AC9(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0ACA(CScript *script);
@@ -112,6 +117,8 @@ class CustomOpcodes
 	static eOpcodeResult WINAPI OPCODE_0ADE(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0ADF(CScript *script);
 	static eOpcodeResult WINAPI OPCODE_0AE0(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0AE4(CScript *script);
+	static eOpcodeResult WINAPI OPCODE_0AE5(CScript *script);
 	static eOpcodeResult WINAPI SET_CLEO_ARRAY(CScript* script);
 	static eOpcodeResult WINAPI GET_CLEO_ARRAY(CScript* script);
 	static eOpcodeResult WINAPI GET_CLEO_ARRAY_OFFSET(CScript* script);

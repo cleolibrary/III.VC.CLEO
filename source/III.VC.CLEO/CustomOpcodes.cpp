@@ -129,15 +129,15 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x0AB4, OPCODE_0AB4);
 	Opcodes::RegisterOpcode(0x0AB5, DUMMY);
 	Opcodes::RegisterOpcode(0x0AB6, DUMMY);
-	Opcodes::RegisterOpcode(0x0AB7, DUMMY);
-	Opcodes::RegisterOpcode(0x0AB8, DUMMY);
+	Opcodes::RegisterOpcode(0x0AB7, OPCODE_0AB7);
+	Opcodes::RegisterOpcode(0x0AB8, OPCODE_0AB8);
 	Opcodes::RegisterOpcode(0x0AB9, DUMMY);
 	Opcodes::RegisterOpcode(0x0ABA, TERMINATE_NAMED_CUSTOM_THREAD);
 	Opcodes::RegisterOpcode(0x0ABB, DUMMY);
 	Opcodes::RegisterOpcode(0x0ABC, DUMMY);
-	Opcodes::RegisterOpcode(0x0ABD, DUMMY);
-	Opcodes::RegisterOpcode(0x0ABE, DUMMY);
-	Opcodes::RegisterOpcode(0x0ABF, DUMMY);
+	Opcodes::RegisterOpcode(0x0ABD, OPCODE_0ABD);
+	Opcodes::RegisterOpcode(0x0ABE, OPCODE_0ABE);
+	Opcodes::RegisterOpcode(0x0ABF, OPCODE_0ABF);
 	Opcodes::RegisterOpcode(0x0AC0, DUMMY);
 	Opcodes::RegisterOpcode(0x0AC1, DUMMY);
 	Opcodes::RegisterOpcode(0x0AC2, DUMMY);
@@ -174,8 +174,8 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x0AE1, FIND_RANDOM_CHAR);
 	Opcodes::RegisterOpcode(0x0AE2, FIND_RANDOM_CAR);
 	Opcodes::RegisterOpcode(0x0AE3, FIND_RANDOM_OBJECT);
-	Opcodes::RegisterOpcode(0x0AE4, DUMMY);
-	Opcodes::RegisterOpcode(0x0AE5, DUMMY);
+	Opcodes::RegisterOpcode(0x0AE4, OPCODE_0AE4);
+	Opcodes::RegisterOpcode(0x0AE5, OPCODE_0AE5);
 	Opcodes::RegisterOpcode(0x0AE6, DUMMY);
 	Opcodes::RegisterOpcode(0x0AE7, DUMMY);
 	Opcodes::RegisterOpcode(0x0AE8, DUMMY);
@@ -1719,7 +1719,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0AAB(CScript *script)
 //0AB2=-1,ret  //dup
 
 //0AB3=2,var %1d% = %2d%
-eOpcodeResult CustomOpcodes::OPCODE_0AB3(CScript* script)
+eOpcodeResult CustomOpcodes::OPCODE_0AB3(CScript *script)
 {
 	script->Collect(2);
 	SHARED_VAR[game.Scripts.Params[0].nVar].dVar = game.Scripts.Params[1].dVar;
@@ -1727,7 +1727,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0AB3(CScript* script)
 }
 
 //0AB4=2,%2d% = var %1d%
-eOpcodeResult CustomOpcodes::OPCODE_0AB4(CScript* script)
+eOpcodeResult CustomOpcodes::OPCODE_0AB4(CScript *script)
 {
 	script->Collect(1);
 	game.Scripts.Params[0].dVar = SHARED_VAR[game.Scripts.Params[0].nVar].dVar;
@@ -1737,15 +1737,94 @@ eOpcodeResult CustomOpcodes::OPCODE_0AB4(CScript* script)
 
 //0AB5=3,store_actor %1d% closest_vehicle_to %2d% closest_ped_to %3d%
 //0AB6=3,store_target_marker_coords_to %1d% %2d% %3d% // IF and SET //not supported
+
 //0AB7=2,get_vehicle %1d% number_of_gears_to %2d%
+eOpcodeResult __stdcall CustomOpcodes::OPCODE_0AB7(CScript *script)
+{
+	script->Collect(1);
+	uintptr_t vehicle = reinterpret_cast<uintptr_t>(game.Pools.pfVehiclePoolGetStruct(*game.Pools.pVehiclePool, game.Scripts.Params[0].nVar));
+	if (vehicle)
+#if CLEO_VC
+		game.Scripts.Params[0].nVar = *reinterpret_cast<int*>(*reinterpret_cast<uintptr_t*>(vehicle + 0x120) + 0x34 + 0x4A);
+#else
+		game.Scripts.Params[0].nVar = *reinterpret_cast<int*>(*reinterpret_cast<uintptr_t*>(vehicle + 0x128) + 0x34 + 0x4A);
+#endif
+	else
+		game.Scripts.Params[0].nVar = 0;
+	script->Store(1);
+	return OR_CONTINUE;
+}
+
 //0AB8=2,get_vehicle %1d% current_gear_to %2d%
+eOpcodeResult __stdcall CustomOpcodes::OPCODE_0AB8(CScript *script)
+{
+	script->Collect(1);
+	uintptr_t vehicle = reinterpret_cast<uintptr_t>(game.Pools.pfVehiclePoolGetStruct(*game.Pools.pVehiclePool, game.Scripts.Params[0].nVar));
+	if (vehicle)
+#if CLEO_VC
+		game.Scripts.Params[0].nVar = *reinterpret_cast<uint8_t*>(vehicle + 0x208);
+#else
+		game.Scripts.Params[0].nVar = *reinterpret_cast<uint8_t*>(vehicle + 0x204);
+#endif
+	else 
+		game.Scripts.Params[0].nVar = 0;
+	script->Store(1);
+	return OR_CONTINUE;
+}
+
 //0AB9=2,get_mp3 %1d% state_to %2d%
 //0ABA=1,end_custom_thread_named %1s% //dup
 //0ABB=2,%2d% = audiostream %1d% volume
 //0ABC=2,set_audiostream %1d% volume %2d%
-//0ABD=1,  vehicle %1d% siren_on
+
+//0ABD=1,  vehicle %1d% lights_on ( //0ABD=1,  vehicle %1d% siren_on // dup see 0383 )
+eOpcodeResult __stdcall CustomOpcodes::OPCODE_0ABD(CScript *script)
+{
+	script->Collect(1);
+	uintptr_t vehicle = reinterpret_cast<uintptr_t>(game.Pools.pfVehiclePoolGetStruct(*game.Pools.pVehiclePool, game.Scripts.Params[0].nVar));
+	if (vehicle)
+#if CLEO_VC
+		script->UpdateCompareFlag(reinterpret_cast<GtaGame::bVehicleFlags*>(vehicle + 0x1F9)->bLightsOn);
+#else
+		script->UpdateCompareFlag(reinterpret_cast<GtaGame::bVehicleFlags*>(vehicle + 0x1F5)->bLightsOn);
+#endif
+	else
+		script->UpdateCompareFlag(false);
+	return OR_CONTINUE;
+}
+
 //0ABE=1,  vehicle %1d% engine_on
+eOpcodeResult __stdcall CustomOpcodes::OPCODE_0ABE(CScript *script)
+{
+	script->Collect(1);
+	uintptr_t vehicle = reinterpret_cast<uintptr_t>(game.Pools.pfVehiclePoolGetStruct(*game.Pools.pVehiclePool, game.Scripts.Params[0].nVar));
+	if (vehicle) 
+#if CLEO_VC
+		script->UpdateCompareFlag(reinterpret_cast<GtaGame::bVehicleFlags*>(vehicle + 0x1F9)->bEngineOn);
+#else
+		script->UpdateCompareFlag(reinterpret_cast<GtaGame::bVehicleFlags*>(vehicle + 0x1F5)->bEngineOn);
+#endif
+	else 
+		script->UpdateCompareFlag(false);
+	return OR_CONTINUE;
+}
+
 //0ABF=2,set_vehicle %1d% engine_state_to %2d%
+eOpcodeResult __stdcall CustomOpcodes::OPCODE_0ABF(CScript* script)
+{
+	script->Collect(2);
+	uintptr_t vehicle = reinterpret_cast<uintptr_t>(game.Pools.pfVehiclePoolGetStruct(*game.Pools.pVehiclePool, game.Scripts.Params[0].nVar));
+	if (vehicle)
+	{
+#if CLEO_VC
+		reinterpret_cast<GtaGame::bVehicleFlags*>(vehicle + 0x1F9)->bEngineOn = game.Scripts.Params[1].nVar != false;
+#else
+		reinterpret_cast<GtaGame::bVehicleFlags*>(vehicle + 0x1F5)->bEngineOn = game.Scripts.Params[1].nVar != false;
+#endif
+	}
+	return OR_CONTINUE;
+}
+
 //0AC0=2,audiostream %1d% loop %2d%
 //0AC1=2,%2d% = load_audiostream_with_3d_support %1d% ; IF and SET
 //0AC2=4,set_audiostream %1d% 3d_position %2d% %3d% %4d%
@@ -2199,8 +2278,23 @@ eOpcodeResult CustomOpcodes::OPCODE_0AE0(CScript *script)
 //0AE1=7,%7d% = random_actor_near_point %1d% %2d% %3d% in_radius %4d% find_next %5h% pass_deads %6h% //IF and SET //dup
 //0AE2=7,%7d% = random_vehicle_near_point %1d% %2d% %3d% in_radius %4d% find_next %5h% pass_wrecked %6h% //IF and SET //dup
 //0AE3=6,%6d% = random_object_near_point %1d% %2d% %3d% in_radius %4d% find_next %5h% //IF and SET //dup
-//0AE4=1,directory_exists %1d%
+
+//0AE4=1,  directory_exists %1d%
+eOpcodeResult __stdcall CustomOpcodes::OPCODE_0AE4(CScript* script)
+{
+	script->Collect(1);
+	auto fAttr = GetFileAttributes(game.Scripts.Params[0].cVar);
+	script->UpdateCompareFlag((fAttr != INVALID_FILE_ATTRIBUTES) && (fAttr & FILE_ATTRIBUTE_DIRECTORY));
+	return OR_CONTINUE;
+}
+
 //0AE5=1,create_directory %1d% ; IF and SET
+eOpcodeResult __stdcall CustomOpcodes::OPCODE_0AE5(CScript* script)
+{
+	script->Collect(1);
+	script->UpdateCompareFlag(CreateDirectory(game.Scripts.Params[0].cVar, NULL) != 0);
+	return OR_CONTINUE;
+}
 
 //0AE6=3,%2d% = find_first_file %1d% get_filename_to %3d% ; IF and SET
 //0AE7=2,%2d% = find_next_file %1d% ; IF and SET
@@ -2232,7 +2326,7 @@ eOpcodeResult __stdcall CustomOpcodes::GET_CLEO_ARRAY(CScript *script)
 }
 
 //0AFA=2,%2d% = cleo_array %1d% pointer
-eOpcodeResult __stdcall CustomOpcodes::GET_CLEO_ARRAY_OFFSET(CScript* script)
+eOpcodeResult __stdcall CustomOpcodes::GET_CLEO_ARRAY_OFFSET(CScript *script)
 {
 	script->Collect(1);
 	game.Scripts.Params[0].pVar = &script->m_pLocalArray[game.Scripts.Params[0].nVar].dVar;
@@ -2241,7 +2335,7 @@ eOpcodeResult __stdcall CustomOpcodes::GET_CLEO_ARRAY_OFFSET(CScript* script)
 }
 
 //0AFB=3,%3d% = script %1d% cleo_array %2d% pointer
-eOpcodeResult __stdcall CustomOpcodes::GET_CLEO_ARRAY_SCRIPT(CScript* script)
+eOpcodeResult __stdcall CustomOpcodes::GET_CLEO_ARRAY_SCRIPT(CScript *script)
 {
 	script->Collect(2);
 	CScript *pScript = reinterpret_cast<CScript*>(game.Scripts.Params[0].pVar);
