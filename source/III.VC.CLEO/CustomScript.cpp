@@ -229,7 +229,8 @@ void CScript::Collect(unsigned int *pIp, unsigned int numParams)
 
 		default:
 			*pIp -= 1;
-			ReadShortString(game.Scripts.Params[i].cVar);
+			game.Scripts.Params[i].cVar = &game.Scripts.Space[*pIp];
+			*pIp += 8;
 			break;
 		}
 	}
