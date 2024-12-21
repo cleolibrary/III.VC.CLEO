@@ -32,9 +32,12 @@ Opcode Format
 		{
 			memcpy(Params[0].pVar, ClipbData, Params[1].nVar);
 			script->UpdateCompareFlag(true);
+			CloseClipboard();
+			return OR_CONTINUE;
 		}
 		CloseClipboard();
 	}
+	script->UpdateCompareFlag(false);
 	return OR_CONTINUE;
 }
 
@@ -57,13 +60,19 @@ Opcode Format
 		if (hGl)
 		{
 			Lock = GlobalLock(hGl);
-			memcpy(Lock, Params[0].pVar, Params[1].nVar);
-			GlobalUnlock(hMem);
-			SetClipboardData(1u, hMem);
-			script->UpdateCompareFlag(true);
+			if (Lock)
+			{
+				memcpy(Lock, Params[0].pVar, Params[1].nVar);
+				GlobalUnlock(hMem);
+				SetClipboardData(1u, hMem);
+				CloseClipboard();
+				script->UpdateCompareFlag(true);
+				return OR_CONTINUE;
+			}
 		}
 		CloseClipboard();
 	}
+	script->UpdateCompareFlag(false);
 	return OR_CONTINUE;
 }
 

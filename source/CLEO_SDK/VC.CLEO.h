@@ -103,6 +103,7 @@ public:
 	/* 0xA0 */ class ScmFunction *m_pScmFunction;
 	/* 0xA4 */ CScript *m_pNextCustom;
 	/* 0xA8 */ CScript *m_pPrevCustom;
+	/* 0xAC */ tScriptVar *m_pLocalArray;
 
 	CScript();
 

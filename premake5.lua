@@ -95,6 +95,7 @@ workspace "CLEO_SDK"
    characterset ("MBCS")
    staticruntime "On"
    
+   defines { "_CRT_SECURE_NO_WARNINGS",  "_CRT_NON_CONFORMING_SWPRINTFS" }
    defines { "rsc_CompanyName=\"CLEO\"" }
    defines { "rsc_LegalCopyright=\"MIT License\""} 
    defines { "rsc_InternalName=\"%{prj.name}\"", "rsc_ProductName=\"%{prj.name}\"", "rsc_OriginalFilename=\"%{prj.name}.asi\"" }
