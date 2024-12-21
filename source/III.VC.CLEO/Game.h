@@ -275,6 +275,7 @@ public:
 		// variables
 		std::set<FILE *> *openedFiles;
 		std::set<void *> *allocatedMemory;
+		std::set<HANDLE> *openedHandles;
 		uintptr_t stVehicleModelInfo;
 		uintptr_t activePadState;
 		uintptr_t cameraWidescreen;

@@ -176,9 +176,9 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x0AE3, FIND_RANDOM_OBJECT);
 	Opcodes::RegisterOpcode(0x0AE4, OPCODE_0AE4);
 	Opcodes::RegisterOpcode(0x0AE5, OPCODE_0AE5);
-	Opcodes::RegisterOpcode(0x0AE6, DUMMY);
-	Opcodes::RegisterOpcode(0x0AE7, DUMMY);
-	Opcodes::RegisterOpcode(0x0AE8, DUMMY);
+	Opcodes::RegisterOpcode(0x0AE6, OPCODE_0AE6);
+	Opcodes::RegisterOpcode(0x0AE7, OPCODE_0AE7);
+	Opcodes::RegisterOpcode(0x0AE8, OPCODE_0AE8);
 	Opcodes::RegisterOpcode(0x0AE9, CALL_POP_FLOAT);
 	Opcodes::RegisterOpcode(0x0AEA, GET_CHAR_HANDLE);
 	Opcodes::RegisterOpcode(0x0AEB, GET_CAR_HANDLE);
@@ -2280,7 +2280,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0AE0(CScript *script)
 //0AE3=6,%6d% = random_object_near_point %1d% %2d% %3d% in_radius %4d% find_next %5h% //IF and SET //dup
 
 //0AE4=1,  directory_exists %1d%
-eOpcodeResult __stdcall CustomOpcodes::OPCODE_0AE4(CScript* script)
+eOpcodeResult __stdcall CustomOpcodes::OPCODE_0AE4(CScript *script)
 {
 	script->Collect(1);
 	auto fAttr = GetFileAttributes(game.Scripts.Params[0].cVar);
@@ -2289,7 +2289,7 @@ eOpcodeResult __stdcall CustomOpcodes::OPCODE_0AE4(CScript* script)
 }
 
 //0AE5=1,create_directory %1d% ; IF and SET
-eOpcodeResult __stdcall CustomOpcodes::OPCODE_0AE5(CScript* script)
+eOpcodeResult __stdcall CustomOpcodes::OPCODE_0AE5(CScript *script)
 {
 	script->Collect(1);
 	script->UpdateCompareFlag(CreateDirectory(game.Scripts.Params[0].cVar, NULL) != 0);
@@ -2297,8 +2297,56 @@ eOpcodeResult __stdcall CustomOpcodes::OPCODE_0AE5(CScript* script)
 }
 
 //0AE6=3,%2d% = find_first_file %1d% get_filename_to %3d% ; IF and SET
+eOpcodeResult __stdcall CustomOpcodes::OPCODE_0AE6(CScript *script)
+{
+	script->Collect(1);
+	WIN32_FIND_DATAA ffd;
+	memset(&ffd, 0, sizeof(ffd));
+	HANDLE handle = FindFirstFile(game.Scripts.Params[0].cVar, &ffd);
+	game.Scripts.Params[0].pVar = handle;
+	script->Store(1);
+	game.Misc.openedHandles->insert(handle);
+	script->Collect(1);
+	if (handle != INVALID_HANDLE_VALUE)
+	{
+		strcpy(game.Scripts.Params[0].cVar, ffd.cFileName);
+		script->UpdateCompareFlag(true);
+	}
+	else
+	{
+		script->UpdateCompareFlag(false);
+	}
+	return OR_CONTINUE;
+}
+
 //0AE7=2,%2d% = find_next_file %1d% ; IF and SET
+eOpcodeResult __stdcall CustomOpcodes::OPCODE_0AE7(CScript *script)
+{
+	script->Collect(2);
+	WIN32_FIND_DATAA ffd;
+	memset(&ffd, 0, sizeof(ffd));
+	HANDLE handle = (HANDLE)game.Scripts.Params[0].pVar;
+	if (FindNextFile(handle, &ffd))
+	{
+		strcpy(game.Scripts.Params[1].cVar, ffd.cFileName);
+		script->UpdateCompareFlag(true);
+	}
+	else
+	{
+		script->UpdateCompareFlag(false);
+	}
+	return OR_CONTINUE;
+}
+
 //0AE8=1,find_close %1d%
+eOpcodeResult __stdcall CustomOpcodes::OPCODE_0AE8(CScript *script)
+{
+	script->Collect(1);
+	HANDLE handle = (HANDLE)game.Scripts.Params[0].pVar;
+	FindClose(handle);
+	game.Misc.openedHandles->erase(handle);
+	return OR_CONTINUE;
+}
 
 //0AE9=1,pop_float %1d% //dup
 //0AEA=2,%2d% = actor_struct %1d% handle //dup

@@ -103,6 +103,7 @@ void GtaGame::InitAndPatch()
 {
 	this->Misc.openedFiles = new std::set<FILE *>;
 	this->Misc.allocatedMemory = new std::set<void *>;
+	this->Misc.openedHandles = new std::set<HANDLE>;
 
 #if CLEO_VC
 	switch(this->Version)
@@ -723,6 +724,8 @@ void GtaGame::InitScripts_OnGameReinit()
 	game.Misc.openedFiles->clear();
 	std::for_each(game.Misc.allocatedMemory->begin(), game.Misc.allocatedMemory->end(), free);
 	game.Misc.allocatedMemory->clear();
+	std::for_each(game.Misc.openedHandles->begin(), game.Misc.openedHandles->end(), CloseHandle);
+	game.Misc.openedHandles->clear();
 }
 
 void GtaGame::InitScripts_OnGameSaveLoad()
@@ -737,6 +740,8 @@ void GtaGame::InitScripts_OnGameSaveLoad()
 	game.Misc.openedFiles->clear();
 	std::for_each(game.Misc.allocatedMemory->begin(), game.Misc.allocatedMemory->end(), free);
 	game.Misc.allocatedMemory->clear();
+	std::for_each(game.Misc.openedHandles->begin(), game.Misc.openedHandles->end(), CloseHandle);
+	game.Misc.openedHandles->clear();
 }
 
 void GtaGame::OnShutdownGame()
@@ -749,6 +754,8 @@ void GtaGame::OnShutdownGame()
 	game.Misc.openedFiles->clear();
 	std::for_each(game.Misc.allocatedMemory->begin(), game.Misc.allocatedMemory->end(), free);
 	game.Misc.allocatedMemory->clear();
+	std::for_each(game.Misc.openedHandles->begin(), game.Misc.openedHandles->end(), CloseHandle);
+	game.Misc.openedHandles->clear();
 }
 
 void GtaGame::OnGameSaveScripts(int a, int b)
