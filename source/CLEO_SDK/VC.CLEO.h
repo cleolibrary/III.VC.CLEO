@@ -139,7 +139,7 @@ public:
 
 	eOpcodeResult ProcessOneCommand();
 };
-static_assert(sizeof(CScript) == 0xAC, "Error with CScript");
+static_assert(sizeof(CScript) == 0xB0, "Error with CScript");
 
 #define CUSTOM_OPCODE_START_ID 0x05DC
 #define MAX_NUMBER_OF_OPCODES 0x8000

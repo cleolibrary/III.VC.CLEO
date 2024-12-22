@@ -87,10 +87,11 @@ eGameVersion GtaGame::GetGameVersion()
 
 bool GtaGame::IsChineseVersion()
 {
-	bool is_cn = false;
-	if (GetModuleHandleA("wm_vcchs.asi") || GetModuleHandleA("wm_vcchs.dll") || GetModuleHandleA("wm_lcchs.asi") || GetModuleHandleA("wm_lcchs.dll")) 
-		is_cn = true;
-	return is_cn;
+	if (GetModuleHandleA("wm_vcchs.asi") || GetModuleHandleA("wm_vcchs.dll") 
+		|| GetModuleHandleA("wm_lcchs.asi") || GetModuleHandleA("wm_lcchs.dll")) 
+		return true;
+
+	return false;
 }
 
 bool GtaGame::IsChinese()
@@ -248,6 +249,7 @@ void GtaGame::InitAndPatch()
 		this->Scripts.Params = (tScriptVar *)(0x7D7438 + 0x8);
 		this->Scripts.Space = (char *)(0x821280 + 0x8);
 		this->Scripts.pNumOpcodesExecuted = (unsigned short *)0xA10A6E;
+		this->Scripts.usedObjectArray = (tUsedObject*)0x7D1DE8;
 		// Text
 		this->Text.pfGetText = (wchar_t *(__thiscall *)(int, char *))0x584DC2;
 		CPatch::SetInt(0x584DC2, 0xD98B5553); //push ebx push ebp mov ebx,ecx
