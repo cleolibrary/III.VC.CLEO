@@ -60,7 +60,12 @@
 0AB2=-1,ret
 0AB3=2,cleo_shared_var %1d% = %2d%
 0AB4=2,%2d% = cleo_shared_var %1d%
+0AB7=2,get_vehicle %1d% number_of_gears_to %2d%
+0AB8=2,get_vehicle %1d% current_gear_to %2d%
 0ABA=1,end_custom_thread_named %1s%
+0ABD=1,  vehicle %1d% lights_on
+0ABE=1,  vehicle %1d% engine_on
+0ABF=2,set_vehicle %1d% engine_state_to %2d%
 0AC6=2,%2d% = label %1p% offset
 0AC7=2,%2d% = var %1d% offset
 0AC8=2,%2d% = allocate_memory_size %1d%
@@ -90,6 +95,11 @@
 0AE1=7,%7d% = random_actor_near_point %1d% %2d% %3d% in_radius %4d% find_next %5h% pass_deads %6h% //IF and SET
 0AE2=7,%7d% = random_vehicle_near_point %1d% %2d% %3d% in_radius %4d% find_next %5h% pass_wrecked %6h% //IF and SET
 0AE3=6,%6d% = random_object_near_point %1d% %2d% %3d% in_radius %4d% find_next %5h% //IF and SET
+0AE4=1,  directory_exists %1d%
+0AE5=1,create_directory %1d% ; IF and SET
+0AE6=3,%2d% = find_first_file %1d% get_filename_to %3d% ; IF and SET
+0AE7=2,%2d% = find_next_file %1d% ; IF and SET
+0AE8=1,find_close %1d%
 0AE9=1,pop_float %1d%
 0AEA=2,%2d% = actor_struct %1d% handle
 0AEB=2,%2d% = car_struct %1d% handle
@@ -102,6 +112,10 @@
 0AF3=4,write_float %1d% to_ini_file %2s% section %3s% key %4s%
 0AF4=4,%4d% = read_string_from_ini_file %1s% section %2s% key %3s%
 0AF5=4,write_string %1s% to_ini_file %2s% section %3s% key %4s%
+0AF8=2,cleo_array %1d% = %2d%
+0AF9=2,%2d% = cleo_array %1d%
+0AFA=2,%2d% = cleo_array %1d% pointer
+0AFB=3,%3d% = script %1d% cleo_array %2d% pointer
 0B00=1,delete_file %1d% ;; IF and SET
 0B01=2,delete_directory %1d% with_all_files_and_subdirectories %2d% ;; IF and SET
 0B02=2,move_file %1d% to %2d% ;; IF and SET
@@ -127,3 +141,4 @@
 0BA2=2,%2h% = memory_load_library %1s%
 0BA3=1,memory_free_library %1h%
 0BA4=3,%3d% = memory_get_proc_address %1s% library %2d%
+0DD5=1,%1d% = get_platform
