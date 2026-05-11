@@ -146,7 +146,7 @@ void GtaGame::InitAndPatch()
 		this->Scripts.pNumOpcodesExecuted = (unsigned short *)0xA10A66;
 		this->Scripts.usedObjectArray = (tUsedObject *)0x7D1DE0;
 		// Text
-		this->Text.pfGetText = (wchar_t *(__thiscall *)(int, char *))0x584DA2;
+		this->Text.pfGetText = (wchar_t *(__thiscall *)(int, const char *))0x584DA2;
 		CPatch::SetInt(0x584DA2, 0xD98B5553); //push ebx push ebp mov ebx,ecx
 		CPatch::SetInt(0x584DA6, 0xE940EC83); //sub esp,40 
 		CPatch::SetInt(0x584DAA, 0x00000189); //jmp 584F37
@@ -251,7 +251,7 @@ void GtaGame::InitAndPatch()
 		this->Scripts.pNumOpcodesExecuted = (unsigned short *)0xA10A6E;
 		this->Scripts.usedObjectArray = (tUsedObject*)0x7D1DE8;
 		// Text
-		this->Text.pfGetText = (wchar_t *(__thiscall *)(int, char *))0x584DC2;
+		this->Text.pfGetText = (wchar_t *(__thiscall *)(int, const char *))0x584DC2;
 		CPatch::SetInt(0x584DC2, 0xD98B5553); //push ebx push ebp mov ebx,ecx
 		CPatch::SetInt(0x584DC6, 0xE940EC83); //sub esp,40 
 		CPatch::SetInt(0x584DCA, 0x00000189); //jmp 584F37
@@ -355,7 +355,7 @@ void GtaGame::InitAndPatch()
 		this->Scripts.Space = (char *)0x820288;
 		this->Scripts.pNumOpcodesExecuted = (unsigned short *)0xA0FA6E;
 		// Text
-		this->Text.pfGetText = (wchar_t *(__thiscall *)(int, char *))0x584BD2;
+		this->Text.pfGetText = (wchar_t *(__thiscall *)(int, const char *))0x584BD2;
 		CPatch::SetInt(0x584BD2, 0xD98B5553); //push ebx push ebp mov ebx,ecx
 		CPatch::SetInt(0x584BD6, 0xE940EC83); //sub esp,40 
 		CPatch::SetInt(0x584BDA, 0x00000189); //jmp 584F37
@@ -460,7 +460,7 @@ void GtaGame::InitAndPatch()
 		this->Scripts.pNumOpcodesExecuted = (unsigned short *)0x95CCA6;
 		this->Scripts.usedObjectArray = (tUsedObject*)0x6E69E0;
 		// Text
-		this->Text.pfGetText = (wchar_t *(__thiscall *)(int, char *))0x52BFB0;
+		this->Text.pfGetText = (wchar_t *(__thiscall *)(int, const char *))0x52BFB0;
 		CPatch::RedirectJump(0x52C5A0, CustomText::GetText);
 		this->Text.CText = 0x941520;
 		this->Text.textDrawers = (CTextDrawer *)0x70EA68;
@@ -550,7 +550,7 @@ void GtaGame::InitAndPatch()
 		this->Scripts.pNumOpcodesExecuted = (unsigned short *)0x95CE5E;
 		this->Scripts.usedObjectArray = (tUsedObject*)0x6E69E0;
 		// Text
-		this->Text.pfGetText = (wchar_t *(__thiscall *)(int, char *))0x52C1F0;
+		this->Text.pfGetText = (wchar_t *(__thiscall *)(int, const char *))0x52C1F0;
 		CPatch::RedirectJump(0x52C7E0, CustomText::GetText);
 		this->Text.CText = 0x9416D8;
 		this->Text.textDrawers = (CTextDrawer *)0x70EA68;
@@ -639,7 +639,7 @@ void GtaGame::InitAndPatch()
 		this->Scripts.Space = (char *)0x75B388;
 		this->Scripts.pNumOpcodesExecuted = (unsigned short *)0x96CF9E;
 		// Text
-		this->Text.pfGetText = (wchar_t *(__thiscall *)(int, char *))0x52C180;
+		this->Text.pfGetText = (wchar_t *(__thiscall *)(int, const char *))0x52C180;
 		CPatch::RedirectJump(0x52C770, CustomText::GetText);
 		this->Text.CText = 0x951818;
 		this->Text.textDrawers = (CTextDrawer *)0x71EBA8;

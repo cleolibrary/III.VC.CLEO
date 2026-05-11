@@ -2212,9 +2212,10 @@ eOpcodeResult CustomOpcodes::OPCODE_0ADE(CScript *script)
 	script->Collect(2);
 	char *gxt = game.Scripts.Params[0].cVar;
 	char *result = game.Scripts.Params[1].cVar;
-	wchar_t *text = CustomText::GetText(game.Text.CText, 0, gxt);
-	wcstombs(result, text, wcslen(text));
-	result[wcslen(text)] = '\0';
+	const wchar_t *text = CustomText::GetText(game.Text.CText, 0, gxt);
+	const size_t len = wcslen(text);
+	wcstombs(result, text, len);
+	result[len] = '\0';
 	return OR_CONTINUE;
 }
 
@@ -2223,12 +2224,7 @@ eOpcodeResult CustomOpcodes::OPCODE_0ADF(CScript *script)
 {
 	script->Collect(2);
 
-	CustomTextEntry *entry = new CustomTextEntry(game.Scripts.Params[0].cVar, game.Scripts.Params[1].cVar);
-	if (entry)
-	{
-		entry->m_pNext = CustomText::pCustomTextList;
-		CustomText::pCustomTextList = entry;
-	}
+	CustomTextEntry::NewTextEntry(game.Scripts.Params[0].cVar, game.Scripts.Params[1].cVar, strlen(game.Scripts.Params[1].cVar));
 
 	return OR_CONTINUE;
 }

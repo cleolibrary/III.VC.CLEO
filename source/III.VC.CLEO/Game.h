@@ -199,7 +199,7 @@ public:
 
 	struct _Text
 	{
-		wchar_t *(__thiscall *pfGetText)(int, char *);
+		wchar_t *(__thiscall *pfGetText)(int, const char *);
 #if CLEO_VC
 		void(__cdecl *TextBox)(const wchar_t *text, bool flag1, bool infinite, bool flag2);
 #else
