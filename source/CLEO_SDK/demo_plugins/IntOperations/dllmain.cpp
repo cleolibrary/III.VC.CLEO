@@ -141,7 +141,7 @@ Opcode Format
 {
 	tScriptVar* op = (tScriptVar*)script->GetPointerToScriptVariable();
 	script->Collect(1);
-	int val = Params[1].nVar;
+	int val = Params[0].nVar;
 	op->nVar |= val;
 	return OR_CONTINUE;
 }
@@ -154,7 +154,7 @@ Opcode Format
 {
 	tScriptVar* op = (tScriptVar*)script->GetPointerToScriptVariable();
 	script->Collect(1);
-	int val = Params[1].nVar;
+	int val = Params[0].nVar;
 	op->nVar ^= val;
 	return OR_CONTINUE;
 }
@@ -178,7 +178,7 @@ Opcode Format
 {
 	tScriptVar* op = (tScriptVar*)script->GetPointerToScriptVariable();
 	script->Collect(1);
-	int val = Params[1].nVar;
+	int val = Params[0].nVar;
 	op->nVar %= val;
 	return OR_CONTINUE;
 }
@@ -191,7 +191,7 @@ Opcode Format
 {
 	tScriptVar* op = (tScriptVar*)script->GetPointerToScriptVariable();
 	script->Collect(1);
-	int val = Params[1].nVar;
+	int val = Params[0].nVar;
 	op->nVar >>= val;
 	return OR_CONTINUE;
 }
@@ -204,7 +204,7 @@ Opcode Format
 {
 	tScriptVar* op = (tScriptVar*)script->GetPointerToScriptVariable();
 	script->Collect(1);
-	int val = Params[1].nVar;
+	int val = Params[0].nVar;
 	op->nVar <<= val;
 	return OR_CONTINUE;
 }
