@@ -15,12 +15,12 @@
 template<uintptr_t addr>
 void RwRenderStateSetHook()
 {
-	using func_hook = injector::function_hooker<addr, void(int, int)>;
-	injector::make_static_hook<func_hook>([](func_hook::func_type RwRenderStateSet, int a1, int a2)
+	using func_hook = injector::function_hooker<addr, void*(int, void*)>;
+	injector::make_static_hook<func_hook>([](func_hook::func_type RwRenderStateSet, int a1, void* a2) -> void*
 	{
-		RwRenderStateSet(a1, a2);
-		RwRenderStateSet(0xC, a2);
-		return;
+		void* result = RwRenderStateSet(a1, a2);
+		RwRenderStateSet(0xC, a2 != nullptr ? (void*)TRUE : FALSE); // rwRENDERSTATEVERTEXALPHAENABLE
+		return result;
 	});
 }
 
