@@ -4,35 +4,39 @@
 #include "Log.h"
 #include "Game.h"
 
-CustomTextEntry *CustomText::pCustomTextList;
+CustomTextEntry *CustomText::pCustomTextList = nullptr;
 
-CustomTextEntry::CustomTextEntry(char *key, char *text)
+CustomTextEntry::CustomTextEntry(const char *key)
+	: m_pNext(std::exchange(CustomText::pCustomTextList, this))
 {
-	size_t len = strlen(text);
-	this->m_pText = new wchar16_t[len + 1];
+	strncpy(m_key, key, 7);
+	this->m_key[7] = '\0';
+}
+
+CustomTextEntry* CustomTextEntry::NewTextEntry(const char* key, const char* text, size_t length)
+{
+	// GTA III and Vice City over-read all strings by one character past the null terminator,
+	// so account for this by double null-terminating.
+	CustomTextEntry* newEntry = new(ThisIsntPlacementNewTag{}, length + 2) CustomTextEntry(key);
+
+	char16_t* newText = reinterpret_cast<char16_t*>(newEntry + 1);
 	if (GtaGame::IsChinese())
 	{
-		CustomText::Utf8ToUtf16(text, this->m_pText, len, len + 1);
+		CustomText::Utf8ToUtf16(text, newText, length, length + 1);
 	}
 	else
 	{
-		for (size_t i = 0; i < len; i++) 
-			this->m_pText[i] = (unsigned char)text[i];
+		for (size_t i = 0; i < length; i++) 
+			newText[i] = (unsigned char)text[i];
 	}
-	this->m_pText[len] = 0;
-	strncpy(m_key, key, 7);
-	this->m_key[7] = '\0';
-	this->m_pNext = nullptr;
-	LOGL(LOG_PRIORITY_CUSTOM_TEXT, "Registered custom text: \"%s\", \"%s\"", this->m_key, text);
+	newText[length] = newText[length+1] = '\0';
+
+	LOGL(LOG_PRIORITY_CUSTOM_TEXT, "Registered custom text: \"%s\", \"%s\"", key, text);
+
+	return newEntry;
 }
 
-CustomTextEntry::~CustomTextEntry()
-{
-	delete[] this->m_pText;
-	this->m_pText = nullptr;
-}
-
-void CustomText::Utf8ToUtf16(const char *utf8, wchar16_t *utf16, size_t utf8_len, size_t utf16_len)
+void CustomText::Utf8ToUtf16(const char *utf8, char16_t *utf16, size_t utf8_len, size_t utf16_len)
 {
 	static auto get_utf8_bytes = [](uint8_t utf8) -> uint8_t
 	{
@@ -66,24 +70,19 @@ void CustomText::Utf8ToUtf16(const char *utf8, wchar16_t *utf16, size_t utf8_len
 	utf16[len] = 0;
 }
 
-wchar_t *CustomText::GetText(int theText, int, char *key)
+const wchar_t *CustomText::GetText(int theText, int, const char *key)
 {
-	wchar_t *result = nullptr;
-	CustomTextEntry *entry = pCustomTextList;
-	while(entry)
+	const CustomTextEntry *entry = pCustomTextList;
+	while(entry != nullptr)
 	{
-		if(!_stricmp(entry->m_key, key))
+		if(_stricmp(entry->m_key, key) == 0)
 		{
-			result = reinterpret_cast<wchar_t*>(entry->m_pText);
-			break;
+			return entry->GetText();
 		}
 		entry = entry->m_pNext;
 	}
-	if(!result)
-		result = game.Text.pfGetText(theText, key);
-	if(!result)
-		return nullptr;
-	return result;
+	
+	return game.Text.pfGetText(theText, key);
 }
 
 char *StrFindKeyBegin(char *str)
@@ -128,13 +127,13 @@ char *StrFindTextEnd(char *str)
 	return str;
 }
 
-void CustomText::LoadFxtFile(char *filepath)
+void CustomText::LoadFxtFile(const char *filepath)
 {
-	FILE *fxt = fopen(filepath, "rt");
-	char line[512];
-	if(fgets(line, 512, fxt))
+	FILE *fxt = fopen(filepath, "r");
+	if (fxt != nullptr)
 	{
-		do
+		char line[1024];
+		while (fgets(line, sizeof(line), fxt))
 		{
 			char *keyBegin = StrFindKeyBegin(line);
 			if(keyBegin)
@@ -148,24 +147,18 @@ void CustomText::LoadFxtFile(char *filepath)
 					{
 						char *textEnd = StrFindTextEnd(&textBegin[1]);
 						*textEnd = '\0';
-						CustomTextEntry *entry = new CustomTextEntry(keyBegin, textBegin);
-						if(entry)
-						{
-							entry->m_pNext = CustomText::pCustomTextList;
-							CustomText::pCustomTextList = entry;
-						}
+						CustomTextEntry::NewTextEntry(keyBegin, textBegin, textEnd - textBegin);
 					}
 				}
 			}
 		}
-		while(fgets(line, 512, fxt));
+		fclose(fxt);
 	}
 }
 
 void CustomText::Load()
 {
 	WIN32_FIND_DATA FindFileData;
-	memset(&FindFileData, 0, sizeof(WIN32_FIND_DATA));
 	HANDLE hFind = FindFirstFile("CLEO\\CLEO_TEXT\\*.fxt", &FindFileData);
 	if(hFind != INVALID_HANDLE_VALUE)
 	{
@@ -194,5 +187,5 @@ void CustomText::Unload()
 		delete entry;
 		entry = next;
 	}
-	pCustomTextList = 0;
+	pCustomTextList = nullptr;
 }
