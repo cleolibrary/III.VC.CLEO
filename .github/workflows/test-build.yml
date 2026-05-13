@@ -1,0 +1,97 @@
+name: Test Build
+
+on:
+  workflow_dispatch: # manually
+
+  push:
+    branches-ignore:
+      - master
+    
+    paths:
+      - '**.c*' ## .c and .cpp
+      - '**.h*' ## .h and .hpp
+      - '**.def'
+      - '**.lib'
+      - '**.rc'
+      - '**.vcproj'
+      - '**.vcxproj.filters'
+      - '**.sln'
+      - '**.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  Test_Build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          submodules: "recursive"
+
+      - name: Set up MsBuild
+        uses: microsoft/setup-msbuild@6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce # v2.0.0
+
+      - name: Tag with current commit SHA
+        id: custom_build
+        run: node.exe .github/workflows/tag-custom-build.js
+        
+      - name: Generate project files
+        shell: cmd
+        run: premake5 vs2022
+
+      - name: Core - Build
+        shell: cmd
+        run: |
+          @echo off
+          set PLUGIN_SDK_DIR=%GITHUB_WORKSPACE%\third-party\plugin-sdk
+          msbuild "build/III.VC.CLEO.sln" /property:Configuration="Release" /property:Platform="Win32" /m /verbosity:minimal /fileLogger1 /fileLoggerParameters1:warningsOnly;errorsOnly;logfile=output.log
+          node .github/workflows/analyze-build-log.js "III Core compilation"
+          
+      - name: Plugins - Build
+        shell: cmd
+        run: |
+          @echo off
+          set PLUGIN_SDK_DIR=%GITHUB_WORKSPACE%\third-party\plugin-sdk
+          msbuild "build/CLEO_SDK.sln" /property:Configuration="Release" /property:Platform="Win32" /m /verbosity:minimal /fileLogger1 /fileLoggerParameters1:warningsOnly;errorsOnly;logfile=output.log
+          node .github/workflows/analyze-build-log.js "III Plugins compilation"
+
+      - name: Upload Result III
+        id: upload-III
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          compression-level: 9
+          include-hidden-files: true
+          name: III.CLEO-v${{steps.custom_build.outputs.version}}-${{steps.custom_build.outputs.sha}}
+          path: |
+            bin\III*
+            !bin\*.exp
+            !bin\*.lib
+            !bin\*.pdb
+            bin\cleo\cleo_plugins\III*
+            !bin\cleo\cleo_plugins\*.exp
+            !bin\cleo\cleo_plugins\*.lib
+            !bin\cleo\cleo_plugins\*.pdb
+        
+      - name: Upload Result VC
+        id: upload-VC
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          compression-level: 9
+          include-hidden-files: true
+          name: VC.CLEO-v${{steps.custom_build.outputs.version}}-${{steps.custom_build.outputs.sha}}
+          path: |
+            bin\VC*
+            !bin\*.exp
+            !bin\*.lib
+            !bin\*.pdb
+            bin\cleo\cleo_plugins\VC*
+            !bin\cleo\cleo_plugins\*.exp
+            !bin\cleo\cleo_plugins\*.lib
+            !bin\cleo\cleo_plugins\*.pdb
+
+      - name: Log download links
+        run: |
+            echo "::notice::Download GTA-III build: ${{steps.upload-III.outputs.artifact-url}}"
+            echo "::notice::Download GTA-VC build: ${{steps.upload-VC.outputs.artifact-url}}"

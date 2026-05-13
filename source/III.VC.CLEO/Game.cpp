@@ -775,24 +775,40 @@ float ScreenCoord(float a)
 
 void GtaGame::OnMenuDrawing(float x, float y, wchar_t *text)
 {
+	// draw CLEO + version text
 	game.Events.pfDrawInMenu(x, y, text);
 #if CLEO_VC
+	game.Font.SetFontStyle(1);
 	unsigned char color[4] = { 0xFF, 0x96, 0xE1, 0xFF };
 #else
+	game.Font.SetFontStyle(0);
 	unsigned char color[4] = { 0xEB, 0xAA, 0x32, 0xFF };
 #endif
 	game.Font.SetColor((unsigned int *)color);
 	game.Font.SetDropShadowPosition(0);
 	game.Font.SetPropOn();
-	game.Font.SetFontStyle(0);
 	game.Font.SetScale(ScreenCoord(0.45f), ScreenCoord(0.7f));
 	game.Font.SetLeftJustifyOn();
+
 	wchar_t line[128];
-	swprintf(line, L"CLEO v%d.%d.%d", CLEO_VERSION_MAIN, CLEO_VERSION_MAJOR, CLEO_VERSION_MINOR);
+	swprintf(line, L"CLEO v%S", CLEO_VERSION_DOT_STR);
 	game.Font.PrintString(ScreenCoord(30.0f), (float)*game.Screen.Height - ScreenCoord(34.0f), line);
-	scriptMgr.numLoadedCustomScripts ?
-	swprintf(line, L"%d %s, %d %s loaded", scriptMgr.numLoadedCustomScripts, scriptMgr.numLoadedCustomScripts == 1? L"script" : L"scripts",
-		CleoPlugins::numLoadedPlugins, CleoPlugins::numLoadedPlugins == 1? L"plugin" : L"plugins") :
-	swprintf(line, L"%d %s loaded", CleoPlugins::numLoadedPlugins, CleoPlugins::numLoadedPlugins == 1 ? L"plugin" : L"plugins");
-	game.Font.PrintString(ScreenCoord(30.0f), (float)*game.Screen.Height - ScreenCoord(20.0f), line);
+
+	// draw plugins / scripts text
+	const auto pluginCount = CleoPlugins::numLoadedPlugins;
+	const auto scriptCount = scriptMgr.numLoadedCustomScripts;
+	if (pluginCount || scriptCount)
+	{
+		wchar_t* linePos = line;
+		if (pluginCount)
+		{
+			linePos += swprintf(linePos, L"%d plugin%s", pluginCount, pluginCount == 1 ? L"" : L"s");
+		}
+		if (scriptCount)
+		{
+			if (linePos != line) linePos += swprintf(linePos, L" /"); // separator
+			linePos += swprintf(linePos, L"%d script%s", scriptCount, scriptCount == 1 ? L"" : L"s");
+		}
+		game.Font.PrintString(ScreenCoord(30.0f), (float)*game.Screen.Height - ScreenCoord(20.0f), line);
+	}
 }
