@@ -227,6 +227,10 @@ void CustomOpcodes::Register()
 	Opcodes::RegisterOpcode(0x0AFA, GET_CLEO_ARRAY_OFFSET);
 	Opcodes::RegisterOpcode(0x0AFB, GET_CLEO_ARRAY_SCRIPT);
 	Opcodes::RegisterOpcode(0x0DD5, GET_PLATFORM);
+
+	// CLEO 5
+	Opcodes::RegisterOpcode(0x2002, SCM_FUNCTION_RET_WITH);
+	Opcodes::RegisterOpcode(0x2003, SCM_FUNCTION_RET_FAIL);
 }
 
 eOpcodeResult CustomOpcodes::DUMMY(CScript *script)
@@ -1002,34 +1006,93 @@ eOpcodeResult CustomOpcodes::MATH_LOG(CScript *script)
 
 eOpcodeResult CustomOpcodes::CALL_SCM_FUNCTION(CScript *script)
 {
-	script->m_pScmFunction = new ScmFunction(script);
-	script->Collect(2);
-	int addr = game.Scripts.Params[0].nVar;
-	unsigned int paramCount = game.Scripts.Params[1].nVar;
-	if(paramCount > 0)
-		script->Collect(paramCount);
-	memset(script->m_aLVars, 0, 64);
-	if(paramCount > 0)
-		memcpy(script->m_aLVars, game.Scripts.Params, paramCount * 4);
-	script->m_pScmFunction->retAddr = script->m_dwIp;
-	script->JumpTo(addr);
+	int label;
+	script->Collect(1); 
+	label = game.Scripts.Params[0].nVar;
+
+	DWORD paramCount = 0;
+	if(script->GetNextParamType() != PARAM_TYPE_END_OF_PARAMS)
+	{
+		script->Collect(1);
+		paramCount = game.Scripts.Params[0].nVar;
+
+		if (paramCount > 0) 
+			script->Collect(paramCount);
+	}
+
+	new ScmFunction(script);
+
+	// transfer params as local variables
+	if (paramCount > 0)
+		memcpy(script->m_aLVars, game.Scripts.Params, paramCount * sizeof(tScriptVar));
+	
+	script->JumpTo(label);
+
 	return OR_CONTINUE;
 }
 
 eOpcodeResult CustomOpcodes::SCM_FUNCTION_RET(CScript *script)
 {
+	DWORD retArgCount = 0;
+	if (script->GetNextParamType() != PARAM_TYPE_END_OF_PARAMS)
+	{
+		script->Collect(1);
+		retArgCount = game.Scripts.Params[0].nVar;
+
+		if (retArgCount > 0)
+		{
+			script->Collect(retArgCount);
+		}
+	}
+
+	ScmFunction::Return(script);
+
+	if(retArgCount > 0)
+		script->Store(retArgCount);
+	script->m_dwIp++; // 0AB1 var arg terminator
+	
+	return OR_CONTINUE;
+}
+
+eOpcodeResult CustomOpcodes::SCM_FUNCTION_RET_WITH(CScript* script)
+{
 	script->Collect(1);
-	unsigned int paramCount = game.Scripts.Params[0].nVar;
-	if(paramCount > 0)
-		script->Collect(paramCount);
-	memcpy(script->m_aLVars, script->m_pScmFunction->vars, 64);
-	script->m_dwIp = script->m_pScmFunction->retAddr;
-	if(paramCount > 0)
-		script->Store(paramCount);
-	script->m_dwIp++;
-	ScmFunction *prev = script->m_pScmFunction->prev;
-	delete script->m_pScmFunction;
-	script->m_pScmFunction = prev;
+	bool result = game.Scripts.Params[0].nVar != 0;
+
+	static tScriptVar retArgs[16];
+	DWORD retArgCount = 0;
+	while (script->GetNextParamType() != PARAM_TYPE_END_OF_PARAMS)
+	{
+		script->Collect(1);
+		retArgs[retArgCount] = game.Scripts.Params[0];
+		retArgCount++;
+	}
+
+	script->m_bCondResult = result;
+	ScmFunction::Return(script);
+
+	if (retArgCount > 0)
+	{
+		memcpy(game.Scripts.Params, retArgs, retArgCount * sizeof(tScriptVar));
+		script->Store(retArgCount);
+	}
+	script->m_dwIp++; // 0AB1 var arg terminator
+
+	return OR_CONTINUE;
+}
+
+eOpcodeResult CustomOpcodes::SCM_FUNCTION_RET_FAIL(CScript* script)
+{
+	script->m_bCondResult = false;
+	ScmFunction::Return(script);
+
+	// skip unused target return params
+	while (script->GetNextParamType() != PARAM_TYPE_END_OF_PARAMS)
+	{
+		script->Collect(1);
+	}
+	script->m_dwIp++; // and terminator itself
+
 	return OR_CONTINUE;
 }
 
