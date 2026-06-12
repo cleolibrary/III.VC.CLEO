@@ -141,7 +141,6 @@ public:
 };
 static_assert(sizeof(CScript) == 0xB0, "Error with CScript");
 
-#define CUSTOM_OPCODE_START_ID 0x05DC
 #define MAX_NUMBER_OF_OPCODES 0x8000
 
 typedef eOpcodeResult(__stdcall* Opcode)(CScript *);
@@ -150,8 +149,6 @@ typedef eOpcodeResult(__thiscall* OpcodeHandler)(CScript *, int);
 class Opcodes
 {
 public:
-	static Opcode CLEOAPI functions[MAX_NUMBER_OF_OPCODES];
-
 	static bool CLEOAPI RegisterOpcode(unsigned short id, Opcode func);
 };
 

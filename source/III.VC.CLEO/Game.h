@@ -1,6 +1,7 @@
 #pragma once
 #include "CustomScript.h"
 #include "OpcodesSystem.h"
+#include <array>
 #include <set>
 #include <algorithm>
 
@@ -184,9 +185,9 @@ public:
 		tScriptVar *Params;
 		unsigned short *pNumOpcodesExecuted;
 #if CLEO_VC
-		OpcodeHandler OpcodeHandlers[15];
+		std::array<OpcodeHandler, 15> OpcodeHandlers;
 #else
-		OpcodeHandler OpcodeHandlers[12];
+		std::array<OpcodeHandler, 12> OpcodeHandlers;
 #endif
 		CScript **pActiveScriptsList;
 		tUsedObject *usedObjectArray;

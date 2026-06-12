@@ -309,7 +309,9 @@ eOpcodeResult CScript::ProcessOneCommand()
 		LOGL(LOG_PRIORITY_OPCODE_ID, "%s custom opcode %04X", this->m_acName, id);
 		return Opcodes::functions[id](this);
 	}
-	else if(id >= CUSTOM_OPCODE_START_ID)
+
+	const size_t handlerIndex = id / 100;
+	if(handlerIndex >= game.Scripts.OpcodeHandlers.size())
 	{
 		LOGL(LOG_PRIORITY_ALWAYS, "Error (incorrect opcode): %s, %04X", this->m_acName, id);
 		Error("Incorrect opcode ID: %04X", id);
@@ -317,6 +319,5 @@ eOpcodeResult CScript::ProcessOneCommand()
 	}
 	// call default opcode
 	LOGL(LOG_PRIORITY_OPCODE_ID, "%s opcode %04X", this->m_acName, id);
-	eOpcodeResult result = game.Scripts.OpcodeHandlers[id / 100](this, id);
-	return result;
+	return game.Scripts.OpcodeHandlers[handlerIndex](this, id);
 }
