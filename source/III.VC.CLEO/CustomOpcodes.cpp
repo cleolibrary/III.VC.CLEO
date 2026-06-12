@@ -27,6 +27,7 @@ extern "C" {
 	char* __stdcall _CLEO_GetScriptSpaceAddress() { return CLEO_GetScriptSpaceAddress(); }
 	tScriptVar* __stdcall _CLEO_GetParamsAddress() { return CLEO_GetParamsAddress(); }
 	bool __stdcall CLEO_RegisterOpcode(unsigned short id, Opcode func) { return Opcodes::RegisterOpcode(id, func); }
+	bool __stdcall CLEO_IsOpcodeRegistered(unsigned short id) { return Opcodes::functions[id] != nullptr; }
 
 	// CScript methods
 	void __stdcall CLEO_Collect(CScript* script, unsigned int numParams) { script->Collect(numParams); }

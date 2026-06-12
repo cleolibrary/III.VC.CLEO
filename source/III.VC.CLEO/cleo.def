@@ -14,3 +14,4 @@ EXPORTS
 	_CLEO_UpdateCompareFlag@8 @11
 	_CLEO_GetPointerToScriptVariable@4 @12
 	_CLEO_JumpTo@8 @13
+	_CLEO_IsOpcodeRegistered@4 @14

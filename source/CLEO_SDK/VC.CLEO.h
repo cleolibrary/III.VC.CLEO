@@ -164,6 +164,7 @@ extern "C" {
 	char* __stdcall _CLEO_GetScriptSpaceAddress();
 	tScriptVar* __stdcall _CLEO_GetParamsAddress();
 	bool __stdcall CLEO_RegisterOpcode(unsigned short id, Opcode func);
+	bool __stdcall CLEO_IsOpcodeRegistered(unsigned short id);
 
 	// CScript methods
 	void __stdcall CLEO_Collect(CScript* script, unsigned int numParams);
