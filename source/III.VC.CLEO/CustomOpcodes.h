@@ -36,6 +36,8 @@ class CustomOpcodes
 	static eOpcodeResult WINAPI MATH_LOG(CScript *script);
 	static eOpcodeResult WINAPI CALL_SCM_FUNCTION(CScript *script);
 	static eOpcodeResult WINAPI SCM_FUNCTION_RET(CScript *script);
+	static eOpcodeResult WINAPI SCM_FUNCTION_RET_WITH(CScript* script);
+	static eOpcodeResult WINAPI SCM_FUNCTION_RET_FAIL(CScript* script);
 	static eOpcodeResult WINAPI GET_LABEL_OFFSET(CScript *script);
 	static eOpcodeResult WINAPI GET_VAR_OFFSET(CScript *script);
 	static eOpcodeResult WINAPI BIT_AND(CScript *script);
