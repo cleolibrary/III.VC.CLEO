@@ -8,8 +8,8 @@ echo Detected version: %fileVersion%
 SET outputFile=".\CLEO.III_v%fileVersion%.zip"
 if exist %outputFile% del %outputFile% /q
 
-%zip% a -tzip %outputFile% ".\Changelog.md" -bb2 | findstr "+" 
-%zip% rn %outputFile% "Changelog.md" "CLEO_Readme\Changelog.txt" -bso0
+%zip% a -tzip %outputFile% ".\CHANGELOG.md" -bb2 | findstr "+" 
+%zip% rn %outputFile% "CHANGELOG.md" "CLEO_Readme\CHANGELOG.txt" -bso0
 
 %zip% a -tzip %outputFile% ".\Readme_III.md" -bb2 | findstr "+" 
 %zip% rn %outputFile% "Readme_III.md" "CLEO_Readme\Readme.txt" -bso0
@@ -23,8 +23,8 @@ echo Detected version: %fileVersion%
 SET outputFile=".\CLEO.VC_v%fileVersion%.zip"
 if exist %outputFile% del %outputFile% /q
 
-%zip% a -tzip %outputFile% ".\Changelog.md" -bb2 | findstr "+" 
-%zip% rn %outputFile% "Changelog.md" "CLEO_Readme\Changelog.txt" -bso0
+%zip% a -tzip %outputFile% ".\CHANGELOG.md" -bb2 | findstr "+" 
+%zip% rn %outputFile% "CHANGELOG.md" "CLEO_Readme\CHANGELOG.txt" -bso0
 
 %zip% a -tzip %outputFile% ".\Readme_VC.md" -bb2 | findstr "+" 
 %zip% rn %outputFile% "Readme_VC.md" "CLEO_Readme\Readme.txt" -bso0

@@ -1,3 +1,18 @@
+## 2.2.0
+
+### Features
+
+* Rewrite FXT handling to double null-terminate each text to avoid potential game crashes
+* Add new GitHub workflows for automatic release generation
+* SDK: Add a new CLEO_IsOpcodeRegistered export
+
+### Fixes
+
+* Fix an incorrect CUSTOM_OPCODE_START_ID in GTA III
+* Fix RwRenderStateSetHook function definition
+* Fix multiple memory corruptions caused by incorrectly patched arrays
+* Fix the compound bitwise commands in IntOperations plugin
+
 ## 2.1.1
 
 - Added support for chinese text in fxt files. ([#16](https://github.com/cleolibrary/III.VC.CLEO/issues/16)) ([#18](https://github.com/cleolibrary/III.VC.CLEO/issues/18))

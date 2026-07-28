@@ -93,7 +93,7 @@ jobs:
           mkdir .output\VC\CLEO_Readme
 
           @echo Copy GTA III files
-          copy Changelog.md .output\III\CLEO_Readme\Changelog.md
+          copy CHANGELOG.md .output\III\CLEO_Readme\CHANGELOG.md
           copy Readme_III.md .output\III\CLEO_Readme\Readme.md
           copy preview_changes.md .output\III\CLEO_Readme\Preview.md
           copy bin\III.CLEO.asi .output\III\III.CLEO.asi
@@ -101,7 +101,7 @@ jobs:
           if exist .output\III\CLEO\CLEO_PLUGINS\VC* del /Q .output\III\CLEO\CLEO_PLUGINS\VC*
 
           @echo Copy GTA VC files
-          copy Changelog.md .output\VC\CLEO_Readme\Changelog.md
+          copy CHANGELOG.md .output\VC\CLEO_Readme\CHANGELOG.md
           copy Readme_VC.md .output\VC\CLEO_Readme\Readme.md
           copy preview_changes.md .output\VC\CLEO_Readme\Preview.md
           copy bin\VC.CLEO.asi .output\VC\VC.CLEO.asi
