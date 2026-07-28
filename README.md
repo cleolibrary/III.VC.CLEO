@@ -50,6 +50,7 @@ CLEO scripts can be found on Grand Theft Auto fansites and modding sites such as
 ## Credits
 
 * Alien, DK22Pac, ThirteenAG - lead developers
+* All contributors to the GitHub project at https://github.com/cleolibrary/III.VC.CLEO
 
 ---
 
