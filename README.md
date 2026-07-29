@@ -6,13 +6,13 @@ This repository provides CLEO for **GTA III** and **GTA: Vice City**. For **GTA 
 
 ## Installation
 
-Download the archive from the [releases page](https://github.com/cleolibrary/III.VC.CLEO/releases) then extract the files into the game directory.
+Download the archive from the [releases page](https://github.com/cleolibrary/III.VC.CLEO/releases) then extract the files into the game directory (where `gta3.exe` or `gta-vc.exe` are located).
 
 Recommended game version is 1.0.
 
 ### GTA III
 
-The archive creates the following files in your **GTA III** installation folder (where `gta3.exe` is located):
+The archive creates the following files:
 
 - `III.CLEO.asi` (core library)
 - `cleo\` (CLEO script directory)
@@ -24,7 +24,7 @@ The archive creates the following files in your **GTA III** installation folder 
 
 ### Grand Theft Auto: Vice City
 
-The archive creates the following files in your **Vice City** installation folder (where `gta-vc.exe` is located):
+The archive creates the following files:
 
 - `VC.CLEO.asi` (core library)
 - `cleo\` (CLEO script directory)

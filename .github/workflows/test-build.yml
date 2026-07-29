@@ -45,7 +45,6 @@ jobs:
         shell: cmd
         run: |
           @echo off
-          set PLUGIN_SDK_DIR=%GITHUB_WORKSPACE%\third-party\plugin-sdk
           msbuild "build/III.VC.CLEO.sln" /property:Configuration="Release" /property:Platform="Win32" /m /verbosity:minimal /fileLogger1 /fileLoggerParameters1:warningsOnly;errorsOnly;logfile=output.log
           node .github/workflows/analyze-build-log.js "III Core compilation"
           
@@ -53,7 +52,6 @@ jobs:
         shell: cmd
         run: |
           @echo off
-          set PLUGIN_SDK_DIR=%GITHUB_WORKSPACE%\third-party\plugin-sdk
           msbuild "build/CLEO_SDK.sln" /property:Configuration="Release" /property:Platform="Win32" /m /verbosity:minimal /fileLogger1 /fileLoggerParameters1:warningsOnly;errorsOnly;logfile=output.log
           node .github/workflows/analyze-build-log.js "III Plugins compilation"
 
